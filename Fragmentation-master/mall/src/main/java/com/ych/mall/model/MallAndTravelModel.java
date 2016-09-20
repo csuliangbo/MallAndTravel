@@ -143,6 +143,9 @@ public class MallAndTravelModel {
         map.put("user_id", UserCenter.getInstance().getCurrentUserId());
         if (title != null)
             map.put("taocan", title);
+        else
+        map.put("taocan","");
+        Log.i("mall",ADD_SHOPCAR+"&id="+id+"user_id"+UserCenter.getInstance().getCurrentUserId());
         HttpModel.newInstance(GOODS_DETAIL).post(map, callback);
     }
 }

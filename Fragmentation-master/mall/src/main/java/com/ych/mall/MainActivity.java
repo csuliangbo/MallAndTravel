@@ -34,7 +34,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
-
+//修改
 @EActivity
 public class MainActivity extends SupportActivity implements BaseLazyMainFragment.OnBackToFirstListener {
     public static final int FIRST = 0;

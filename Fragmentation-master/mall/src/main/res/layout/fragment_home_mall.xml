@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <include layout="@layout/include_search_title"></include>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+
+                <com.ych.mall.widget.SlideShowView
+                    android:id="@+id/banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text="会员商城"
+                        android:background="@drawable/selector_home_text"
+                        android:textColor="@drawable/selector_home_text_color"
+                        android:gravity="center"
+                        android:enabled="false"
+                        />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text="会员旅游"
+                        android:background="@drawable/selector_home_text"
+                        android:textColor="@drawable/selector_home_text_color"
+                        android:gravity="center"
+                        android:id="@+id/tv_to_travel" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </ScrollView>
+    </LinearLayout>
+
+
+
+</android.support.v4.widget.SwipeRefreshLayout>

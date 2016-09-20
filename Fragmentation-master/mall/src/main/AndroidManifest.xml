@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ych.mall">
+
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+
+    <application
+        android:name=".MyApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity_"
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.PayActivity_"
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".ui.AddressActivity_"></activity>
+        <activity android:name=".ui.NewAddressActivity_"></activity>
+        <activity android:name=".ui.fourth.MyinfoActivity_"></activity>
+        <activity android:name=".ui.fourth.BalanceActivity_"></activity>
+<activity android:name=".ui.fourth.ChangeNameActivity_"></activity>
+        <activity android:name=".ui.fourth.ChangePhoneActivity_"></activity>
+        <activity android:name=".ui.LoginActivity_"></activity>
+        <activity android:name=".ui.RegistActivity_"></activity>
+        <activity android:name=".ui.ForgetPwdActivity_"></activity>
+        <activity android:name=".ui.SplashActivity_"></activity>
+    </application>
+
+</manifest>

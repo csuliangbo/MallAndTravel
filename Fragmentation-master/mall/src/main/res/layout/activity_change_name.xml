@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_title" />
+
+    <com.ych.mall.widget.ClearEditText
+        android:id="@+id/mEditText"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:hint="输入新名字"
+        android:padding="10dp"
+        android:textSize="@dimen/text_mid" />
+
+    <View
+        android:id="@+id/mView1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height"
+        android:background="@color/Linear"
+        android:visibility="gone" />
+
+    <com.ych.mall.widget.ClearEditText
+        android:id="@+id/mNewPwd"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:hint="输入新名字"
+        android:padding="10dp"
+        android:textSize="@dimen/text_mid"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/mView2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height"
+        android:background="@color/Linear"
+        android:visibility="gone" />
+
+    <com.ych.mall.widget.ClearEditText
+        android:id="@+id/mNewPwd2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:hint="输入修改内容"
+        android:padding="10dp"
+        android:textSize="@dimen/text_mid"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/mRemark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="2-12个字符，可由中英文，数字，汉字组成"
+        android:textColor="@color/text_gray"
+        android:textSize="@dimen/text_mid" />
+
+    <Button
+        android:id="@+id/onSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/selector_btn_green"
+        android:text="确定"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_large" />
+</LinearLayout>

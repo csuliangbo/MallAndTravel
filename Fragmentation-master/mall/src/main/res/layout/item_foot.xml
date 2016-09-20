@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:background="@drawable/selector_layout_pressed"
+    android:padding="10dp"
+    android:layout_marginBottom="5dp"
+    android:gravity="center_vertical"
+    android:layout_height="120dp">
+<ImageView
+    android:layout_width="80dp"
+    android:layout_height="80dp"
+    android:src="@drawable/logo"
+    android:id="@+id/pic" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_mid"
+            android:textColor="@color/black"
+            android:text="惠普笔记本"
+            android:id="@+id/name" />
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textSize="@dimen/text_xlarge"
+    android:textColor="@color/text_orange"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:text="￥12341"
+    android:id="@+id/price" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="@color/colorPrimary"
+            android:background="@drawable/shape_border_green"
+            android:text="删除"
+            android:id="@+id/del" />
+    </LinearLayout>
+</LinearLayout>

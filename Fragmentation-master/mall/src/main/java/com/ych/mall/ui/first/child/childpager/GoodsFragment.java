@@ -13,6 +13,7 @@ import com.fyales.tagcloud.library.TagCloudLayout;
 import com.ych.mall.R;
 
 import com.ych.mall.bean.GoodsDetailBean;
+import com.ych.mall.bean.ParentBean;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.MallAndTravelModel;
 import com.ych.mall.ui.PayActivity_;
@@ -61,7 +62,8 @@ public class GoodsFragment extends BaseFragment {
     @ViewById(R.id.fg_order)
     Button order;
     String mId;
-
+    @ViewById
+    TextView mLoading;
 
     @ViewById
     TextView mTitle;
@@ -152,11 +154,30 @@ public class GoodsFragment extends BaseFragment {
         });
 
     }
-@Click
-void onShopCar(){
 
-}
+    @Click
+    void onShopCar() {
+        mLoading.setVisibility(View.VISIBLE);
+        MallAndTravelModel.addShopCar(shopCallBack, mId, groupTitle);
+    }
 
+    StringCallback shopCallBack = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            TOT("添加购物车失败");
+            mLoading.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            mLoading.setVisibility(View.GONE);
+            ParentBean bean = Http.model(ParentBean.class, response);
+            if (bean.getCode().equals("200")) {
+
+            }
+            TOT(bean.getMessage());
+        }
+    };
 
 
     private void travel() {
@@ -168,10 +189,12 @@ void onShopCar(){
         @Override
         public void onError(Call call, Exception e, int id) {
             TOT("网络连接失败");
+            mLoading.setVisibility(View.GONE);
         }
 
         @Override
         public void onResponse(String response, int id) {
+            mLoading.setVisibility(View.GONE);
             GoodsDetailBean bean = Http.model(GoodsDetailBean.class, response);
             if (bean.getCode().equals("200")) {
                 goods(bean.getData().get(0));

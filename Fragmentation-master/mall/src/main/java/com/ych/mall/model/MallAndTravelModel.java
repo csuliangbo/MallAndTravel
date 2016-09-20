@@ -106,22 +106,24 @@ public class MallAndTravelModel {
         HttpModel.newInstance(SHOPCAR_DEL).post(map, callback);
     }
 
-    static String SHOPCAR_ADD = urlGoods + "add_num";
-    static String SHOPCAR_CUT = urlGoods + "reduce_num";
+    static String SHOPCAR_EDIT = urlGoods + "edit_goods_num";
 
     //增删购物车数量
-    public static void shopCarNum(StringCallback callback, int type, String id) {
+    public static void shopCarNum(StringCallback callback, String id, String num) {
         HashMap<String, String> map = new HashMap<>();
         map.put("cart_id", id);
-        map.put("goods_num", "1");
-        switch (type) {
-            case 0:
-                HttpModel.newInstance(SHOPCAR_ADD).post(map, callback);
-                break;
-            case 1:
-                HttpModel.newInstance(SHOPCAR_CUT).post(map, callback);
-                break;
-        }
+        map.put("goods_num", num);
+        HttpModel.newInstance(SHOPCAR_EDIT).post(map, callback);
+    }
+
+
+    static String CLEAR_SHOPCAR = urlGoods + "empty_goods_cart";
+
+    //清空购物车
+    public static void clearShopCar(StringCallback callback) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("user_id", UserCenter.getInstance().getCurrentUserId());
+        HttpModel.newInstance(CLEAR_SHOPCAR).post(map, callback);
     }
 
     static String GOODS_DETAIL = urlGoods + "goods_details";
@@ -134,20 +136,25 @@ public class MallAndTravelModel {
         HttpModel.newInstance(GOODS_DETAIL).post(map, callback);
     }
 
-    //955
+
     static String ADD_SHOPCAR = urlGoods + "add_goods_cart";
 
-    public static void addShopCar(StringCallback callback, String id, String title) {
+    //添加购物车
+    public static void addShopCar(StringCallback callback, String id, String title, String point, String price) {
         HashMap<String, String> map = new HashMap<>();
         map.put("id", id);
         map.put("user_id", UserCenter.getInstance().getCurrentUserId());
         if (title != null)
             map.put("taocan", title);
         else
-        map.put("taocan","");
-        Log.i("mall",ADD_SHOPCAR+"&id="+id+"user_id"+UserCenter.getInstance().getCurrentUserId());
+            map.put("taocan", "");
+        map.put("fanli_jifen", point);
+        map.put("price_new", price);
+        Log.i("mall", ADD_SHOPCAR + "&id=" + id + "user_id" + UserCenter.getInstance().getCurrentUserId());
         HttpModel.newInstance(GOODS_DETAIL).post(map, callback);
     }
+
+
 }
 
 

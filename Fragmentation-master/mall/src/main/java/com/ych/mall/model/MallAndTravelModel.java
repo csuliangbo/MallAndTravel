@@ -137,7 +137,16 @@ public class MallAndTravelModel {
         HttpModel.newInstance(GOODS_DETAIL).post(map, callback);
     }
 
+    static String GOODS_SEARCH = home + "goods_search";
 
+    //商品搜索
+    public static void goodsSearch(StringCallback callback, String title, int page) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("title", title);
+        map.put("Page", (page + 1) + "");
+        HttpModel.newInstance(GOODS_SEARCH).post(map, callback);
+
+    }
     static String ADD_SHOPCAR = urlGoods + "add_goods_cart";
 
     //添加购物车
@@ -153,16 +162,9 @@ public class MallAndTravelModel {
         map.put("price_new", price);
         HttpModel.newInstance(ADD_SHOPCAR).post(map, callback);
     }
+ 
 
-    static String GOODS_SEARCH = home + "goods_search";
 
-    //商品搜索
-    public static void goodsSearch(StringCallback callback, String title, int page) {
-        HashMap<String, String> map = new HashMap<>();
-        map.put("title", title);
-        map.put("Page", (page + 1) + "");
-        HttpModel.newInstance(GOODS_SEARCH).post(map, callback);
-    }
 
 }
 

@@ -10,9 +10,13 @@ import android.widget.TextView;
 
 import com.fyales.tagcloud.library.TagBaseAdapter;
 import com.fyales.tagcloud.library.TagCloudLayout;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.ych.mall.R;
 
 import com.ych.mall.bean.GoodsDetailBean;
+import com.ych.mall.bean.ParentBean;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.MallAndTravelModel;
 import com.ych.mall.ui.PayActivity_;
@@ -77,6 +81,46 @@ public class GoodsFragment extends BaseFragment {
     TagBaseAdapter tAdapter;
     String groupId;
     String groupTitle;
+    @ViewById
+    TextView mLoading;
+    String mPrice;
+    String mPoint;
+
+    @Click
+    void ivShare() {
+        umShare();
+    }
+
+    UMShareListener umShareListener = new UMShareListener() {
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            TOT("分享成功啦");
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            TOT("分享失败啦");
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            TOT("分享取消了");
+        }
+    };
+
+    private void umShare() {
+        final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]
+                {
+                        SHARE_MEDIA.WEIXIN,
+                        SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.WEIXIN_CIRCLE
+                };
+        new ShareAction(getActivity()).setDisplayList(displaylist)
+                .withText("呵呵")
+                .withTitle("掌中游")
+                .withTargetUrl("http://www.baidu.com")
+                .setListenerList(umShareListener)
+                .open();
+    }
 
     @Click
     public void fg_order() {
@@ -125,6 +169,8 @@ public class GoodsFragment extends BaseFragment {
         sT(mPriceOld, t.getPrice_old());
         points.setText("送积分（" + t.getFanli_jifen() + "积分）");
         stock.setText("库存：" + t.getKucun() + "件");
+        mPrice = t.getPrice_new();
+        mPoint = t.getFanli_jifen();
         if (t.getPic_tuji() != null) {
             String[] banner = new String[t.getPic_tuji().size()];
             int c = 0;
@@ -152,12 +198,29 @@ public class GoodsFragment extends BaseFragment {
         });
 
     }
-@Click
-void onShopCar(){
 
-}
+    @Click
+    void onShopCar() {
+        MallAndTravelModel.addShopCar(shopCallBack, mId, groupTitle, mPoint, mPrice);
+    }
 
+    StringCallback shopCallBack = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            TOT("网络连接失败");
+            mLoading.setVisibility(View.GONE);
+        }
 
+        @Override
+        public void onResponse(String response, int id) {
+            mLoading.setVisibility(View.GONE);
+            ParentBean bean = Http.model(ParentBean.class, response);
+            if (bean.getCode().equals("200")) {
+            }
+            TOT(bean.getMessage());
+
+        }
+    };
 
     private void travel() {
 
@@ -168,10 +231,12 @@ void onShopCar(){
         @Override
         public void onError(Call call, Exception e, int id) {
             TOT("网络连接失败");
+            mLoading.setVisibility(View.GONE);
         }
 
         @Override
         public void onResponse(String response, int id) {
+            mLoading.setVisibility(View.GONE);
             GoodsDetailBean bean = Http.model(GoodsDetailBean.class, response);
             if (bean.getCode().equals("200")) {
                 goods(bean.getData().get(0));

@@ -46,8 +46,6 @@ public class SearchFragment extends BaseFragment implements RecyclerViewModel.RM
     ClearEditText onSearch;
     @ViewById(R.id.ivSearch)
     ImageView ivSearch;
-    @ViewById(R.id.onShare)
-    TextView share;
     String title;
     int type;
 
@@ -73,41 +71,8 @@ public class SearchFragment extends BaseFragment implements RecyclerViewModel.RM
         hideSoftKeyBord();
     }
 
-    @Click
-    void onShare() {
-        umShare();
-    }
 
-    UMShareListener umShareListener = new UMShareListener() {
-        @Override
-        public void onResult(SHARE_MEDIA platform) {
-            TOT("分享成功啦");
-        }
 
-        @Override
-        public void onError(SHARE_MEDIA platform, Throwable t) {
-            TOT("分享失败啦");
-        }
-
-        @Override
-        public void onCancel(SHARE_MEDIA platform) {
-            TOT("分享取消了");
-        }
-    };
-
-    private void umShare() {
-        final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]
-                {
-                        SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.SINA,
-                        SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.DOUBAN
-                };
-        new ShareAction(getActivity()).setDisplayList(displaylist)
-                .withText("呵呵")
-                .withTitle("title")
-                .withTargetUrl("http://www.baidu.com")
-                .setListenerList(umShareListener)
-                .open();
-    }
 
     RecyclerViewModel<SearchBean.SearchData> rvm;
 

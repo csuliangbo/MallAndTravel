@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.ych.mall.R;
 import com.ych.mall.bean.GoodsListBean;
@@ -35,6 +36,8 @@ public class TravelListFragment extends BaseFragment implements RecyclerViewMode
     @ViewById(R.id.recycle)
     RecyclerView rv;
     String id;
+    @ViewById
+    TextView mLoading;
 
     public static TravelListFragment newInstance(String id) {
         Bundle bundle = new Bundle();
@@ -66,7 +69,7 @@ public class TravelListFragment extends BaseFragment implements RecyclerViewMode
 
     @Override
     public void onErr(int state) {
-
+        TOT("网络链接失败");
     }
 
     @Override
@@ -79,7 +82,7 @@ public class TravelListFragment extends BaseFragment implements RecyclerViewMode
 
     @Override
     public void covert(YViewHolder holder, TravelListData t) {
-        final String id=t.getId();
+        final String id = t.getId();
         holder.setText(R.id.name, t.getTitle());
         holder.setText(R.id.price, "￥" + t.getPrice_new());
         holder.setText(R.id.num, "返利积分：" + t.getFanli_jifen());
@@ -88,7 +91,7 @@ public class TravelListFragment extends BaseFragment implements RecyclerViewMode
         holder.getCovertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_TRAVEL,id));
+                start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_TRAVEL, id));
             }
         });
 

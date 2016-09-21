@@ -16,6 +16,7 @@ import com.ych.mall.event.MainEvent;
 import com.ych.mall.event.MallAndTravelEvent;
 import com.ych.mall.ui.LoginActivity_;
 import com.ych.mall.ui.base.BaseFragment;
+import com.ych.mall.widget.ClearEditText;
 import com.ych.mall.widget.SlideShowView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -23,6 +24,8 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
+
+import me.yokeyword.fragmentation.SupportFragment;
 
 /**
  * Created by ych on 2016/8/31.
@@ -33,6 +36,8 @@ public class HomeMallFragment extends BaseFragment implements SwipeRefreshLayout
     SwipeRefreshLayout rLayout;
     @ViewById(R.id.rv_list)
     RecyclerView list;
+    @ViewById
+    ClearEditText mSearch;
 
     public static HomeMallFragment newInstance() {
         Bundle bundle = new Bundle();
@@ -102,5 +107,11 @@ public class HomeMallFragment extends BaseFragment implements SwipeRefreshLayout
     @Click
     void onClass() {
         EventBus.getDefault().post(new MainEvent());
+    }
+
+    @Click
+    void onSearch() {
+        hideSoftKeyBord();
+        ((SupportFragment) getParentFragment()).start(SearchFragment.newInstance(mSearch.getText().toString(), GoodsFragment.TYPE_GOODS));
     }
 }

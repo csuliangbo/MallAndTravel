@@ -23,7 +23,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 def AAVersion = '4.0.0'
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
@@ -40,6 +40,7 @@ dependencies {
     compile 'com.zhy:okhttputils:2.6.2'
     compile project(':citypickerview')
     compile project(':tag')
+    compile files('libs/SocialSDK_QQZone_3.jar')
 }
 
 apt {

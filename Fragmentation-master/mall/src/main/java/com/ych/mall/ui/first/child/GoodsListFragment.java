@@ -15,7 +15,9 @@ import com.ych.mall.model.RecyclerViewModel;
 import com.ych.mall.model.YViewHolder;
 import com.ych.mall.ui.base.BaseFragment;
 import com.ych.mall.ui.first.child.childpager.GoodsFragment;
+import com.ych.mall.ui.first.child.childpager.SearchFragment;
 import com.ych.mall.utils.KV;
+import com.ych.mall.widget.ClearEditText;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.androidannotations.annotations.AfterViews;
@@ -37,6 +39,14 @@ public class GoodsListFragment extends BaseFragment implements RecyclerViewModel
     RecyclerView rv;
     @ViewById
     TextView mLoading;
+    @ViewById(R.id.onSearch)
+    ClearEditText onSearch;
+
+    @Click
+    void tvSearch() {
+        start(SearchFragment.newInstance(onSearch.getText().toString(), GoodsFragment.TYPE_GOODS));
+        hideSoftKeyBord();
+    }
 
     @Click
     void onBack() {

@@ -48,18 +48,25 @@
     android:layout_height="1dp"
     android:layout_weight="1"
     />
-            <TextView
+            <LinearLayout
+                android:id="@+id/ll_fanli"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="返利："
-                android:textColor="@color/black"
-                 />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="123"
-                android:textColor="@color/text_orange"
-                android:id="@+id/num" />
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="返利："
+                    android:textColor="@color/black"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="123"
+                    android:textColor="@color/text_orange"
+                    android:id="@+id/num" />
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

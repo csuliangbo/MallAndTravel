@@ -9,12 +9,15 @@ import com.ych.mall.adapter.HomeTravelAdapter;
 import com.ych.mall.event.MainEvent;
 import com.ych.mall.event.MallAndTravelEvent;
 import com.ych.mall.ui.base.BaseFragment;
+import com.ych.mall.widget.ClearEditText;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
+
+import me.yokeyword.fragmentation.SupportFragment;
 
 /**
  * Created by ych on 2016/8/31.
@@ -25,6 +28,8 @@ public class HomeTravelFragment extends BaseFragment {
 
     @ViewById(R.id.rv_list)
     RecyclerView list;
+    @ViewById
+    ClearEditText mSearch;
 
     public static HomeTravelFragment newInStance() {
         Bundle bundle = new Bundle();
@@ -56,5 +61,11 @@ public class HomeTravelFragment extends BaseFragment {
     @Click
     void onClass() {
         EventBus.getDefault().post(new MainEvent());
+    }
+
+    @Click
+    void onSearch() {
+        hideSoftKeyBord();
+        ((SupportFragment) getParentFragment()).start(SearchFragment.newInstance(mSearch.getText().toString(), GoodsFragment.TYPE_TRAVEL));
     }
 }

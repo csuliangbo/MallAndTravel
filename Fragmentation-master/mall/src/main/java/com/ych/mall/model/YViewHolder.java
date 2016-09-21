@@ -34,6 +34,11 @@ public class YViewHolder extends RecyclerView.ViewHolder {
 
     }
 
+    public void setVisible(int viewId, int visible) {
+        View view = getView(viewId);
+        view.setVisibility(visible);
+    }
+
     public void setImgRes(int viewId, int res) {
         ImageView iv = getView(viewId);
         iv.setImageResource(res);

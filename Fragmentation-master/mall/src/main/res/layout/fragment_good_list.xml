@@ -4,53 +4,56 @@
     android:layout_height="match_parent"
     android:background="@color/main_bg"
     android:orientation="vertical">
-<LinearLayout
-    android:background="@color/white"
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:gravity="center_vertical"
 
-    android:orientation="horizontal"
-    >
-    <ImageView
-        android:layout_width="45dp"
-        android:layout_height="match_parent"
-        android:padding="15dp"
-
-        android:src="@drawable/back"
-        android:id="@+id/onBack" />
-
-    <com.ych.mall.widget.ClearEditText
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:layout_marginRight="5dp"
-        android:background="@drawable/shape_black_border_5dp" />
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        android:padding="5dp"
-        android:textColor="@color/colorPrimary"
-        android:text="搜索"
-        android:layout_marginRight="5dp"
-        />
-</LinearLayout>
+        <ImageView
+            android:id="@+id/onBack"
+            android:layout_width="45dp"
+            android:layout_height="match_parent"
+
+            android:padding="15dp"
+            android:src="@drawable/back" />
+
+        <com.ych.mall.widget.ClearEditText
+            android:id="@+id/onSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="6dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_black_border_5dp"
+            android:imeOptions="actionSearch"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp" />
+
+        <TextView
+            android:id="@+id/tvSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:padding="5dp"
+            android:text="搜索"
+            android:textColor="@color/colorPrimary" />
+    </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/gray1"
-        />
+        android:background="@color/gray1" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe"
         android:layout_width="match_parent"
-        android:layout_weight="1"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView
@@ -58,13 +61,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
     </android.support.v4.widget.SwipeRefreshLayout>
+
     <TextView
+        android:id="@+id/mLoading"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:textSize="@dimen/text_large"
-        android:textColor="@color/white"
         android:background="@color/colorPrimary"
+        android:gravity="center"
         android:text="加载中..."
-         android:gravity="center"
-        android:id="@+id/mLoading" />
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_large" />
 </LinearLayout>

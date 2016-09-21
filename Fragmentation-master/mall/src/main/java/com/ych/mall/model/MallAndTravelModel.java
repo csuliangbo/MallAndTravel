@@ -14,6 +14,7 @@ import java.util.Map;
 public class MallAndTravelModel {
     static String urlGoods = Http.SERVER_URL + "goods.php?action=";
     static String urlTravel = Http.SERVER_URL + "tour.php?action=";
+    static String home = Http.SERVER_URL + "home.php?action=";
 
     public static void searchResult(StringCallback callback, int page) {
         Map<String, String> p = new HashMap<String, String>();
@@ -144,6 +145,16 @@ public class MallAndTravelModel {
         if (title != null)
             map.put("taocan", title);
         HttpModel.newInstance(GOODS_DETAIL).post(map, callback);
+    }
+
+    static String GOODS_SEARCH = home + "goods_search";
+
+    //商品搜索
+    public static void goodsSearch(StringCallback callback, String title, int page) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("title", title);
+        map.put("Page", (page + 1) + "");
+        HttpModel.newInstance(GOODS_SEARCH).post(map, callback);
     }
 }
 

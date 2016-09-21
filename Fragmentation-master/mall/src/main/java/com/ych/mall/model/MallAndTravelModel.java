@@ -163,6 +163,7 @@ public class MallAndTravelModel {
         map.put("price_new", price);
         HttpModel.newInstance(ADD_SHOPCAR).post(map, callback);
     }
+ 
 
 
     static String TRAVEL_DETAIL = urlTravel + "tour_synopsis";

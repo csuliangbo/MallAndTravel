@@ -67,11 +67,15 @@ public class SearchFragment extends BaseFragment implements RecyclerViewModel.RM
     @Click
     void ivSearch() {
         title = onSearch.getText().toString();
-        rvm.onRefresh();
+        mLoading.setVisibility(View.VISIBLE);
+        mLoading.setText("加载中...");
+        if (rvm.isEmpty()) {
+            rvm.newInit();
+        } else
+            rvm.onRefresh();
+
         hideSoftKeyBord();
     }
-
-
 
 
     RecyclerViewModel<SearchBean.SearchData> rvm;
@@ -80,13 +84,8 @@ public class SearchFragment extends BaseFragment implements RecyclerViewModel.RM
     public void initViews() {
         title = getArguments().getString(KV.TITLE);
         type = getArguments().getInt(KV.TYPE);
-        rvm = new RecyclerViewModel<SearchBean.SearchData>(getActivity(),
-                this,
-                rv,
-                layout,
-                R.layout.item_goods_list);
-        rvm.setMiniSize(10);
-        rvm.init();
+        initModel();
+
     }
 
     @Override
@@ -97,6 +96,7 @@ public class SearchFragment extends BaseFragment implements RecyclerViewModel.RM
     @Override
     public void onErr(int state) {
         TOT("网络链接失败");
+        mLoading.setText("网络链接失败");
     }
 
     @Override
@@ -109,6 +109,16 @@ public class SearchFragment extends BaseFragment implements RecyclerViewModel.RM
             mLoading.setText(bean.getMessage());
         }
         return null;
+    }
+
+    private void initModel() {
+        rvm = new RecyclerViewModel<SearchBean.SearchData>(getActivity(),
+                this,
+                rv,
+                layout,
+                R.layout.item_goods_list);
+        rvm.setMiniSize(10);
+        rvm.init();
     }
 
 

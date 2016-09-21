@@ -162,7 +162,7 @@ public class MallAndTravelModel {
         map.put("price_new", price);
         HttpModel.newInstance(ADD_SHOPCAR).post(map, callback);
     }
- 
+
 
 
 

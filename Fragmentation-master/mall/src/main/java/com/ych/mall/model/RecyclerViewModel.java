@@ -139,6 +139,10 @@ public class RecyclerViewModel<T> implements SwipeRefreshLayout.OnRefreshListene
         mListener.getData(callback, page);
     }
 
+    public void newInit(){
+        CURRENT_STATE=STATE_NEW;
+        mListener.getData(callback, page);
+    }
     public void noti(){
         mAdapter.notifyDataSetChanged();
     }
@@ -148,6 +152,12 @@ public class RecyclerViewModel<T> implements SwipeRefreshLayout.OnRefreshListene
 
     }
 
+    public boolean isEmpty(){
+        if (mAdapter==null)
+            return true;
+        else
+            return false;
+    }
     StringCallback callback = new StringCallback() {
         @Override
         public void onError(Call call, Exception e, int id) {

@@ -1,22 +1,31 @@
 package com.ych.mall.ui.fourth.child;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ych.mall.R;
+import com.ych.mall.bean.LogisticsBean;
 import com.ych.mall.bean.OrderBean;
+import com.ych.mall.bean.ParentBean;
 import com.ych.mall.model.Http;
+import com.ych.mall.model.MallAndTravelModel;
 import com.ych.mall.model.RecyclerViewModel;
 import com.ych.mall.model.UserInfoModel;
 import com.ych.mall.model.YViewHolder;
+import com.ych.mall.ui.PayActivity_;
 import com.ych.mall.ui.base.BaseFragment;
 import com.ych.mall.utils.KV;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -27,6 +36,8 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
+
+import okhttp3.Call;
 
 /**
  * Created by ych on 2016/9/9.
@@ -58,6 +69,9 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
     @ViewById
     SwipeRefreshLayout mSwipeRefreshLayout;
     RecyclerViewModel<OrderBean.OrderData> model;
+
+    private String titleHead = "点击后该订单(";
+    private String titleFoot = ")所有商品不可退货，积分返利立即到账，是否同意?";
 
     @Click
     void onBack() {
@@ -154,23 +168,105 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
         return null;
     }
 
+    private String cancleOreder = "取消订单";
+    private String nowPay = "立即付款";
+    private String getShop = "确认收货";
+    private String refund = "退货";
+    private String logistics = "查看物流";
+    private String complete = "标记完成";
+
     @Override
     public void covert(YViewHolder holder, OrderBean.OrderData t) {
+        final String id = t.getOrders_num();
         holder.setText(R.id.id, "订单号:" + t.getOrders_num());
         int type = Integer.parseInt(t.getOrders_status());
         String typeText = null;
+        Button btnLeft = holder.getView(R.id.btnLeft);
+        Button btnMiddle = holder.getView(R.id.btnMiddle);
+        Button btnRight = holder.getView(R.id.btnRight);
+        btnLeft.setVisibility(View.GONE);
+        btnMiddle.setVisibility(View.GONE);
+        btnRight.setVisibility(View.GONE);
         switch (type) {
             case 0:
-                typeText = "订单默认状态";
+                typeText = "待付款";
+                btnLeft.setVisibility(View.VISIBLE);
+                btnMiddle.setVisibility(View.VISIBLE);
+                btnLeft.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
+                btnLeft.setTextColor(getResources().getColor(R.color.gray2));
+                btnLeft.setText(cancleOreder);
+                btnMiddle.setText(nowPay);
+                btnLeft.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UserInfoModel.cancelOrder(cancelCallBack, id);
+                    }
+                });
+                btnMiddle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(getActivity(), PayActivity_.class));
+                    }
+                });
                 break;
             case 1:
                 typeText = "已支付";
                 break;
             case 2:
                 typeText = "已发货";
+                btnLeft.setVisibility(View.VISIBLE);
+                btnMiddle.setVisibility(View.VISIBLE);
+                btnRight.setVisibility(View.VISIBLE);
+                btnMiddle.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
+                btnRight.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
+                btnMiddle.setTextColor(getResources().getColor(R.color.gray2));
+                btnRight.setTextColor(getResources().getColor(R.color.gray2));
+                btnLeft.setText(getShop);
+                btnMiddle.setText(refund);
+                btnRight.setText(logistics);
+                btnLeft.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UserInfoModel.getShop(getShopCallBack, id);
+                    }
+                });
+                btnMiddle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        start(SalesReturn.newInstance(id));
+                    }
+                });
+                btnRight.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        start(LogisticsFragment.newInstance(id));
+                    }
+                });
                 break;
             case 3:
                 typeText = "已签收";
+                btnLeft.setVisibility(View.VISIBLE);
+                btnLeft.setText(complete);
+                btnLeft.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle("掌中游商城提醒您")
+                                .setMessage(titleHead + id + titleFoot)
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).create();
+                        dialog.show();
+                    }
+                });
                 break;
             case 4:
                 typeText = "已申请退货";
@@ -189,4 +285,37 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
         holder.setText(R.id.time, "下单时间:" + date);
         holder.setText(R.id.name, t.getGoods_title());
     }
+
+    //取消
+    StringCallback cancelCallBack = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            TOT("网络链接失败");
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            ParentBean bean = Http.model(ParentBean.class, response);
+            if (bean.getCode().equals("200")) {
+                model.onRefresh();
+            }
+            TOT(bean.getMessage());
+        }
+    };
+    //确认收货
+    StringCallback getShopCallBack = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            TOT("网络链接失败");
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            ParentBean bean = Http.model(ParentBean.class, response);
+            if (bean.getCode().equals("200")) {
+                model.onRefresh();
+            }
+            TOT(bean.getMessage());
+        }
+    };
 }

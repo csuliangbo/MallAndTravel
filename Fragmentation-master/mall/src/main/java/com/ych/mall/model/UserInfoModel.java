@@ -186,7 +186,7 @@ public class UserInfoModel {
     static void order(StringCallback callback, int page, String url) {
         HashMap<String, String> map = new HashMap<>();
         map.put("id", UserCenter.getInstance().getCurrentUserId());
-        HttpModel.newInstance(url+"&page="+(page+1)).post(map, callback);
+        HttpModel.newInstance(url + "&page=" + (page + 1)).post(map, callback);
     }
 
     static String ORDER_ALL = url + "order_list";
@@ -217,6 +217,40 @@ public class UserInfoModel {
         order(callback, page, ORDER_COMMENT);
     }
 
+    //取消订单
+    static String CANCEL_ORDER = url + "update_payment_success";
 
+    public static void cancelOrder(StringCallback callback, String id) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("orders_num", id);
+        HttpModel.newInstance(CANCEL_ORDER).post(map, callback);
+    }
+
+    //确认收货
+    static String GET_SHOP = url + "confirm";
+
+    public static void getShop(StringCallback callback, String id) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("orders_num", id);
+        HttpModel.newInstance(GET_SHOP).post(map, callback);
+    }
+
+    //查看物流
+    static String KUAIDI = url + "kuaidi";
+
+    public static void kuaidi(StringCallback callback, String id) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("orders_num", id);
+        HttpModel.newInstance(KUAIDI).post(map, callback);
+    }
+
+    //查看物流
+
+    public static void salesReturn(StringCallback callback, String id, String reson) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("orders_num", id);
+        map.put("tuihuo_case", reson);
+        HttpModel.newInstance(KUAIDI).post(map, callback);
+    }
 }
 

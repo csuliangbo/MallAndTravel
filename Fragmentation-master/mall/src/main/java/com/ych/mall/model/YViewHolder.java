@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.ych.mall.R;
 
 /**
  * Created by ych on 2016/9/5.
@@ -32,6 +33,16 @@ public class YViewHolder extends RecyclerView.ViewHolder {
         TextView tv = getView(viewId);
         tv.setText(text);
 
+    }
+
+    public void setBackground(int viewId, int drawableId) {
+        View view = getView(viewId);
+        view.setBackgroundResource(drawableId);
+    }
+
+    public void setTextColor(int viewId, int colorId) {
+        TextView tv = getView(viewId);
+        tv.setTextColor(colorId);
     }
 
     public void setVisible(int viewId, int visible) {

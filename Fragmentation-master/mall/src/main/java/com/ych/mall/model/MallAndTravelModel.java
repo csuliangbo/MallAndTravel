@@ -150,7 +150,7 @@ public class MallAndTravelModel {
             map.put("taocan", "");
         map.put("fanli_jifen", point);
         map.put("price_new", price);
-        Log.i("mall", ADD_SHOPCAR + "&id=" + id + "user_id" + UserCenter.getInstance().getCurrentUserId());
+       
         HttpModel.newInstance(GOODS_DETAIL).post(map, callback);
     }
 

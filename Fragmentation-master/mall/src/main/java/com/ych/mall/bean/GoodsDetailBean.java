@@ -65,7 +65,7 @@ public class GoodsDetailBean extends ParentBean {
         private String pic_url;
 
 
-        private List<String> pic_tuji ;
+        private List<String> pic_tuji;
 
 
         private String kucun;
@@ -75,9 +75,6 @@ public class GoodsDetailBean extends ParentBean {
 
 
         private List<Taocan> taocan;
-
-
-        private List<String> shuoming ;
 
 
         private String price_old;
@@ -100,52 +97,44 @@ public class GoodsDetailBean extends ParentBean {
 
         private String username;
 
-        public List<Taocan> getTaocan() {
-            return taocan;
-        }
 
-        public void setTaocan(List<Taocan> taocan) {
-            this.taocan = taocan;
-        }
+        private String shuoming;
 
-        public String getFanli_jifen() {
-            return fanli_jifen;
-        }
 
-        public void setFanli_jifen(String fanli_jifen) {
-            this.fanli_jifen = fanli_jifen;
-        }
+        public void setId(String id){
 
-        public String getGoods_id() {
-            return goods_id;
-        }
-
-        public void setGoods_id(String goods_id) {
-            this.goods_id = goods_id;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
             this.id = id;
+
         }
 
-        public String getIs_baoyou() {
-            return is_baoyou;
+        public String getId(){
+
+            return this.id;
+
         }
 
-        public void setIs_baoyou(String is_baoyou) {
-            this.is_baoyou = is_baoyou;
+        public void setTitle(String title){
+
+            this.title = title;
+
         }
 
-        public String getKucun() {
-            return kucun;
+        public String getTitle(){
+
+            return this.title;
+
         }
 
-        public void setKucun(String kucun) {
-            this.kucun = kucun;
+        public void setPic_url(String pic_url){
+
+            this.pic_url = pic_url;
+
+        }
+
+        public String getPic_url(){
+
+            return this.pic_url;
+
         }
 
         public List<String> getPic_tuji() {
@@ -156,73 +145,135 @@ public class GoodsDetailBean extends ParentBean {
             this.pic_tuji = pic_tuji;
         }
 
-        public String getPic_url() {
-            return pic_url;
+        public void setKucun(String kucun){
+
+            this.kucun = kucun;
+
         }
 
-        public void setPic_url(String pic_url) {
-            this.pic_url = pic_url;
+        public String getKucun(){
+
+            return this.kucun;
+
         }
 
-        public String getPingjia_content() {
-            return pingjia_content;
+        public void setFanli_jifen(String fanli_jifen){
+
+            this.fanli_jifen = fanli_jifen;
+
         }
 
-        public void setPingjia_content(String pingjia_content) {
-            this.pingjia_content = pingjia_content;
+        public String getFanli_jifen(){
+
+            return this.fanli_jifen;
+
         }
 
-        public String getPingjia_time() {
-            return pingjia_time;
+        public List<Taocan> getTaocan() {
+            return taocan;
         }
 
-        public void setPingjia_time(String pingjia_time) {
-            this.pingjia_time = pingjia_time;
+        public void setTaocan(List<Taocan> taocan) {
+            this.taocan = taocan;
         }
 
-        public String getPrice_new() {
-            return price_new;
-        }
+        public void setPrice_old(String price_old){
 
-        public void setPrice_new(String price_new) {
-            this.price_new = price_new;
-        }
-
-        public String getPrice_old() {
-            return price_old;
-        }
-
-        public void setPrice_old(String price_old) {
             this.price_old = price_old;
+
         }
 
-        public List<String> getShuoming() {
-            return shuoming;
+        public String getPrice_old(){
+
+            return this.price_old;
+
         }
 
-        public void setShuoming(List<String> shuoming) {
-            this.shuoming = shuoming;
+        public void setPrice_new(String price_new){
+
+            this.price_new = price_new;
+
         }
 
+        public String getPrice_new(){
 
+            return this.price_new;
 
-        public String getTitle() {
-            return title;
         }
 
-        public void setTitle(String title) {
-            this.title = title;
+        public void setIs_baoyou(String is_baoyou){
+
+            this.is_baoyou = is_baoyou;
+
         }
 
-        public String getUsername() {
-            return username;
+        public String getIs_baoyou(){
+
+            return this.is_baoyou;
+
         }
 
-        public void setUsername(String username) {
+        public void setPingjia_content(String pingjia_content){
+
+            this.pingjia_content = pingjia_content;
+
+        }
+
+        public String getPingjia_content(){
+
+            return this.pingjia_content;
+
+        }
+
+        public void setGoods_id(String goods_id){
+
+            this.goods_id = goods_id;
+
+        }
+
+        public String getGoods_id(){
+
+            return this.goods_id;
+
+        }
+
+        public void setPingjia_time(String pingjia_time){
+
+            this.pingjia_time = pingjia_time;
+
+        }
+
+        public String getPingjia_time(){
+
+            return this.pingjia_time;
+
+        }
+
+        public void setUsername(String username){
+
             this.username = username;
-        }
-    }
 
+        }
+
+        public String getUsername(){
+
+            return this.username;
+
+        }
+
+        public void setShuoming(String shuoming){
+
+            this.shuoming = shuoming;
+
+        }
+
+        public String getShuoming(){
+
+            return this.shuoming;
+
+        }
+
+    }
     private List<GoodsDetailData> data;
 
     public List<GoodsDetailData> getData() {

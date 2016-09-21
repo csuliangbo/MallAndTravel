@@ -2,6 +2,7 @@ package com.ych.mall.ui.first.child.childpager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -17,6 +18,7 @@ import com.ych.mall.R;
 
 import com.ych.mall.bean.GoodsDetailBean;
 import com.ych.mall.bean.ParentBean;
+import com.ych.mall.bean.TravelDetailBean;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.MallAndTravelModel;
 import com.ych.mall.ui.PayActivity_;
@@ -78,6 +80,7 @@ public class GoodsFragment extends BaseFragment {
     @ViewById
     TextView mGroup;
     List<GoodsDetailBean.Taocan> datas;
+    List<TravelDetailBean.Chufa_taocan> tDatas;
     TagBaseAdapter tAdapter;
     String groupId;
     String groupTitle;
@@ -85,7 +88,11 @@ public class GoodsFragment extends BaseFragment {
     TextView mLoading;
     String mPrice;
     String mPoint;
+    String goodsUrl = "http://www.zzumall.com/index.php/Mobile/Goods/goods_detail_m.html?id=";
+    String travelUrl = "http://www.zzumall.com/index.php/Mobile/Tourism/tourism_detail_m.html?id=";
+    String protocolUrl = "http://www.zzumall.com/index.php/Mobile/Tourism/lvyou_xieyi";
 
+    //风向
     @Click
     void ivShare() {
         umShare();
@@ -109,15 +116,20 @@ public class GoodsFragment extends BaseFragment {
     };
 
     private void umShare() {
+        String url;
+        if (currentType == TYPE_GOODS)
+            url = goodsUrl + mId;
+        else
+            url = travelUrl + mId;
         final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]
                 {
                         SHARE_MEDIA.WEIXIN,
                         SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.WEIXIN_CIRCLE
                 };
         new ShareAction(getActivity()).setDisplayList(displaylist)
-                .withText("呵呵")
+                .withText(mTitle.getText().toString())
                 .withTitle("掌中游")
-                .withTargetUrl("http://www.baidu.com")
+                .withTargetUrl(url)
                 .setListenerList(umShareListener)
                 .open();
     }
@@ -145,7 +157,7 @@ public class GoodsFragment extends BaseFragment {
             goodsInit();
             MallAndTravelModel.goodsDetail(goodsCallBack, mId);
         } else {
-
+            MallAndTravelModel.travelDetail(travelCallBack, mId);
         }
 
     }
@@ -160,12 +172,18 @@ public class GoodsFragment extends BaseFragment {
         order.setVisibility(View.GONE);
     }
 
+    @Click
+    void onShopCar() {
+        MallAndTravelModel.addShopCar(shopCallBack, mId, groupTitle, mPoint, mPrice);
+    }
+
+
     private void goods(GoodsDetailBean.GoodsDetailData t) {
         if (t == null)
             return;
 
         sT(mTitle, t.getTitle());
-        sT(mPriceNew, t.getPrice_new());
+        sT(mPriceNew, "￥"+t.getPrice_new());
         sT(mPriceOld, t.getPrice_old());
         points.setText("送积分（" + t.getFanli_jifen() + "积分）");
         stock.setText("库存：" + t.getKucun() + "件");
@@ -199,31 +217,47 @@ public class GoodsFragment extends BaseFragment {
 
     }
 
-    @Click
-    void onShopCar() {
-        MallAndTravelModel.addShopCar(shopCallBack, mId, groupTitle, mPoint, mPrice);
-    }
-
-    StringCallback shopCallBack = new StringCallback() {
-        @Override
-        public void onError(Call call, Exception e, int id) {
-            TOT("网络连接失败");
-            mLoading.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onResponse(String response, int id) {
-            mLoading.setVisibility(View.GONE);
-            ParentBean bean = Http.model(ParentBean.class, response);
-            if (bean.getCode().equals("200")) {
+    private void travel(TravelDetailBean.TravelDetaiData t) {
+        if (t == null)
+            return;
+        mPriceOld.setVisibility(View.GONE);
+        sT(mTitle, t.getTitle());
+//        sT(mPriceNew, t.getPrice_new());
+//        sT(mPriceOld, t.getPrice_old());
+        points.setText("送积分（" + t.getFanli_jifen() + "积分）");
+        //stock.setText("库存：" + t.getKucun() + "件");
+        //  mPrice = t.getPrice_new();
+        mPoint = t.getFanli_jifen();
+        if (t.getPic_url() != null) {
+            String[] banner = new String[t.getPic_tuji().size()];
+            int c = 0;
+            for (String s : t.getPic_tuji()) {
+                banner[c] = Http.GOODS_PIC_URL + t.getPic_tuji().get(c);
+                c++;
             }
-            TOT(bean.getMessage());
-
+            showView.setData(banner);
         }
-    };
-
-    private void travel() {
-
+        tDatas = t.getChufa_taocan();
+        sT(city,"出发城市："+t.getChufa_address());
+       time.setVisibility(View.GONE);
+        if (tDatas == null || tDatas.size() < 1)
+            return;
+        packagell.setVisibility(View.VISIBLE);
+        mGroup.setVisibility(View.GONE);
+        List<String> tagDatas = new ArrayList<>();
+        for (TravelDetailBean.Chufa_taocan ta : tDatas) {
+            tagDatas.add(ta.getChufa_date());
+        }
+        tAdapter = new TagBaseAdapter(getActivity(), tagDatas);
+        mTags.setAdapter(tAdapter);
+        mTags.setItemClickListener(new TagCloudLayout.TagItemClickListener() {
+            @Override
+            public void itemClick(int position) {
+                groupTitle = tDatas.get(position).getChufa_date();
+                sT(mPriceNew,"￥"+tDatas.get(position).getChufa_price());
+                mPrice= tDatas.get(position).getChufa_price();
+            }
+        });
     }
 
     //商品
@@ -237,11 +271,16 @@ public class GoodsFragment extends BaseFragment {
         @Override
         public void onResponse(String response, int id) {
             mLoading.setVisibility(View.GONE);
-            GoodsDetailBean bean = Http.model(GoodsDetailBean.class, response);
-            if (bean.getCode().equals("200")) {
-                goods(bean.getData().get(0));
-            } else
-                TOT(bean.getMessage());
+
+            try {
+                GoodsDetailBean bean = Http.model(GoodsDetailBean.class, response);
+                if (bean.getCode().equals("200")) {
+                    goods(bean.getData().get(0));
+                } else
+                    TOT(bean.getMessage());
+            } catch (Exception e) {
+
+            }
 
         }
     };
@@ -249,11 +288,36 @@ public class GoodsFragment extends BaseFragment {
     StringCallback travelCallBack = new StringCallback() {
         @Override
         public void onError(Call call, Exception e, int id) {
-
+            TOT("网络连接失败");
+            mLoading.setVisibility(View.GONE);
         }
 
         @Override
         public void onResponse(String response, int id) {
+            mLoading.setVisibility(View.GONE);
+            TravelDetailBean bean = Http.model(TravelDetailBean.class, response);
+            if (bean.getCode().equals("200"))
+                travel(bean.getData().get(0));
+            else
+                TOT(bean.getMessage());
+        }
+    };
+    //添加购物车
+    StringCallback shopCallBack = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            TOT("网络连接失败");
+            mLoading.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            mLoading.setVisibility(View.GONE);
+            ParentBean bean = Http.model(ParentBean.class, response);
+            if (bean.getCode().equals("200")) {
+
+            }
+            TOT(bean.getMessage());
 
         }
     };

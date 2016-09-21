@@ -36,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="四川成都三日游"
+                    android:text=" "
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
@@ -51,7 +51,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="￥123元"
+                        android:text=" "
                         android:textColor="@color/text_orange"
                         android:textSize="30sp" />
 
@@ -60,7 +60,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="￥123元"
+                        android:text=" "
                         android:textColor="@color/text_gray"
                         android:textSize="22sp" />
 
@@ -114,7 +114,6 @@
                     android:id="@+id/fg_points"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="返利积分（50积分）"
                     android:textColor="@color/text_orange"
                     android:textSize="14sp" />
 

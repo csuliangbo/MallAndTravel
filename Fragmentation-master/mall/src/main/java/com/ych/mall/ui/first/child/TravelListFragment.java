@@ -70,10 +70,12 @@ public class TravelListFragment extends BaseFragment implements RecyclerViewMode
     @Override
     public void onErr(int state) {
         TOT("网络链接失败");
+        mLoading.setVisibility(View.GONE);
     }
 
     @Override
     public List<TravelListData> getList(String str) {
+        mLoading.setVisibility(View.GONE);
         TravelListBean bean = Http.model(TravelListBean.class, str);
         if (bean.getCode().equals("200"))
             return bean.getData();

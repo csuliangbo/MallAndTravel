@@ -32,7 +32,7 @@ import java.util.List;
 import me.yokeyword.fragmentation.SupportFragment;
 
 /**
- * Created by Administrator on 2016/9/20.
+ * Created by gb on 2016/9/20.
  */
 @EFragment(R.layout.fragment_first_search)
 public class SearchFragment extends BaseFragment implements RecyclerViewModel.RModelListener<SearchBean.SearchData> {
@@ -122,9 +122,9 @@ public class SearchFragment extends BaseFragment implements RecyclerViewModel.RM
             @Override
             public void onClick(View v) {
                 if (type == GoodsFragment.TYPE_GOODS) {
-                    ((SupportFragment) getParentFragment()).start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_GOODS, t.getId()));
+                 start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_GOODS, t.getId()));
                 } else if (type == GoodsFragment.TYPE_TRAVEL) {
-                    ((SupportFragment) getParentFragment()).start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_TRAVEL, t.getId()));
+                   start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_TRAVEL, t.getId()));
                 }
             }
         });

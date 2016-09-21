@@ -68,7 +68,10 @@ public class ShopCarFragment extends BaseFragment implements RecyclerViewModel.R
     @ViewById
     SwipeRefreshLayout mLayout;
     List<String> idList;
+@Click
+void tiText(){
 
+}
     @AfterViews
     public void initViews() {
         onBack.setVisibility(View.GONE);

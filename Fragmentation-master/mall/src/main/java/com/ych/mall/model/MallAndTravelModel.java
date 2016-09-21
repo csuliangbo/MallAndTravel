@@ -142,8 +142,8 @@ public class MallAndTravelModel {
     //添加购物车
     public static void addShopCar(StringCallback callback, String id, String title, String point, String price) {
         HashMap<String, String> map = new HashMap<>();
-        map.put("id", id);
         map.put("user_id", UserCenter.getInstance().getCurrentUserId());
+        map.put("id", id);
         if (title != null)
             map.put("taocan", title);
         else

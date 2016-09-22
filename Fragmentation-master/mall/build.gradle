@@ -41,6 +41,8 @@ dependencies {
     compile project(':citypickerview')
     compile project(':tag')
     compile files('libs/SocialSDK_QQZone_3.jar')
+    compile files('libs/BaiduLBS_Android.jar')
+    compile files('libs/zxing.jar')
 }
 
 apt {

@@ -8,9 +8,9 @@
     android:orientation="vertical">
 
     <ScrollView
-        android:scrollbars="@null"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="@null">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -42,20 +42,20 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/mName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="加载中..."
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_mid"
-                        android:id="@+id/mName" />
+                        android:textSize="@dimen/text_mid" />
 
                     <TextView
+                        android:id="@+id/mID"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="加载中..."
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_mid"
-                        android:id="@+id/mID" />
+                        android:textSize="@dimen/text_mid" />
 
 
                 </LinearLayout>
@@ -66,6 +66,7 @@
                     android:layout_weight="1" />
 
                 <TextView
+                    android:id="@+id/mGrade"
                     android:layout_width="80dp"
                     android:layout_height="27dp"
                     android:background="@drawable/shape_black_bg_30dp"
@@ -74,8 +75,7 @@
                     android:paddingRight="10dp"
                     android:text="加载中..."
                     android:textColor="@color/text_orange"
-                    android:textSize="@dimen/text_mini"
-                    android:id="@+id/mGrade" />
+                    android:textSize="@dimen/text_mini" />
 
                 <FrameLayout
                     android:layout_width="wrap_content"
@@ -102,10 +102,10 @@
                 android:orientation="horizontal">
 
                 <FrameLayout
+                    android:id="@+id/onPay"
                     android:layout_width="70dp"
                     android:layout_height="match_parent"
-                    android:background="@drawable/selector_layout_pressed"
-                    android:id="@+id/onPay">
+                    android:background="@drawable/selector_layout_pressed">
 
                     <ImageView
                         android:layout_width="25dp"
@@ -125,10 +125,10 @@
                 </FrameLayout>
 
                 <FrameLayout
+                    android:id="@+id/onWait"
                     android:layout_width="70dp"
                     android:layout_height="match_parent"
-                    android:background="@drawable/selector_layout_pressed"
-                    android:id="@+id/onWait">
+                    android:background="@drawable/selector_layout_pressed">
 
                     <ImageView
                         android:layout_width="25dp"
@@ -148,10 +148,10 @@
                 </FrameLayout>
 
                 <FrameLayout
+                    android:id="@+id/onComment"
                     android:layout_width="70dp"
                     android:layout_height="match_parent"
-                    android:background="@drawable/selector_layout_pressed"
-                    android:id="@+id/onComment">
+                    android:background="@drawable/selector_layout_pressed">
 
                     <ImageView
                         android:layout_width="25dp"
@@ -181,10 +181,10 @@
                     android:background="@color/Linear" />
 
                 <FrameLayout
+                    android:id="@+id/onAll"
                     android:layout_width="70dp"
                     android:layout_height="match_parent"
-                    android:background="@drawable/selector_layout_pressed"
-                    android:id="@+id/onAll">
+                    android:background="@drawable/selector_layout_pressed">
 
                     <ImageView
                         android:layout_width="25dp"
@@ -218,15 +218,15 @@
                     android:background="@drawable/selector_layout_pressed">
 
                     <TextView
+                        android:id="@+id/mIntegral"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
 
+                        android:layout_gravity="center"
                         android:layout_marginBottom="10dp"
                         android:text="0"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_large"
-                        android:id="@+id/mIntegral" />
+                        android:textSize="@dimen/text_large" />
 
                     <TextView
 
@@ -281,6 +281,7 @@
                     android:background="@drawable/selector_layout_pressed">
 
                     <ImageView
+                        android:id="@+id/onShare"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center"
@@ -301,15 +302,15 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/white">
 
                 <android.support.v7.widget.RecyclerView
-                    android:layout_gravity="center_horizontal"
                     android:id="@+id/mGrid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
 
                     android:background="@color/white"></android.support.v7.widget.RecyclerView>
             </FrameLayout>

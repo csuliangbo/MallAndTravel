@@ -12,4 +12,5 @@ public class KV {
     public static String TITLE = "title";
     public static String ORDER_NUM = "order_num";
     public static String KUIDI = "kuidi";
+    public static String URL = "url";
 }

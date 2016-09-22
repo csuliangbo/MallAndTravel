@@ -183,6 +183,14 @@ public class MallAndTravelModel {
 
         HttpModel.newInstance(HOME_MALL_URL + "&page=" + (page + 1) + "&pagesize=10").post(map, callback);
     }
+
+    static String HOME_TRAVEL_URL=home+"tourism_index";
+
+    public static void homeTravel(StringCallback callback,int page){
+        HashMap<String, String> map = new HashMap<>();
+
+        HttpModel.newInstance(HOME_TRAVEL_URL + "&page=" + (page + 1) + "&pagesize=10").post(map, callback);
+    }
 }
 
 

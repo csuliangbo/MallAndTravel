@@ -18,7 +18,7 @@ import com.umeng.socialize.utils.Log;
 import com.ych.mall.R;
 import com.ych.mall.adapter.HomeMallAdapter;
 import com.ych.mall.adapter.HomeTravelAdapter;
-import com.ych.mall.bean.HomeMallBean;
+import com.ych.mall.bean.HomeTravelBean;
 import com.ych.mall.event.MainEvent;
 import com.ych.mall.event.MallAndTravelEvent;
 import com.ych.mall.model.Http;
@@ -42,29 +42,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.yokeyword.fragmentation.SupportFragment;
-import okhttp3.Call;
 
 /**
  * Created by ych on 2016/8/31.
  */
 @EFragment(R.layout.fragment_home_travel)
-public class HomeTravelFragment extends BaseFragment implements RecyclerViewModel.RModelListener<HomeMallBean.Class> {
+public class HomeTravelFragment extends BaseFragment implements RecyclerViewModel.RModelListener<HomeTravelBean.Clas> {
     @ViewById(R.id.refresh_layout)
     SwipeRefreshLayout rLayout;
     @ViewById(R.id.rv_list)
     RecyclerView list;
     @ViewById
     ClearEditText mSearch;
-    HomeMallBean.Class mData;
-    RecyclerViewModel<HomeMallBean.Class> model;
+    HomeTravelBean mData;
+    RecyclerViewModel<HomeTravelBean.Clas> model;
     RecyclerViewHeader header;
-    List<HomeMallBean.Banner> mBanner;
-    List<HomeMallBean.Center> mCenter;
-    List<HomeMallBean.Hot> mHot;
+    List<HomeTravelBean.Bannner> mBanner;
+    List<HomeTravelBean.Center> mCenter;
+    List<HomeTravelBean.Hot> mHot;
 
-    public static HomeMallFragment newInstance() {
+    public static HomeTravelFragment newInstance() {
         Bundle bundle = new Bundle();
-        HomeMallFragment fragment = new HomeMallFragment_();
+        HomeTravelFragment fragment = new HomeTravelFragment_();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -74,6 +73,12 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
     public void ininList() {
 
         header = RecyclerViewHeader.fromXml(getActivity(), R.layout.head_travel);
+        header.findViewById(R.id.toMall).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(new MallAndTravelEvent(MallAndTravelEvent.TYPE_CHANGE,0 ));
+            }
+        });
         model = new RecyclerViewModel<>(getActivity(),
                 this,
                 list,
@@ -103,7 +108,7 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
 
     @Override
     public void getData(StringCallback callback, int page) {
-        MallAndTravelModel.homeMall(callback, page);
+        MallAndTravelModel.homeTravel(callback, page);
     }
 
     @Override
@@ -113,12 +118,12 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
 
 
     @Override
-    public List<HomeMallBean.Class> getList(String str) {
+    public List<HomeTravelBean.Clas> getList(String str) {
 
-        HomeMallBean bean = Http.model(HomeMallBean.class, str);
+        HomeTravelBean bean = Http.model(HomeTravelBean.class, str);
         if (bean.getCode().equals("200")) {
             if (mBanner == null || mCenter == null || mHot == null) {
-                setBanner(bean.getData().getBanner());
+                setBanner(bean.getData().getBannner());
                 setCenter(bean.getData().getCenter());
                 setHot(bean.getData().getHot());
             }
@@ -128,8 +133,10 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
         return null;
     }
 
+
+
     @Override
-    public void covert(YViewHolder holder, HomeMallBean.Class t) {
+    public void covert(YViewHolder holder, HomeTravelBean.Clas t) {
         final String id = t.getClass_id();
         holder.loadImg(getActivity(), R.id.it_img, Http.CLASS_PIC_URL + t.getClass_url());
         holder.getCovertView().setOnClickListener(new View.OnClickListener() {
@@ -144,7 +151,7 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
     String[] bannerUrl;
     SlideShowView sv;
 
-    private void setBanner(List<HomeMallBean.Banner> banner) {
+    private void setBanner(List<HomeTravelBean.Bannner> banner) {
         mBanner = banner;
         sv = (SlideShowView) header.findViewById(R.id.banner);
         final TextView toTravel = (TextView) header.findViewById(R.id.toTravel);
@@ -152,8 +159,8 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
         bannerImg = new String[mBanner.size()];
         bannerUrl = new String[mBanner.size()];
         int i = 0;
-        for (HomeMallBean.Banner b : mBanner) {
-            bannerImg[i] = Http.AD_PIC_URL + b.getBanner_url();
+        for (HomeTravelBean.Bannner b : mBanner) {
+            bannerImg[i] = Http.AD_PIC_URL + b.getBannner_url();
             bannerUrl[i] = b.getAd_link();
             i++;
         }
@@ -168,11 +175,11 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
 
     }
 
-    private void setCenter(List<HomeMallBean.Center> center) {
+    private void setCenter(List<HomeTravelBean.Center> center) {
         mCenter = center;
         ImageView iv = (ImageView) header.findViewById(R.id.banner_mid);
         final String url = mCenter.get(0).getAd_link();
-        Glide.with(getActivity()).load(Http.AD_PIC_URL + center.get(0).getCenter_url()).into(iv);
+        Glide.with(getActivity()).load(Http.AD_PIC_URL + center.get(0).getFooter_url()).into(iv);
         iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,7 +189,7 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
 
     }
 
-    private void setHot(final List<HomeMallBean.Hot> hot) {
+    private void setHot(final List<HomeTravelBean.Hot> hot) {
         mHot = hot;
         List<ImageView> ivList = new ArrayList<>();
         ivList.add((ImageView) header.findViewById(R.id.banner_bottom_iv1));
@@ -191,8 +198,8 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
         ivList.add((ImageView) header.findViewById(R.id.banner_bottom_iv4));
         int i = 0;
         for (ImageView iv : ivList) {
-            final String url = hot.get(i).getAd_link();
-            loadPic(Http.AD_PIC_URL + hot.get(i).getHot_url(), iv);
+            final String url = hot.get(i).getSige_url();
+            loadPic(Http.AD_PIC_URL + hot.get(i).getSige_url(), iv);
             iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -33,6 +33,7 @@ dependencies {
     compile 'com.android.support:support-v4:23.3.0'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.google.code.gson:gson:2.4'
+    //compile 'cn.yipianfengye.android:zxing-library:1.9'
     compile project(':fragmentation_swipeback')
     compile project(':fragmentation')
     apt "org.androidannotations:androidannotations:$AAVersion"
@@ -41,6 +42,8 @@ dependencies {
     compile project(':citypickerview')
     compile project(':tag')
     compile files('libs/SocialSDK_QQZone_3.jar')
+    compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.0'
+
 }
 
 apt {

@@ -1,8 +1,12 @@
 package com.ych.mall.model;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
+import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
+import com.ych.mall.R;
 import com.ych.mall.bean.ParentBean;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -50,6 +54,7 @@ public class RecyclerViewNormalModel<T> {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
     }
+
 
     public void refresh() {
         mListener.getData(callback, -1);

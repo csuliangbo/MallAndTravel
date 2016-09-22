@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
 import com.ych.mall.R;
 import com.ych.mall.bean.ParentBean;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -56,7 +57,7 @@ public class RecyclerViewModel<T> implements SwipeRefreshLayout.OnRefreshListene
     /**
      * 最小数据量（小于显示没有更多数据）
      */
-    private int miniSize = 5;
+    private int miniSize = 4;
     /**
      * 新建RecyclerView
      */
@@ -131,7 +132,40 @@ public class RecyclerViewModel<T> implements SwipeRefreshLayout.OnRefreshListene
         });
         mListener.getData(callback, page);
     }
+    private int previousTotal = 0;
+    int firstVisibleItem, visibleItemCount, totalItemCount;
+    public void initWithHead(RecyclerViewHeader header){
+        mLayoutManager = new LinearLayoutManager(mContext);
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mSwipeRefreshLayout.setColorSchemeColors(R.color.colorPrimary, R.color.text_blue, R.color.text_red, R.color.text_orange);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                visibleItemCount = recyclerView.getChildCount();
+                totalItemCount = mLayoutManager.getItemCount();
+                firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
+
+                if (!isLoadOver) {
+                    if (totalItemCount > previousTotal) {
+
+                        previousTotal = totalItemCount;
+                    }
+                }
+                if (isLoadOver
+                        && (totalItemCount - visibleItemCount) <= firstVisibleItem) {
+                    CURRENT_STATE = STATE_LOAD;
+                    isLoadOver = false;
+                    mListener.getData(callback, page);
+                }
+            }
+        });
+        header.attachTo(mRecyclerView);
+        mListener.getData(callback, page);
+    }
     @Override
     public void onRefresh() {
         page = 0;
@@ -168,7 +202,7 @@ public class RecyclerViewModel<T> implements SwipeRefreshLayout.OnRefreshListene
 
         @Override
         public void onResponse(String response, int id) {
-            Log.i("list", CURRENT_STATE + "/" + response);
+
             switch (CURRENT_STATE) {
                 case STATE_LOAD:
                     mTempList.clear();
@@ -187,6 +221,7 @@ public class RecyclerViewModel<T> implements SwipeRefreshLayout.OnRefreshListene
                     }
                     dataList.addAll(mTempList);
                     mAdapter.notifyDataSetChanged();
+
                     page++;
                     break;
                 case STATE_NEW:

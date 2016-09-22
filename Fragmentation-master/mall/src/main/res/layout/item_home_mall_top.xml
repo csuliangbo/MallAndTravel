@@ -3,10 +3,16 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <!--顶部广告-->
-    <com.ych.mall.widget.SlideShowView
-        android:id="@+id/banner"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        android:layout_height="200dp">
+        <com.ych.mall.widget.SlideShowView
+            android:id="@+id/banner"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+    </FrameLayout>
+
     <!--切换-->
     <LinearLayout
         android:layout_width="match_parent"

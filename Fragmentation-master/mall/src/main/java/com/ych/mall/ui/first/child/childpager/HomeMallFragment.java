@@ -1,23 +1,36 @@
 package com.ych.mall.ui.first.child.childpager;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
+import com.bumptech.glide.Glide;
+import com.umeng.socialize.utils.Log;
 import com.ych.mall.R;
 import com.ych.mall.adapter.HomeMallAdapter;
 import com.ych.mall.adapter.HomeTravelAdapter;
+import com.ych.mall.bean.HomeMallBean;
 import com.ych.mall.event.MainEvent;
 import com.ych.mall.event.MallAndTravelEvent;
+import com.ych.mall.model.Http;
+import com.ych.mall.model.MallAndTravelModel;
+import com.ych.mall.model.RecyclerViewModel;
+import com.ych.mall.model.YViewHolder;
 import com.ych.mall.ui.LoginActivity_;
 import com.ych.mall.ui.base.BaseFragment;
+import com.ych.mall.ui.first.child.GoodsListFragment;
 import com.ych.mall.widget.ClearEditText;
 import com.ych.mall.widget.SlideShowView;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -25,19 +38,29 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.yokeyword.fragmentation.SupportFragment;
+import okhttp3.Call;
 
 /**
  * Created by ych on 2016/8/31.
  */
 @EFragment(R.layout.fragment_home_travel)
-public class HomeMallFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.RModelListener<HomeMallBean.Class> {
     @ViewById(R.id.refresh_layout)
     SwipeRefreshLayout rLayout;
     @ViewById(R.id.rv_list)
     RecyclerView list;
     @ViewById
     ClearEditText mSearch;
+    HomeMallBean.Class mData;
+    RecyclerViewModel<HomeMallBean.Class> model;
+    RecyclerViewHeader header;
+    List<HomeMallBean.Banner> mBanner;
+    List<HomeMallBean.Center> mCenter;
+    List<HomeMallBean.Hot> mHot;
 
     public static HomeMallFragment newInstance() {
         Bundle bundle = new Bundle();
@@ -46,58 +69,20 @@ public class HomeMallFragment extends BaseFragment implements SwipeRefreshLayout
         return fragment;
     }
 
-    String[] s1 = new String[]{
-            "http://www.zzumall.com/Public/Uploads/ad/2016-09-05/57cd1599cbf79.jpg",
-            "http://www.zzumall.com/Public/Uploads/ad/2016-09-05/57cccc06451da.jpg",
-            "http://www.zzumall.com/Public/Uploads/ad/2016-09-03/57ca6b940c3bb.jpg",
-            "http://www.zzumall.com/Public/Uploads/ad/2016-09-02/57c8dcafc95db.jpg",
-            "http://www.zzumall.com/Public/Uploads/ad/2016-09-02/57c8dc6555b73.jpg",
-            "http://www.zzumall.com/Public/Uploads/ad/2016-09-03/57ca9217d80aa.jpg",
-            "http://www.zzumall.com/Public/Uploads/ad/2016-09-01/57c7e83b6b5d2.jpg"
-    };
-    String[] s2 = new String[]{"", "",
-            "http://www.zzumall.com/Public/Uploads/class/2016-09-03/57ca6f411bed8.jpg",
-            "http://www.zzumall.com/Public/Uploads/class/2016-08-22/57baa1949ea42.jpg",
-            "http://www.zzumall.com/Public/Uploads/class/2016-09-03/57ca8ecda3a62.jpg",
-            "http://www.zzumall.com/Public/Uploads/class/2016-09-05/57ccd95265da9.jpg",
-            "http://www.zzumall.com/Public/Uploads/class/2016-09-03/57ca46117bbc0.jpg",
-            "http://www.zzumall.com/Public/Uploads/class/2016-08-24/57bd0ee6565ec.jpg"};
-    LinearLayoutManager layoutManager;
 
     @AfterViews
     public void ininList() {
-        layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        list.setLayoutManager(layoutManager);
-        list.setAdapter(new HomeMallAdapter(getActivity(), s2, s1));
-        rLayout.setColorSchemeColors(R.color.colorPrimary, R.color.text_blue, R.color.text_red, R.color.text_orange);
-        rLayout.setOnRefreshListener(this);
-        list.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int lastVisibleItem = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
-                int totalItemCount = layoutManager.getItemCount();
-                //lastVisibleItem >= totalItemCount - 4 表示剩下4个item自动加载，l各位自由选择
-                // dy>0 表示向下滑动
-                if (lastVisibleItem >= totalItemCount - 1 && dy > 0) {
-//                    if(isLoadingMore){
-//                        Log.d(TAG,"ignore manually update!");
-//                    } else{
-//                        loadPage();//这里多线程也要手动控制isLoadingMore
-//                        isLoadingMore = false;
-//                    }
 
-                }
-            }
-        });
+        header = RecyclerViewHeader.fromXml(getActivity(), R.layout.head_mall);
+        model = new RecyclerViewModel<>(getActivity(),
+                this,
+                list,
+                rLayout,
+                R.layout.item_home_travel_goods);
+
+        model.initWithHead(header);
     }
 
-
-    @Override
-    public void onRefresh() {
-
-    }
 
     @Click
     void onLogin() {
@@ -113,5 +98,112 @@ public class HomeMallFragment extends BaseFragment implements SwipeRefreshLayout
     void onSearch() {
         hideSoftKeyBord();
         ((SupportFragment) getParentFragment()).start(SearchFragment.newInstance(mSearch.getText().toString(), GoodsFragment.TYPE_GOODS));
+    }
+
+
+    @Override
+    public void getData(StringCallback callback, int page) {
+        MallAndTravelModel.homeMall(callback, page);
+    }
+
+    @Override
+    public void onErr(int state) {
+        TOT("网络连接失败");
+    }
+
+
+    @Override
+    public List<HomeMallBean.Class> getList(String str) {
+
+        HomeMallBean bean = Http.model(HomeMallBean.class, str);
+        if (bean.getCode().equals("200")) {
+            if (mBanner == null || mCenter == null || mHot == null) {
+                setBanner(bean.getData().getBanner());
+                setCenter(bean.getData().getCenter());
+                setHot(bean.getData().getHot());
+            }
+            return bean.getData().getClas();
+
+        }
+        return null;
+    }
+
+    @Override
+    public void covert(YViewHolder holder, HomeMallBean.Class t) {
+        final String id = t.getClass_id();
+        holder.loadImg(getActivity(), R.id.it_img, Http.CLASS_PIC_URL + t.getClass_url());
+        holder.getCovertView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((SupportFragment) getParentFragment()).start(GoodsListFragment.newInstance(id));
+            }
+        });
+    }
+
+    String[] bannerImg;
+    String[] bannerUrl;
+    SlideShowView sv;
+
+    private void setBanner(List<HomeMallBean.Banner> banner) {
+        mBanner = banner;
+        sv = (SlideShowView) header.findViewById(R.id.banner);
+        final TextView toTravel = (TextView) header.findViewById(R.id.toTravel);
+        ImageView bannerMid = (ImageView) header.findViewById(R.id.banner_mid);
+        bannerImg = new String[mBanner.size()];
+        bannerUrl = new String[mBanner.size()];
+        int i = 0;
+        for (HomeMallBean.Banner b : mBanner) {
+            bannerImg[i] = Http.AD_PIC_URL + b.getBanner_url();
+            bannerUrl[i] = b.getAd_link();
+            i++;
+        }
+        sv.setData(bannerImg);
+
+         sv.setListener(new SlideShowView.OnVClick() {
+             @Override
+             public void Click(int position) {
+                onWeb(bannerUrl[position]);
+             }
+         });
+
+    }
+
+    private void setCenter(List<HomeMallBean.Center> center) {
+        mCenter = center;
+        ImageView iv = (ImageView) header.findViewById(R.id.banner_mid);
+        final String url = mCenter.get(0).getAd_link();
+        Glide.with(getActivity()).load(Http.AD_PIC_URL + center.get(0).getCenter_url()).into(iv);
+        iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onWeb(url);
+            }
+        });
+
+    }
+
+    private void setHot(final List<HomeMallBean.Hot> hot) {
+        mHot = hot;
+        List<ImageView> ivList = new ArrayList<>();
+        ivList.add((ImageView) header.findViewById(R.id.banner_bottom_iv1));
+        ivList.add((ImageView) header.findViewById(R.id.banner_bottom_iv2));
+        ivList.add((ImageView) header.findViewById(R.id.banner_bottom_iv3));
+        ivList.add((ImageView) header.findViewById(R.id.banner_bottom_iv4));
+        int i = 0;
+        for (ImageView iv : ivList) {
+            final String url = hot.get(i).getAd_link();
+            loadPic(Http.AD_PIC_URL + hot.get(i).getHot_url(), iv);
+            iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onWeb(url);
+                }
+            });
+                i++;
+        }
+    }
+
+
+    private void onWeb(String url) {
     }
 }

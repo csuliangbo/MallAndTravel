@@ -94,8 +94,8 @@ public class MallAndTravelModel {
     public static void shopCarList(StringCallback callback, int page) {
         HashMap<String, String> map = new HashMap<>();
         map.put("user_id", UserCenter.getInstance().getCurrentUserId());
-       
-        HttpModel.newInstance(SHOPCAR_URL+"&page="+(page+1)).post(map, callback);
+
+        HttpModel.newInstance(SHOPCAR_URL + "&page=" + (page + 1)).post(map, callback);
     }
 
     static String SHOPCAR_DEL = urlGoods + "del_goods_cart";
@@ -143,8 +143,7 @@ public class MallAndTravelModel {
     public static void goodsSearch(StringCallback callback, String title, int page) {
         HashMap<String, String> map = new HashMap<>();
         map.put("title", title);
-        map.put("Page", (page + 1) + "");
-        HttpModel.newInstance(GOODS_SEARCH).post(map, callback);
+        HttpModel.newInstance(GOODS_SEARCH+"&page="+(page+1)).post(map, callback);
 
     }
 
@@ -163,7 +162,6 @@ public class MallAndTravelModel {
         map.put("price_new", price);
         HttpModel.newInstance(ADD_SHOPCAR).post(map, callback);
     }
- 
 
 
     static String TRAVEL_DETAIL = urlTravel + "tour_synopsis";
@@ -174,6 +172,16 @@ public class MallAndTravelModel {
         map.put("id", id);
         map.put("user_id", UserCenter.getInstance().getCurrentUserId());
         HttpModel.newInstance(TRAVEL_DETAIL).post(map, callback);
+    }
+
+
+    static String HOME_MALL_URL = home + "index";
+
+    //商城主页
+    public static void homeMall(StringCallback callback, int page) {
+        HashMap<String, String> map = new HashMap<>();
+
+        HttpModel.newInstance(HOME_MALL_URL + "&page=" + (page + 1) + "&pagesize=10").post(map, callback);
     }
 }
 

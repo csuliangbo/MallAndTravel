@@ -1,1 +1,1 @@
-include ':demo', ':fragmentation', ':fragmentation_swipeback', ':fragmenttest', ':mall', ':citypickerview', ':tag'
+include ':demo', ':fragmentation', ':fragmentation_swipeback', ':fragmenttest', ':mall', ':citypickerview', ':tag', ':lib-zxing'

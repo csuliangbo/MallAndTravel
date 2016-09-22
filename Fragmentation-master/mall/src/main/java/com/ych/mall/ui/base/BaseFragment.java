@@ -5,8 +5,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import me.yokeyword.fragmentation.SupportFragment;
 
@@ -49,5 +52,9 @@ public class BaseFragment extends SupportFragment {
             InputMethodManager inputmanger = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputmanger.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    public void loadPic(String url,ImageView iv){
+        Glide.with(this).load(url).into(iv);
     }
 }

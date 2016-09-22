@@ -17,5 +17,6 @@
     <color name="Linear">#EAEAEA</color>
     <color name="bg_orange">#FF9502</color>
     <color name="bg_red">#FF5000</color>
+    <color name="green">#00B012</color>
     <color name="transparent_black">#77000000</color>
 </resources>

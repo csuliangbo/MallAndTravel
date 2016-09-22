@@ -245,6 +245,12 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 break;
             case 3:
                 typeText = "已签收";
+                break;
+            case 4:
+                typeText = "已申请退货";
+                break;
+            case 5:
+                typeText = "已完成";
                 btnLeft.setVisibility(View.VISIBLE);
                 btnLeft.setText(complete);
                 btnLeft.setOnClickListener(new View.OnClickListener() {
@@ -267,12 +273,6 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                         dialog.show();
                     }
                 });
-                break;
-            case 4:
-                typeText = "已申请退货";
-                break;
-            case 5:
-                typeText = "已完成";
                 break;
         }
         String date = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").

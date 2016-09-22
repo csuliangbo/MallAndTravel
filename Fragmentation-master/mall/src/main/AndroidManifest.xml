@@ -22,6 +22,9 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
 
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
     <application
         android:name=".MyApp"
         android:allowBackup="true"
@@ -51,7 +54,9 @@
         <activity android:name=".ui.RegistActivity_"></activity>
         <activity android:name=".ui.ForgetPwdActivity_"></activity>
         <activity android:name=".ui.SplashActivity_"></activity>
-
+        <activity android:name=".ui.fourth.WebViewActivity_"></activity>
+        <!-- 二维码 -->
+        <activity android:name=".zxingcode.activity.CaptureActivity"></activity>
         <!-- umeng分享 -->
         <activity
             android:name="com.umeng.socialize.editorpage.ShareActivity"

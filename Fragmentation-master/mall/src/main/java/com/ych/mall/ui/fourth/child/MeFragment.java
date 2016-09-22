@@ -74,6 +74,11 @@ public class MeFragment extends BaseFragment {
     }
 
     @Click
+    void onShare() {
+        start(ShareFragment.newInstance());
+    }
+
+    @Click
     void onWait() {
         goOrder(OrderFragment.TYPE_WAIT);
     }
@@ -139,7 +144,7 @@ public class MeFragment extends BaseFragment {
             start(AccountFragment.newInstance());
         }
         if (position == iImg[2]) {
-            //分享
+            start(VipGradeFragment.newInstance());
 
         }
         if (position == iImg[3]) {

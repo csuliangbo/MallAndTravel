@@ -66,6 +66,6 @@ public class HomeTravelFragment extends BaseFragment {
     @Click
     void onSearch() {
         hideSoftKeyBord();
-        ((SupportFragment) getParentFragment()).start(SearchFragment.newInstance(mSearch.getText().toString(), GoodsFragment.TYPE_TRAVEL));
+        ((SupportFragment) getParentFragment()).start(SearchTravelFragment.newInstance(mSearch.getText().toString(), GoodsFragment.TYPE_TRAVEL));
     }
 }

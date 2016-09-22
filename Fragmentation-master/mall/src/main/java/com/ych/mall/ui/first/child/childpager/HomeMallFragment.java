@@ -74,6 +74,12 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
     public void ininList() {
 
         header = RecyclerViewHeader.fromXml(getActivity(), R.layout.head_mall);
+        header.findViewById(R.id.toTravel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(new MallAndTravelEvent(MallAndTravelEvent.TYPE_CHANGE,1));
+            }
+        });
         model = new RecyclerViewModel<>(getActivity(),
                 this,
                 list,

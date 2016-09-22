@@ -23,7 +23,7 @@ public class FirstPagerFragmentAdapter extends FragmentPagerAdapter {
         if (position == 0) {
             return HomeMallFragment.newInstance();
         } else {
-            return HomeTravelFragment.newInStance();
+            return HomeTravelFragment.newInstance();
         }
     }
 

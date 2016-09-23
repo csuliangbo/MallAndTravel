@@ -25,8 +25,9 @@ public class UserCenter {
     public String getCurrentUserId() {
         return SharedPreferencesUtil.getString(USER_ID);
     }
-    public void setCurrentUserId(String id){
-        SharedPreferencesUtil.putString(USER_ID,id);
+
+    public void setCurrentUserId(String id) {
+        SharedPreferencesUtil.putString(USER_ID, id);
     }
 
     public String getCurrentUserGrade() {

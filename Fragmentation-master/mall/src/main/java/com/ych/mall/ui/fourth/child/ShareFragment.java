@@ -73,7 +73,6 @@ public class ShareFragment extends BaseFragment {
         ivCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startScan();
             }
         });
     }
@@ -131,15 +130,4 @@ public class ShareFragment extends BaseFragment {
         return null;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE) {
-            String url = data.getStringExtra("result");
-
-            if (!TextUtils.isEmpty(url)) {
-                startActivity(new Intent(getActivity(), WebViewActivity_.class).putExtra(KV.URL, url));
-            }
-        }
-    }
 }

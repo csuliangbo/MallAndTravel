@@ -51,6 +51,10 @@ public class LogisticsFragment extends BaseFragment {
     void init() {
         tiTitle.setText("查看物流");
         orderNum = getArguments().getString(KV.ORDER_NUM);
+        if (kuaidiCallback == null || orderNum == null) {
+            TOT("没有订单号");
+            return;
+        }
         UserInfoModel.kuaidi(kuaidiCallback, orderNum);
     }
 

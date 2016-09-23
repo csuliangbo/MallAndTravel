@@ -92,7 +92,12 @@ public class GoodsFragment extends BaseFragment {
     String travelUrl = "http://www.zzumall.com/index.php/Mobile/Tourism/tourism_detail_m.html?id=";
     String protocolUrl = "http://www.zzumall.com/index.php/Mobile/Tourism/lvyou_xieyi";
 
-    //风向
+    @Click
+    void onBuy() {
+        startActivity(new Intent(getActivity(), PayActivity_.class));
+    }
+
+    //分享
     @Click
     void ivShare() {
         umShare();
@@ -183,7 +188,7 @@ public class GoodsFragment extends BaseFragment {
             return;
 
         sT(mTitle, t.getTitle());
-        sT(mPriceNew, "￥"+t.getPrice_new());
+        sT(mPriceNew, "￥" + t.getPrice_new());
         sT(mPriceOld, t.getPrice_old());
         points.setText("送积分（" + t.getFanli_jifen() + "积分）");
         stock.setText("库存：" + t.getKucun() + "件");
@@ -238,8 +243,8 @@ public class GoodsFragment extends BaseFragment {
             showView.setData(banner);
         }
         tDatas = t.getChufa_taocan();
-        sT(city,"出发城市："+t.getChufa_address());
-       time.setVisibility(View.GONE);
+        sT(city, "出发城市：" + t.getChufa_address());
+        time.setVisibility(View.GONE);
         if (tDatas == null || tDatas.size() < 1)
             return;
         packagell.setVisibility(View.VISIBLE);
@@ -254,8 +259,8 @@ public class GoodsFragment extends BaseFragment {
             @Override
             public void itemClick(int position) {
                 groupTitle = tDatas.get(position).getChufa_date();
-                sT(mPriceNew,"￥"+tDatas.get(position).getChufa_price());
-                mPrice= tDatas.get(position).getChufa_price();
+                sT(mPriceNew, "￥" + tDatas.get(position).getChufa_price());
+                mPrice = tDatas.get(position).getChufa_price();
             }
         });
     }

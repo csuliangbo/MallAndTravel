@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,12 +29,14 @@ import com.ych.mall.model.YViewHolder;
 import com.ych.mall.ui.LoginActivity_;
 import com.ych.mall.ui.base.BaseFragment;
 import com.ych.mall.ui.first.child.GoodsListFragment;
+
 import com.ych.mall.ui.first.child.GoodsViewPagerFragment;
-import com.ych.mall.ui.fourth.WebViewActivity;
+
 import com.ych.mall.ui.fourth.WebViewActivity_;
 import com.ych.mall.utils.KV;
 import com.ych.mall.widget.ClearEditText;
 import com.ych.mall.widget.SlideShowView;
+import com.ych.mall.zxingcode.activity.CaptureActivity;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.androidannotations.annotations.AfterViews;
@@ -59,6 +62,9 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
     RecyclerView list;
     @ViewById
     ClearEditText mSearch;
+
+    public static int REQUEST_CODE = 123;
+
     HomeMallBean.Class mData;
     RecyclerViewModel<HomeMallBean.Class> model;
     RecyclerViewHeader header;
@@ -100,8 +106,17 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
     }
 
     @Click
-    void onClass() {
-        EventBus.getDefault().post(new MainEvent());
+    void onScanner() {
+        startScan();
+    }
+
+    /**
+     * 点击扫一扫按钮，开启扫描二维码
+     */
+    public void startScan() {
+        //跳转到扫一扫
+        Intent intent = new Intent(getActivity(), CaptureActivity.class);
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
     @Click
@@ -172,9 +187,11 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
         sv.setListener(new SlideShowView.OnVClick() {
             @Override
             public void Click(int position) {
+
                 String url=bannerUrl[position];
                 String id = url.split("=")[1];
                 ((SupportFragment) getParentFragment()).start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_GOODS, id));
+
             }
         });
 
@@ -216,6 +233,18 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+
+            String url = data.getStringExtra("result");
+
+            if (!TextUtils.isEmpty(url)) {
+                startActivity(new Intent(getActivity(), WebViewActivity_.class).putExtra(KV.URL, url));
+            }
+        }
+    }
 
     private void onWeb(String url) {
         startActivity(new Intent(getActivity(), WebViewActivity_.class).putExtra(KV.URL, url));

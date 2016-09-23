@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,21 +28,19 @@ import com.ych.mall.model.RecyclerViewModel;
 import com.ych.mall.model.YViewHolder;
 import com.ych.mall.ui.LoginActivity_;
 import com.ych.mall.ui.base.BaseFragment;
-import com.ych.mall.ui.first.child.GoodsListFragment;
 import com.ych.mall.ui.first.child.GoodsViewPagerFragment;
 import com.ych.mall.ui.first.child.TravelListFragment;
 import com.ych.mall.ui.fourth.WebViewActivity_;
 import com.ych.mall.utils.KV;
 import com.ych.mall.widget.ClearEditText;
 import com.ych.mall.widget.SlideShowView;
+import com.ych.mall.zxingcode.activity.CaptureActivity;
 import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +64,8 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
     List<HomeTravelBean.Center> mCenter;
     List<HomeTravelBean.Hot> mHot;
 
+    public static int REQUEST_CODE = 123;
+
     public static HomeTravelFragment newInstance() {
         Bundle bundle = new Bundle();
         HomeTravelFragment fragment = new HomeTravelFragment_();
@@ -80,7 +81,7 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
         header.findViewById(R.id.toMall).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new MallAndTravelEvent(MallAndTravelEvent.TYPE_CHANGE,0 ));
+                EventBus.getDefault().post(new MallAndTravelEvent(MallAndTravelEvent.TYPE_CHANGE, 0));
             }
         });
         model = new RecyclerViewModel<>(getActivity(),
@@ -99,14 +100,25 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
     }
 
     @Click
-    void onClass() {
-        EventBus.getDefault().post(new MainEvent());
+    void onScanner() {
+        startScan();
+    }
+
+    /**
+     * 点击扫一扫按钮，开启扫描二维码
+     */
+    public void startScan() {
+        //跳转到扫一扫
+        Intent intent = new Intent(getActivity(), CaptureActivity.class);
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
     @Click
     void onSearch() {
         hideSoftKeyBord();
-        ((SupportFragment) getParentFragment()).start(SearchFragment.newInstance(mSearch.getText().toString(), GoodsFragment.TYPE_GOODS));
+
+        ((SupportFragment) getParentFragment()).start(SearchTravelFragment.newInstance(mSearch.getText().toString(), GoodsFragment.TYPE_TRAVEL));
+
     }
 
 
@@ -136,7 +148,6 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
         }
         return null;
     }
-
 
 
     @Override
@@ -218,8 +229,21 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            String url = data.getStringExtra("result");
+
+            if (!TextUtils.isEmpty(url)) {
+                startActivity(new Intent(getActivity(), WebViewActivity_.class).putExtra(KV.URL, url));
+            }
+        }
+    }
 
     private void onWeb(String url) {
+
         startActivity(new Intent(getActivity(), WebViewActivity_.class).putExtra(KV.URL, url));
+
     }
 }

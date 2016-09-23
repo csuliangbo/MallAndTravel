@@ -28,20 +28,19 @@ import com.ych.mall.model.RecyclerViewModel;
 import com.ych.mall.model.YViewHolder;
 import com.ych.mall.ui.LoginActivity_;
 import com.ych.mall.ui.base.BaseFragment;
-import com.ych.mall.ui.first.child.GoodsListFragment;
+import com.ych.mall.ui.first.child.GoodsViewPagerFragment;
+import com.ych.mall.ui.first.child.TravelListFragment;
 import com.ych.mall.ui.fourth.WebViewActivity_;
 import com.ych.mall.utils.KV;
 import com.ych.mall.widget.ClearEditText;
 import com.ych.mall.widget.SlideShowView;
 import com.ych.mall.zxingcode.activity.CaptureActivity;
 import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,7 +157,7 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
         holder.getCovertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((SupportFragment) getParentFragment()).start(GoodsListFragment.newInstance(id));
+                ((SupportFragment) getParentFragment()).start(TravelListFragment.newInstance(id));
             }
         });
     }
@@ -185,7 +184,9 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
         sv.setListener(new SlideShowView.OnVClick() {
             @Override
             public void Click(int position) {
-                onWeb(bannerUrl[position]);
+                String url=bannerUrl[position];
+                String id = url.split("=")[1];
+                ((SupportFragment) getParentFragment()).start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_TRAVEL, id));
             }
         });
 
@@ -214,12 +215,14 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
         ivList.add((ImageView) header.findViewById(R.id.banner_bottom_iv4));
         int i = 0;
         for (ImageView iv : ivList) {
-            final String url = hot.get(i).getSige_url();
+            final String id = hot.get(i).getId();
             loadPic(Http.AD_PIC_URL + hot.get(i).getSige_url(), iv);
             iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onWeb(url);
+
+                    ((SupportFragment) getParentFragment()).start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_TRAVEL, id));
+
                 }
             });
             i++;
@@ -239,6 +242,8 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
     }
 
     private void onWeb(String url) {
+
+        startActivity(new Intent(getActivity(), WebViewActivity_.class).putExtra(KV.URL, url));
 
     }
 }

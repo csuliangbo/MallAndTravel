@@ -27,8 +27,9 @@ public class BaseActivity extends Activity {
         Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
     }
 
-    public void sT(TextView tv,String str){
-        tv.setText(str);
+    public void sT(TextView tv, String str) {
+        if (str!=null)
+            tv.setText(str);
     }
 
     public void hideSoftKeyBord(){

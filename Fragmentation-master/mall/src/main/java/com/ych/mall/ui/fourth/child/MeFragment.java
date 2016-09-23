@@ -154,7 +154,7 @@ public class MeFragment extends BaseFragment {
             start(MyCollectFragment.newInstance());
         }
         if (position == iImg[5]) {
-
+            start(ShareFragment.newInstance());
         }
         if (position == iImg[6]) {
             start(MyFootFragment.newInstance());

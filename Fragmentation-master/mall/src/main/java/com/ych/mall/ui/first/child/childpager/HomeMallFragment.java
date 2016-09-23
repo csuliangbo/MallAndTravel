@@ -29,6 +29,9 @@ import com.ych.mall.model.YViewHolder;
 import com.ych.mall.ui.LoginActivity_;
 import com.ych.mall.ui.base.BaseFragment;
 import com.ych.mall.ui.first.child.GoodsListFragment;
+
+import com.ych.mall.ui.first.child.GoodsViewPagerFragment;
+
 import com.ych.mall.ui.fourth.WebViewActivity_;
 import com.ych.mall.utils.KV;
 import com.ych.mall.widget.ClearEditText;
@@ -119,7 +122,7 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
     @Click
     void onSearch() {
         hideSoftKeyBord();
-        ((SupportFragment) getParentFragment()).start(SearchFragment.newInstance(mSearch.getText().toString(), GoodsFragment.TYPE_GOODS));
+        ((SupportFragment) getParentFragment()).start(SearchFragment.newInstance(mSearch.getText().toString(), GoodsFragment.TYPE_TRAVEL));
     }
 
 
@@ -184,7 +187,11 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
         sv.setListener(new SlideShowView.OnVClick() {
             @Override
             public void Click(int position) {
-                onWeb(bannerUrl[position]);
+
+                String url=bannerUrl[position];
+                String id = url.split("=")[1];
+                ((SupportFragment) getParentFragment()).start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_GOODS, id));
+
             }
         });
 
@@ -218,7 +225,8 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
             iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onWeb(url);
+                    String id = url.split("=")[1];
+                    ((SupportFragment) getParentFragment()).start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_GOODS, id));
                 }
             });
             i++;
@@ -239,5 +247,6 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
     }
 
     private void onWeb(String url) {
+        startActivity(new Intent(getActivity(), WebViewActivity_.class).putExtra(KV.URL, url));
     }
 }

@@ -353,7 +353,6 @@ public class SlideShowView extends FrameLayout {
     }
 
     private void LoadImg(ImageView view, String url) {
-        Log.i("ych", "LoadImg: " + url);
         Glide.with(context).load(url).into(view);
     }
 

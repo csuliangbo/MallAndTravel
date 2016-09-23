@@ -29,7 +29,7 @@ public class LoginAndRegistModel {
 
     static String CODE_URL = URL + "get_sms";
 
-    //获取验证嘛
+    //获取验证码
     public static void code(String mobile) {
         HashMap<String, String> map = new HashMap<>();
         map.put("mobile", mobile);

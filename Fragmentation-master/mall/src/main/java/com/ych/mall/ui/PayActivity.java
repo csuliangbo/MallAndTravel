@@ -16,15 +16,20 @@ import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
 import com.ych.mall.R;
+import com.ych.mall.bean.CreateOrderBean;
 import com.ych.mall.bean.GoodsDetailBean;
+import com.ych.mall.bean.ParentBean;
 import com.ych.mall.bean.PayBean;
+import com.ych.mall.bean.PayRequestBean;
 import com.ych.mall.bean.SearchBean;
 import com.ych.mall.bean.SearchTravelBean;
 import com.ych.mall.bean.ShopCarBean;
+import com.ych.mall.bean.TravelRecverBean;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.MallAndTravelModel;
 import com.ych.mall.model.RecyclerViewModel;
 import com.ych.mall.model.RecyclerViewNormalModel;
+import com.ych.mall.model.UserInfoModel;
 import com.ych.mall.model.YViewHolder;
 import com.ych.mall.ui.base.BaseActivity;
 import com.ych.mall.bean.AuthResult;
@@ -42,6 +47,8 @@ import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.Call;
 
 /**
  * Created by ych on 2016/9/6.
@@ -68,13 +75,24 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     ClearEditText cetA;
     @ViewById(R.id.cet_B)
     ClearEditText cetB;
+    @ViewById(R.id.tv_pay_price)
+    TextView tvPayPrice;
 
     private String cart_id;
     private String goods_id;
     private boolean isPayNow = false;
-    private Double totalPrice = 0.0;
+    private Double totalPrice = 0.0D;
+    private Double payPrice = 0.0D;
     private Double fanli_jifen;
+    private String date;
     private boolean isTravel = false;
+    private String address;
+    private String number;
+    private String realName;
+    private String mobile;
+    private String goodTitle;
+    private String jifenA = "";
+    private String jifenB = "";
 
     @Click
     public void addressLayout() {
@@ -82,28 +100,33 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     }
 
     @Click
+    void onBack() {
+        finish();
+    }
+
+    @Click
     void onPay() {
-        payInerface("");
+        createOrder();
     }
 
     /**
      * 支付宝支付
      */
     private void payInerface(final String orderInfo) {
+
         Runnable payRunnable = new Runnable() {
 
             @Override
             public void run() {
                 PayTask alipay = new PayTask(PayActivity.this);
                 Map<String, String> result = alipay.payV2(orderInfo, true);
-                Log.i("msp", result.toString());
                 Message msg = new Message();
                 msg.what = SDK_PAY_FLAG;
                 msg.obj = result;
                 mHandler.sendMessage(msg);
             }
         };
-
+        // 必须异步调用
         Thread payThread = new Thread(payRunnable);
         payThread.start();
     }
@@ -157,6 +180,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         ;
     };
     RecyclerViewNormalModel<GoodsDetailBean.GoodsDetailData> rvm;
+    RecyclerViewNormalModel<TravelRecverBean.TravelRecverData> rvmTravel;
 
     @AfterViews
     void init() {
@@ -165,27 +189,31 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         goods_id = bundle.getString(KV.GOODS_ID);
         if (bundle.getInt("TYPE") == GoodsFragment.TYPE_TRAVEL) {
             isTravel = true;
+            date = bundle.getString("Date");
             llA.setVisibility(View.GONE);
         }
         if (!TextUtils.isEmpty(goods_id)) {
             isPayNow = true;
         }
         cart_id = getIntent().getExtras().getString(KV.CART_ID);
-        Log.e("KTY", " cart ID  " + cart_id + "  goods id  " + goods_id);
+        Log.e("KTY", " cart ID  " + cart_id + "  goods id  " + goods_id + "  data " + date);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
-        rvm = new RecyclerViewNormalModel<>(this, this, rlvPay, R.layout.item_goods_list);
-        rvm.init(layoutManager);
+        LinearLayoutManager layoutManager1 = new LinearLayoutManager(this);
+        layoutManager1.setOrientation(OrientationHelper.VERTICAL);
+        if (!isTravel) {
+            rvm = new RecyclerViewNormalModel<>(this, this, rlvPay, R.layout.item_goods_list);
+            rvm.init(layoutManager);
+        } else {
+            rvmTravel = new RecyclerViewNormalModel<>(this, new TravelRecver(), rlvPay, R.layout.item_goods_list);
+            rvmTravel.init(layoutManager1);
+        }
     }
 
     @Override
     public void getData(StringCallback callback, int page) {
         if (isPayNow) {
-            if (isTravel) {
-                MallAndTravelModel.travelReseve(callback, goods_id, "");
-            } else {
-                MallAndTravelModel.payNow(callback, goods_id);
-            }
+            MallAndTravelModel.payNow(callback, goods_id);
 
         } else {
             MallAndTravelModel.settelAccounts(callback, cart_id);
@@ -199,7 +227,6 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     @Override
     public List<PayBean.PayData> getList(String str) {
-        Log.e("KTY", str);
         PayBean bean = Http.model(PayBean.class, str);
         if (bean.getCode().equals("200")) {
             return bean.getData();
@@ -211,18 +238,129 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     public void covert(YViewHolder holder, PayBean.PayData t) {
         holder.setText(R.id.name, t.getTitle());
         holder.setText(R.id.price, "￥" + t.getPrice_new());
+        holder.setText(R.id.num, t.getFanli_jifen());
         totalPrice = totalPrice + Double.parseDouble(t.getPrice_new());
         tvTotalPrice.setText(totalPrice + "");
-        holder.setVisible(R.id.ll_fanli, View.GONE);
+        if (TextUtils.isEmpty(t.getFanli_jifen())) {
+            holder.setVisible(R.id.ll_fanli, View.GONE);
+        }
         holder.loadImg(PayActivity.this, R.id.pic, Http.GOODS_PIC_URL + t.getPic_url());
         tvA.setText("A账户：" + t.getAdd_jf_limit());
         tvB.setText("B账户：" + t.getAdd_jf_currency());
+        tvPayPrice.setText(totalPrice + "");
         fanli_jifen = Double.parseDouble(t.getFanli_jifen());
+        address = t.getAddress();
+        if (t.getGoods_num() == null) {
+            number = 1 + "";
+        } else {
+            number = t.getGoods_num();
+        }
+        cart_id = t.getCart_id();
+        realName = t.getRealname();
+        mobile = t.getMobile();
+        goodTitle = t.getTitle();
+
     }
 
-    void initPay() {
-        totalPrice = totalPrice - Double.parseDouble(cetA.getText().toString())
-                - Double.parseDouble(cetB.getText().toString());
+    void createOrder() {
+        payPrice = totalPrice;
+        if (!TextUtils.isEmpty(cetA.getText().toString())) {
+            totalPrice = totalPrice - Double.parseDouble(cetA.getText().toString());
+            jifenA = cetA.getText().toString() + "";
+        }
+        if (!TextUtils.isEmpty(cetB.getText().toString())) {
+            totalPrice = totalPrice - Double.parseDouble(cetB.getText().toString());
+            jifenB = cetB.getText().toString() + "";
+        }
+        tvPayPrice.setText(totalPrice + "");
+        // Log.e("KTY", " " + payPrice + " " + totalPrice + " " + address + " " + realName + " " + mobile + " " + number + " " + fanli_jifen + " " + cart_id);
+        if (isTravel) {
+            //Log.e("KTY", " " + payPrice + " " + totalPrice + " " + address + " " + realName + " " + mobile + " " + number + " " + fanli_jifen + " " + goods_id + " " + jifenA + " " + jifenB + " " + date);
+            MallAndTravelModel.createTourOrder(createCallback, payPrice + "", totalPrice + "", address, realName,
+                    mobile, number, fanli_jifen + "", goods_id, jifenA, jifenB, date);
+        } else {
+            MallAndTravelModel.createOrder(createCallback, payPrice + "", totalPrice + "", address, realName,
+                    mobile, number, fanli_jifen + "", cart_id);
+        }
 
+
+    }
+
+
+    //创建订单
+    private StringCallback createCallback = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            TOT("网络连接失败");
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            Log.e("KTY  order ", response);
+            CreateOrderBean bean = Http.model(CreateOrderBean.class, response);
+            if (bean.getCode().equals("200")) {
+                UserInfoModel.pay(payCallBack, bean.getData().get(0), totalPrice + "", goodTitle);
+            }
+        }
+    };
+    //支付
+    private StringCallback payCallBack = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            TOT("网络连接失败");
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            PayRequestBean bean = Http.model(PayRequestBean.class, response);
+            Log.e("KTY pay",response);
+            if (bean.getCode().equals("200")) {
+                payInerface(bean.getData());
+            }
+        }
+    };
+
+
+    class TravelRecver implements RecyclerViewModel.RModelListener<TravelRecverBean.TravelRecverData> {
+
+        @Override
+        public void getData(StringCallback callback, int page) {
+            MallAndTravelModel.travelReseve(callback, goods_id, date);
+        }
+
+        @Override
+        public void onErr(int state) {
+            TOT("网络连接失败");
+        }
+
+        @Override
+        public List<TravelRecverBean.TravelRecverData> getList(String str) {
+            TravelRecverBean bean = Http.model(TravelRecverBean.class, str);
+            if (bean.getCode().equals("200")) {
+                List<TravelRecverBean.TravelRecverData> datas = new ArrayList<TravelRecverBean.TravelRecverData>();
+                datas.add(bean.getData());
+                return datas;
+            }
+            return null;
+        }
+
+        @Override
+        public void covert(YViewHolder holder, TravelRecverBean.TravelRecverData t) {
+            holder.setText(R.id.name, t.getGoods().getTitle());
+            holder.setText(R.id.price, "￥" + t.getGoods().getPrice_new());
+            holder.setText(R.id.num, t.getGoods().getFanli_jifen());
+            totalPrice = totalPrice + Double.parseDouble(t.getGoods().getPrice_new());
+            tvTotalPrice.setText(totalPrice + "");
+            holder.loadImg(PayActivity.this, R.id.pic, Http.GOODS_PIC_URL + t.getGoods().getPic_url());
+            tvA.setText("A账户：" + t.getJifen().getAdd_jf_limit());
+            tvB.setText("B账户：" + t.getJifen().getAdd_jf_currency());
+            tvPayPrice.setText(totalPrice + "");
+            number = 1 + "";
+            fanli_jifen = Double.parseDouble(t.getGoods().getFanli_jifen());
+            address = t.getAddress().getAddress();
+            realName = t.getAddress().getRealname();
+            mobile = t.getAddress().getMobile();
+            goodTitle = t.getGoods().getTitle();
+        }
     }
 }

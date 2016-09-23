@@ -159,6 +159,7 @@ public class GoodsFragment extends BaseFragment {
         Bundle bundle = new Bundle();
         bundle.putString(KV.GOODS_ID, mId);
         bundle.putInt("TYPE", TYPE_TRAVEL);
+        bundle.putString("Date", groupTitle);
         startActivity(new Intent(getActivity(), PayActivity_.class).putExtras(bundle));
 
     }

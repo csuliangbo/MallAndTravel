@@ -95,7 +95,7 @@ public class SearchTravelFragment extends BaseFragment implements RecyclerViewMo
 
     @Override
     public void getData(StringCallback callback, int page) {
-        MallAndTravelModel.goodsSearch(callback, title, page);
+        MallAndTravelModel.travelSearch(callback, title, page);
     }
 
     @Override

@@ -217,10 +217,12 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 btnLeft.setVisibility(View.VISIBLE);
                 btnMiddle.setVisibility(View.VISIBLE);
                 btnRight.setVisibility(View.VISIBLE);
+                btnLeft.setBackgroundResource(R.drawable.shape_green_dark_5dp);
                 btnMiddle.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
                 btnRight.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
                 btnMiddle.setTextColor(getResources().getColor(R.color.gray2));
                 btnRight.setTextColor(getResources().getColor(R.color.gray2));
+                btnLeft.setTextColor(getResources().getColor(R.color.white));
                 btnLeft.setText(getShop);
                 btnMiddle.setText(refund);
                 btnRight.setText(logistics);
@@ -239,6 +241,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 btnRight.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Log.e("KTY  @@", id);
                         start(LogisticsFragment.newInstance(id));
                     }
                 });
@@ -275,14 +278,17 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 });
                 break;
         }
-        String date = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").
-                format(new java.util.Date(Long.parseLong(t.getCreate_time()) * 1000));
+        if (t.getCreate_time() != null) {
+            String date = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").
+                    format(new java.util.Date(Long.parseLong(t.getCreate_time()) * 1000));
+            holder.setText(R.id.time, "下单时间:" + date);
+        }
         holder.setText(R.id.status, typeText);
         holder.loadImg(getActivity(), R.id.pic, Http.GOODS_PIC_URL + t.getPic_url());
         holder.setText(R.id.price, "￥" + t.getPrice_new());
         holder.setText(R.id.num, "x" + t.getGoods_num());
         holder.setText(R.id.priceAll, t.getPrice_sum());
-        holder.setText(R.id.time, "下单时间:" + date);
+
         holder.setText(R.id.name, t.getGoods_title());
     }
 

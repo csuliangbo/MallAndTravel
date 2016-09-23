@@ -226,6 +226,7 @@
             android:textColor="@color/white" />
 
         <TextView
+            android:id="@+id/onBuy"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"

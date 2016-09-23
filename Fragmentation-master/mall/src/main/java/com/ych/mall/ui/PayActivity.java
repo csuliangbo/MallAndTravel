@@ -4,27 +4,53 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.alipay.sdk.app.PayTask;
 import com.ych.mall.R;
+import com.ych.mall.bean.GoodsDetailBean;
+import com.ych.mall.bean.PayBean;
+import com.ych.mall.bean.SearchBean;
+import com.ych.mall.bean.SearchTravelBean;
+import com.ych.mall.bean.ShopCarBean;
+import com.ych.mall.model.Http;
+import com.ych.mall.model.MallAndTravelModel;
+import com.ych.mall.model.RecyclerViewModel;
+import com.ych.mall.model.RecyclerViewNormalModel;
+import com.ych.mall.model.YViewHolder;
 import com.ych.mall.ui.base.BaseActivity;
 import com.ych.mall.bean.AuthResult;
 import com.ych.mall.bean.PayResult;
+import com.ych.mall.utils.KV;
+import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by ych on 2016/9/6.
  */
 @EActivity(R.layout.activity_pay)
-public class PayActivity extends BaseActivity {
+public class PayActivity extends BaseActivity implements RecyclerViewModel.RModelListener<PayBean.PayData> {
     public static final int SDK_PAY_FLAG = 1;
     public static final int SDK_AUTH_FLAG = 2;
+
+
+    @ViewById(R.id.rlv_pay)
+    RecyclerView rlvPay;
+
+    private String cart_id;
 
     @Click
     public void addressLayout() {
@@ -106,4 +132,42 @@ public class PayActivity extends BaseActivity {
 
         ;
     };
+    RecyclerViewNormalModel<GoodsDetailBean.GoodsDetailData> rvm;
+
+    @AfterViews
+    void init() {
+        cart_id= getIntent().getExtras().getString(KV.CART_ID);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(OrientationHelper.VERTICAL);
+        rvm = new RecyclerViewNormalModel<>(this, this, rlvPay, R.layout.item_goods_list);
+        rvm.init(layoutManager);
+    }
+
+    @Override
+    public void getData(StringCallback callback, int page) {
+        MallAndTravelModel.settelAccounts(callback, cart_id);
+    }
+
+    @Override
+    public void onErr(int state) {
+        TOT("网络连接失败");
+    }
+
+    @Override
+    public List<PayBean.PayData> getList(String str) {
+        PayBean bean = Http.model(PayBean.class, str);
+        if (bean.getCode().equals("200")) {
+            return bean.getData();
+        }
+        return null;
+    }
+
+    @Override
+    public void covert(YViewHolder holder, PayBean.PayData t) {
+        holder.setText(R.id.name, t.getTitle());
+        holder.setText(R.id.price, "￥" + t.getPrice_new());
+        holder.setVisible(R.id.ll_fanli, View.GONE);
+        holder.loadImg(PayActivity.this, R.id.pic, Http.GOODS_PIC_URL + t.getPic_url());
+    }
+
 }

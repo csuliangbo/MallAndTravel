@@ -127,6 +127,16 @@ public class MallAndTravelModel {
         HttpModel.newInstance(CLEAR_SHOPCAR).post(map, callback);
     }
 
+    static String SETTEL_ACCOUNTS = urlGoods + "to_settle_accounts";
+
+    //结算
+    public static void settelAccounts(StringCallback callback, String cartId) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("user_id", UserCenter.getInstance().getCurrentUserId());
+        map.put("cart_id", cartId);
+        HttpModel.newInstance(SETTEL_ACCOUNTS).post(map, callback);
+    }
+
     static String GOODS_DETAIL = urlGoods + "goods_details";
 
     //商品详情
@@ -143,7 +153,17 @@ public class MallAndTravelModel {
     public static void goodsSearch(StringCallback callback, String title, int page) {
         HashMap<String, String> map = new HashMap<>();
         map.put("title", title);
-        HttpModel.newInstance(GOODS_SEARCH+"&page="+(page+1)).post(map, callback);
+        HttpModel.newInstance(GOODS_SEARCH + "&page=" + (page + 1)).post(map, callback);
+
+    }
+
+    static String TRAVEL_SEARCH = home + "lvyou_search";
+
+    //商品搜索
+    public static void travelSearch(StringCallback callback, String title, int page) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("title", title);
+        HttpModel.newInstance(TRAVEL_SEARCH + "&page=" + (page + 1)).post(map, callback);
 
     }
 
@@ -184,9 +204,9 @@ public class MallAndTravelModel {
         HttpModel.newInstance(HOME_MALL_URL + "&page=" + (page + 1) + "&pagesize=10").post(map, callback);
     }
 
-    static String HOME_TRAVEL_URL=home+"tourism_index";
+    static String HOME_TRAVEL_URL = home + "tourism_index";
 
-    public static void homeTravel(StringCallback callback,int page){
+    public static void homeTravel(StringCallback callback, int page) {
         HashMap<String, String> map = new HashMap<>();
 
         HttpModel.newInstance(HOME_TRAVEL_URL + "&page=" + (page + 1) + "&pagesize=10").post(map, callback);

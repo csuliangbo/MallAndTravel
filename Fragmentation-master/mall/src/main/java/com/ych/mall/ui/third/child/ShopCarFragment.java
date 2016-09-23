@@ -1,5 +1,6 @@
 package com.ych.mall.ui.third.child;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +20,10 @@ import com.ych.mall.model.MallAndTravelModel;
 import com.ych.mall.model.RecyclerViewModel;
 import com.ych.mall.model.RecyclerViewNormalModel;
 import com.ych.mall.model.YViewHolder;
+import com.ych.mall.ui.PayActivity;
+import com.ych.mall.ui.PayActivity_;
 import com.ych.mall.ui.base.BaseFragment;
+import com.ych.mall.utils.KV;
 import com.ych.mall.utils.Tools;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -59,7 +63,14 @@ public class ShopCarFragment extends BaseFragment implements RecyclerViewModel.R
 
     @Click
     void onSubmit() {
+        if (getCartId().equals("")) {
+            TOT("请选中需要结算的商品");
+            return;
+        }
 
+        Intent intent = new Intent(getActivity(), PayActivity_.class);
+        intent.putExtra(KV.CART_ID, getCartId());
+        startActivity(intent);
     }
 
     RecyclerViewModel<ShopCarData> model;
@@ -68,10 +79,12 @@ public class ShopCarFragment extends BaseFragment implements RecyclerViewModel.R
     @ViewById
     SwipeRefreshLayout mLayout;
     List<String> idList;
-@Click
-void tiText(){
 
-}
+    @Click
+    void tiText() {
+
+    }
+
     @AfterViews
     public void initViews() {
         onBack.setVisibility(View.GONE);
@@ -109,7 +122,7 @@ void tiText(){
     }
 
     @Override
-    public void covert(YViewHolder holder, ShopCarData t) {
+    public void covert(YViewHolder holder, final ShopCarData t) {
         final ShopCarData d = t;
         final int num = Integer.parseInt(t.getGoods_num());
         final double pri = Double.parseDouble(t.getPrice_new());
@@ -148,6 +161,7 @@ void tiText(){
 
                 int n = num + 1;
                 d.setGoods_num(n + "");
+                MallAndTravelModel.shopCarNum(shopCarNumCallback, t.getCart_id(), n + "");
                 model.noti();
                 getTotle();
             }
@@ -160,6 +174,7 @@ void tiText(){
                     n = 1;
                 else
                     d.setGoods_num(n + "");
+                MallAndTravelModel.shopCarNum(shopCarNumCallback, t.getCart_id(), n + "");
                 model.noti();
                 getTotle();
             }
@@ -186,6 +201,16 @@ void tiText(){
         mPrice.setText("应付：￥" + p + "元");
     }
 
+    String getCartId() {
+        String cartId = "";
+        for (ShopCarData t : model.dataList) {
+            if (!t.isSelect())
+                continue;
+            cartId = t.getCart_id() + "," + cartId;
+        }
+        return cartId;
+    }
+
     //删除
     StringCallback delCallback = new StringCallback() {
         @Override
@@ -203,6 +228,19 @@ void tiText(){
                 TOT("删除成功");
                 model.onRefresh();
                 idList.clear();
+            }
+        }
+    };
+    StringCallback shopCarNumCallback = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            TOT("网络异常");
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            ParentBean bean = Http.model(ParentBean.class, response);
+            if (bean.getCode().equals("200")) {
             }
         }
     };

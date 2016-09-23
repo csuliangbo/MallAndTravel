@@ -2,6 +2,7 @@ package com.ych.mall.ui.fourth;
 
 import android.util.Log;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.ych.mall.R;
@@ -35,5 +36,12 @@ public class WebViewActivity extends BaseActivity {
         url = getIntent().getStringExtra(KV.URL);
         TOT(url);
         webView.loadUrl(url);
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
     }
 }

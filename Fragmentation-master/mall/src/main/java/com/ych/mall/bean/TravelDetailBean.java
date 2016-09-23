@@ -17,41 +17,23 @@ private List<TravelDetaiData> data;
         this.data = data;
     }
 
-    public class Chufa_taocan {
 
-        private String chufa_date;
-
-
-        private String chufa_price;
-
-
-        public void setChufa_date(String chufa_date) {
-
-            this.chufa_date = chufa_date;
-
-        }
-
-        public String getChufa_date() {
-
-            return this.chufa_date;
-
-        }
-
-        public void setChufa_price(String chufa_price) {
-
-            this.chufa_price = chufa_price;
-
-        }
-
-        public String getChufa_price() {
-
-            return this.chufa_price;
-
-        }
-
-    }
 
     public class TravelDetaiData {
+        @Override
+        public String toString() {
+            return "TravelDetaiData{" +
+                    "chufa_address='" + chufa_address + '\'' +
+                    ", id='" + id + '\'' +
+                    ", title='" + title + '\'' +
+                    ", pic_url='" + pic_url + '\'' +
+                    ", pic_tuji=" + pic_tuji +
+                    ", price_old='" + price_old + '\'' +
+                    ", price_new='" + price_new + '\'' +
+                    ", chufa_date='" + chufa_date + '\'' +
+                    ", fanli_jifen='" + fanli_jifen + '\'' +
+                    '}';
+        }
 
         private String id;
 
@@ -62,52 +44,56 @@ private List<TravelDetaiData> data;
         private String pic_url;
 
 
-        private List<String> pic_tuji;
+        private List<String> pic_tuji ;
+
+
+        private String price_old;
+
+
+        private String price_new;
 
 
         private String chufa_address;
 
 
-        private List<Chufa_taocan> chufa_taocan;
+        private List<String> chufa_date;
 
 
         private String fanli_jifen;
 
 
-        public void setId(String id) {
+        public List<String> getChufa_date() {
+            return chufa_date;
+        }
 
-            this.id = id;
+        public void setChufa_date(List<String> chufa_date) {
+            this.chufa_date = chufa_date;
+        }
 
+        public String getChufa_address() {
+            return chufa_address;
+        }
+
+        public void setChufa_address(String chufa_address) {
+            this.chufa_address = chufa_address;
+        }
+
+
+
+        public String getFanli_jifen() {
+            return fanli_jifen;
+        }
+
+        public void setFanli_jifen(String fanli_jifen) {
+            this.fanli_jifen = fanli_jifen;
         }
 
         public String getId() {
-
-            return this.id;
-
+            return id;
         }
 
-        public void setTitle(String title) {
-
-            this.title = title;
-
-        }
-
-        public String getTitle() {
-
-            return this.title;
-
-        }
-
-        public void setPic_url(String pic_url) {
-
-            this.pic_url = pic_url;
-
-        }
-
-        public String getPic_url() {
-
-            return this.pic_url;
-
+        public void setId(String id) {
+            this.id = id;
         }
 
         public List<String> getPic_tuji() {
@@ -118,41 +104,36 @@ private List<TravelDetaiData> data;
             this.pic_tuji = pic_tuji;
         }
 
-        public void setChufa_address(String chufa_address) {
-
-            this.chufa_address = chufa_address;
-
+        public String getPic_url() {
+            return pic_url;
         }
 
-        public String getChufa_address() {
-
-            return this.chufa_address;
-
+        public void setPic_url(String pic_url) {
+            this.pic_url = pic_url;
         }
 
-        public void setChufa_taocan(List<Chufa_taocan> chufa_taocan) {
-
-            this.chufa_taocan = chufa_taocan;
-
+        public String getPrice_new() {
+            return price_new;
         }
 
-        public List<Chufa_taocan> getChufa_taocan() {
-
-            return this.chufa_taocan;
-
+        public void setPrice_new(String price_new) {
+            this.price_new = price_new;
         }
 
-        public void setFanli_jifen(String fanli_jifen) {
-
-            this.fanli_jifen = fanli_jifen;
-
+        public String getPrice_old() {
+            return price_old;
         }
 
-        public String getFanli_jifen() {
-
-            return this.fanli_jifen;
-
+        public void setPrice_old(String price_old) {
+            this.price_old = price_old;
         }
 
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
     }
 }

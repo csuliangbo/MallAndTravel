@@ -128,16 +128,31 @@
             </LinearLayout>
             //旅游协议
 
-            <CheckBox
+            <FrameLayout
                 android:id="@+id/fg_protocol"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/white"
-                android:checked="false"
-                android:text="同意[旅游协议]"
-                android:textColor="@color/text_red"
-                android:textSize="14sp" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <CheckBox
+                    android:id="@+id/mProtocol"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+
+                    android:background="@color/white"
+                    android:checked="false" />
+
+                <TextView
+                    android:id="@+id/onProtocol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="30dp"
+                    android:text="同意[旅游协议]"
+                    android:textColor="@color/text_red"
+                    android:textSize="14sp" />
+            </FrameLayout>
+
             //出发日期
 
             <TextView

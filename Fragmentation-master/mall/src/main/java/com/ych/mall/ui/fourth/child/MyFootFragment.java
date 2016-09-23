@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.ych.mall.R;
 import com.ych.mall.bean.MyFootBean;
+import com.ych.mall.bean.ParentBean;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.RecyclerViewModel;
 import com.ych.mall.model.RecyclerViewNormalModel;
@@ -22,6 +23,8 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
+
+import okhttp3.Call;
 
 /**
  * Created by ych on 2016/9/14.
@@ -46,6 +49,11 @@ public class MyFootFragment extends BaseFragment implements RecyclerViewModel.RM
     @Click
     void onBack() {
         back();
+    }
+
+    @Click
+    void tiText() {
+        UserInfoModel.clearFoot(callback);
     }
 
     RecyclerViewNormalModel<MyFootBean.MyFootData> model;
@@ -74,8 +82,8 @@ public class MyFootFragment extends BaseFragment implements RecyclerViewModel.RM
 
     @Override
     public List<MyFootBean.MyFootData> getList(String str) {
-        if (mLoading!=null)
-        mLoading.setVisibility(View.GONE);
+        if (mLoading != null)
+            mLoading.setVisibility(View.GONE);
         MyFootBean bean = Http.model(MyFootBean.class, str);
         if (bean.getCode().equals("200"))
             return bean.getData();
@@ -86,8 +94,49 @@ public class MyFootFragment extends BaseFragment implements RecyclerViewModel.RM
 
     @Override
     public void covert(YViewHolder holder, MyFootBean.MyFootData t) {
+        final String id = t.getGid();
         holder.setText(R.id.name, t.getGoods_name());
         holder.setText(R.id.price, t.getGoods_price());
-        holder.loadImg(getActivity(), R.id.pic, Http.GOODS_PIC_URL+t.getGoods_pic());
+        holder.loadImg(getActivity(), R.id.pic, Http.GOODS_PIC_URL + t.getGoods_pic());
+        holder.getView(R.id.del).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserInfoModel.delFoot(delCallBack, id);
+            }
+        });
     }
+
+    //清除足迹
+    StringCallback callback = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            TOT("网络链接失败");
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            ParentBean bean = Http.model(ParentBean.class, response);
+            if (bean.getCode().equals("200"))
+                model.refresh();
+            else
+                TOT(bean.getMessage());
+        }
+    };
+
+    //删除单个
+    StringCallback delCallBack = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            TOT("网络连接失败");
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            ParentBean bean = Http.model(ParentBean.class, response);
+            if (bean.getCode().equals("200"))
+                model.refresh();
+            else
+                TOT(bean.getMessage());
+        }
+    };
 }

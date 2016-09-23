@@ -173,6 +173,26 @@ public class UserInfoModel {
         HttpModel.newInstance(MY_FOOT).post(map, callback);
     }
 
+    static String DEL_FOOT = url + "del_footprint";
+
+    //删除单个足迹
+    public static void delFoot(StringCallback callback,String id){
+        HashMap<String,String> map=new HashMap<>();
+        map.put("id",id);
+        HttpModel.newInstance(DEL_FOOT).post(map,callback);
+    }
+
+    static String CLEAR_FOOT = url + "del_footprint";
+
+
+    //清除数据
+    public static void clearFoot(StringCallback callback){
+        HashMap<String,String> map=new HashMap<>();
+        map.put("id", UserCenter.getInstance().getCurrentUserId());
+        HttpModel.newInstance(CLEAR_FOOT).post(map,callback);
+
+    }
+
     static String COLLECT_URL = url + "person_collect";
 
     //用户收藏
@@ -251,6 +271,16 @@ public class UserInfoModel {
         map.put("orders_num", id);
         map.put("tuihuo_case", reson);
         HttpModel.newInstance(KUAIDI).post(map, callback);
+    }
+
+    static String VIP_URL = url + "vip";
+
+    //会员等级
+
+    public static void vipInfo(StringCallback callback) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("id", UserCenter.getInstance().getCurrentUserId());
+        HttpModel.newInstance(VIP_URL).post(map, callback);
     }
 }
 

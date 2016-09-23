@@ -43,6 +43,7 @@ public class BaseFragment extends SupportFragment {
     }
 
     public void sT(TextView tv, String str) {
+        if (str!=null)
         tv.setText(str);
     }
 

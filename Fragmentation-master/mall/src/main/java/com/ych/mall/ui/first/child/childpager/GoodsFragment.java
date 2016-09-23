@@ -1,11 +1,14 @@
 package com.ych.mall.ui.first.child.childpager;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,6 +26,7 @@ import com.ych.mall.model.Http;
 import com.ych.mall.model.MallAndTravelModel;
 import com.ych.mall.ui.PayActivity_;
 import com.ych.mall.ui.base.BaseFragment;
+import com.ych.mall.ui.fourth.WebViewActivity_;
 import com.ych.mall.utils.KV;
 import com.ych.mall.widget.SlideShowView;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -43,6 +47,7 @@ import okhttp3.Call;
  */
 @EFragment(R.layout.fragment_goods)
 public class GoodsFragment extends BaseFragment {
+    String TAG = GoodsFragment.class.getName();
     public static final int TYPE_GOODS = 11;
     public static final int TYPE_TRAVEL = 12;
 
@@ -58,7 +63,7 @@ public class GoodsFragment extends BaseFragment {
     @ViewById(R.id.fg_points)
     TextView points;
     @ViewById(R.id.fg_protocol)
-    CheckBox protocol;
+    FrameLayout protocol;
     //库存
     @ViewById(R.id.fg_stock)
     TextView stock;
@@ -79,8 +84,16 @@ public class GoodsFragment extends BaseFragment {
     TagCloudLayout mTags;
     @ViewById
     TextView mGroup;
+    @ViewById
+    CheckBox mProtocol;
+
+    @Click
+    void onProtocol() {
+        web("http://www.zzumall.com/index.php/Mobile/Tourism/lvyou_xieyi");
+    }
+
     List<GoodsDetailBean.Taocan> datas;
-    List<TravelDetailBean.Chufa_taocan> tDatas;
+    List<String> mDate;
     TagBaseAdapter tAdapter;
     String groupId;
     String groupTitle;
@@ -227,11 +240,11 @@ public class GoodsFragment extends BaseFragment {
             return;
         mPriceOld.setVisibility(View.GONE);
         sT(mTitle, t.getTitle());
-//        sT(mPriceNew, t.getPrice_new());
-//        sT(mPriceOld, t.getPrice_old());
+        sT(mPriceNew, t.getPrice_new());
+        sT(mPriceOld, t.getPrice_old());
         points.setText("送积分（" + t.getFanli_jifen() + "积分）");
         //stock.setText("库存：" + t.getKucun() + "件");
-        //  mPrice = t.getPrice_new();
+        mPrice = t.getPrice_new();
         mPoint = t.getFanli_jifen();
         if (t.getPic_url() != null) {
             String[] banner = new String[t.getPic_tuji().size()];
@@ -242,27 +255,30 @@ public class GoodsFragment extends BaseFragment {
             }
             showView.setData(banner);
         }
-        tDatas = t.getChufa_taocan();
+
         sT(city, "出发城市：" + t.getChufa_address());
         time.setVisibility(View.GONE);
-        if (tDatas == null || tDatas.size() < 1)
+        mDate = t.getChufa_date();
+        if (mDate == null)
             return;
         packagell.setVisibility(View.VISIBLE);
         mGroup.setVisibility(View.GONE);
         List<String> tagDatas = new ArrayList<>();
-        for (TravelDetailBean.Chufa_taocan ta : tDatas) {
-            tagDatas.add(ta.getChufa_date());
+        for (String s : mDate) {
+            tagDatas.add(s);
         }
         tAdapter = new TagBaseAdapter(getActivity(), tagDatas);
         mTags.setAdapter(tAdapter);
         mTags.setItemClickListener(new TagCloudLayout.TagItemClickListener() {
             @Override
             public void itemClick(int position) {
-                groupTitle = tDatas.get(position).getChufa_date();
-                sT(mPriceNew, "￥" + tDatas.get(position).getChufa_price());
-                mPrice = tDatas.get(position).getChufa_price();
+                groupTitle = mDate.get(position);
             }
         });
+    }
+
+    void web(String url) {
+        startActivity(new Intent(getActivity(), WebViewActivity_.class).putExtra(KV.URL, url));
     }
 
     //商品

@@ -46,12 +46,14 @@
                     android:padding="10dp">
 
                     <TextView
+                        android:id="@+id/tv_real_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="收货人：叶昌洪"
                         android:textColor="@color/text_blue" />
 
                     <TextView
+                        android:id="@+id/tv_address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -103,7 +105,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginLeft="10dp"
-                        android:checked="false" />
+                        android:checked="true" />
 
                     <ImageView
                         android:layout_width="40dp"
@@ -125,12 +127,14 @@
 
                     <CheckBox
                         android:layout_width="40dp"
-                        android:layout_height="40dp" />
+                        android:layout_height="40dp"
+                        android:visibility="gone" />
 
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/weixin" />
+                        android:src="@drawable/weixin"
+                        android:visibility="gone" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -139,7 +143,8 @@
                         android:layout_marginRight="10dp"
                         android:text="微信"
                         android:textColor="@color/text_blue"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
             //支付商品
@@ -202,6 +207,7 @@
                         android:textColor="@color/text_gray" />
 
                     <TextView
+                        android:id="@+id/tv_total_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dp"
@@ -221,6 +227,7 @@
                 android:padding="10dp">
 
                 <LinearLayout
+                    android:id="@+id/ll_a"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -232,6 +239,7 @@
                         android:textColor="@color/black" />
 
                     <com.ych.mall.widget.ClearEditText
+                        android:id="@+id/cet_A"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:background="@drawable/shape_black_border_5dp"
@@ -240,6 +248,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_b"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -252,6 +261,7 @@
                         android:textColor="@color/black" />
 
                     <com.ych.mall.widget.ClearEditText
+                        android:id="@+id/cet_B"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:background="@drawable/shape_black_border_5dp"
@@ -281,15 +291,18 @@
                         android:textColor="@color/black" />
 
                     <TextView
+                        android:id="@+id/tv_A"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="A账户：123123"
                         android:textColor="@color/text_orange" />
 
                     <TextView
+                        android:id="@+id/tv_B"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="A账户：123123"
+                        android:layout_marginLeft="10dp"
+                        android:text="B账户：123123"
                         android:textColor="@color/text_orange" />
                 </LinearLayout>
 

@@ -2,6 +2,7 @@ package com.ych.mall.ui.first.child.childpager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -88,13 +89,15 @@ public class GoodsFragment extends BaseFragment {
     TextView mLoading;
     String mPrice;
     String mPoint;
+    String goodsID;
     String goodsUrl = "http://www.zzumall.com/index.php/Mobile/Goods/goods_detail_m.html?id=";
     String travelUrl = "http://www.zzumall.com/index.php/Mobile/Tourism/tourism_detail_m.html?id=";
     String protocolUrl = "http://www.zzumall.com/index.php/Mobile/Tourism/lvyou_xieyi";
 
     @Click
     void onBuy() {
-        startActivity(new Intent(getActivity(), PayActivity_.class));
+
+        startActivity(new Intent(getActivity(), PayActivity_.class).putExtra(KV.GOODS_ID, mId));
     }
 
     //分享
@@ -141,7 +144,10 @@ public class GoodsFragment extends BaseFragment {
 
     @Click
     public void fg_order() {
-        startActivity(new Intent(getActivity(), PayActivity_.class));
+        Bundle bundle = new Bundle();
+        bundle.putString(KV.GOODS_ID, mId);
+        bundle.putInt("TYPE", TYPE_TRAVEL);
+        startActivity(new Intent(getActivity(), PayActivity_.class).putExtras(bundle));
 
     }
 
@@ -186,7 +192,6 @@ public class GoodsFragment extends BaseFragment {
     private void goods(GoodsDetailBean.GoodsDetailData t) {
         if (t == null)
             return;
-
         sT(mTitle, t.getTitle());
         sT(mPriceNew, "￥" + t.getPrice_new());
         sT(mPriceOld, t.getPrice_old());

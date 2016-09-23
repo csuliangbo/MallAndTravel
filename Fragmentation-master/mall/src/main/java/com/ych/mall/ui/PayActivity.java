@@ -2,6 +2,7 @@ package com.ych.mall.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
 import com.ych.mall.R;
@@ -26,7 +29,9 @@ import com.ych.mall.model.YViewHolder;
 import com.ych.mall.ui.base.BaseActivity;
 import com.ych.mall.bean.AuthResult;
 import com.ych.mall.bean.PayResult;
+import com.ych.mall.ui.first.child.childpager.GoodsFragment;
 import com.ych.mall.utils.KV;
+import com.ych.mall.widget.ClearEditText;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.androidannotations.annotations.AfterViews;
@@ -49,8 +54,27 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     @ViewById(R.id.rlv_pay)
     RecyclerView rlvPay;
+    @ViewById(R.id.tv_A)
+    TextView tvA;
+    @ViewById(R.id.tv_B)
+    TextView tvB;
+    @ViewById(R.id.tv_total_price)
+    TextView tvTotalPrice;
+    @ViewById(R.id.ll_a)
+    LinearLayout llA;
+    @ViewById(R.id.ll_b)
+    LinearLayout llB;
+    @ViewById(R.id.cet_A)
+    ClearEditText cetA;
+    @ViewById(R.id.cet_B)
+    ClearEditText cetB;
 
     private String cart_id;
+    private String goods_id;
+    private boolean isPayNow = false;
+    private Double totalPrice = 0.0;
+    private Double fanli_jifen;
+    private boolean isTravel = false;
 
     @Click
     public void addressLayout() {
@@ -136,7 +160,18 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     @AfterViews
     void init() {
-        cart_id= getIntent().getExtras().getString(KV.CART_ID);
+        goods_id = getIntent().getExtras().getString(KV.GOODS_ID);
+        Bundle bundle = getIntent().getExtras();
+        goods_id = bundle.getString(KV.GOODS_ID);
+        if (bundle.getInt("TYPE") == GoodsFragment.TYPE_TRAVEL) {
+            isTravel = true;
+            llA.setVisibility(View.GONE);
+        }
+        if (!TextUtils.isEmpty(goods_id)) {
+            isPayNow = true;
+        }
+        cart_id = getIntent().getExtras().getString(KV.CART_ID);
+        Log.e("KTY", " cart ID  " + cart_id + "  goods id  " + goods_id);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         rvm = new RecyclerViewNormalModel<>(this, this, rlvPay, R.layout.item_goods_list);
@@ -145,7 +180,16 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     @Override
     public void getData(StringCallback callback, int page) {
-        MallAndTravelModel.settelAccounts(callback, cart_id);
+        if (isPayNow) {
+            if (isTravel) {
+                MallAndTravelModel.travelReseve(callback, goods_id, "");
+            } else {
+                MallAndTravelModel.payNow(callback, goods_id);
+            }
+
+        } else {
+            MallAndTravelModel.settelAccounts(callback, cart_id);
+        }
     }
 
     @Override
@@ -155,6 +199,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     @Override
     public List<PayBean.PayData> getList(String str) {
+        Log.e("KTY", str);
         PayBean bean = Http.model(PayBean.class, str);
         if (bean.getCode().equals("200")) {
             return bean.getData();
@@ -166,8 +211,18 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     public void covert(YViewHolder holder, PayBean.PayData t) {
         holder.setText(R.id.name, t.getTitle());
         holder.setText(R.id.price, "￥" + t.getPrice_new());
+        totalPrice = totalPrice + Double.parseDouble(t.getPrice_new());
+        tvTotalPrice.setText(totalPrice + "");
         holder.setVisible(R.id.ll_fanli, View.GONE);
         holder.loadImg(PayActivity.this, R.id.pic, Http.GOODS_PIC_URL + t.getPic_url());
+        tvA.setText("A账户：" + t.getAdd_jf_limit());
+        tvB.setText("B账户：" + t.getAdd_jf_currency());
+        fanli_jifen = Double.parseDouble(t.getFanli_jifen());
     }
 
+    void initPay() {
+        totalPrice = totalPrice - Double.parseDouble(cetA.getText().toString())
+                - Double.parseDouble(cetB.getText().toString());
+
+    }
 }

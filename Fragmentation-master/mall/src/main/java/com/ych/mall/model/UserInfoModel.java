@@ -226,6 +226,17 @@ public class UserInfoModel {
         HttpModel.newInstance(CANCEL_ORDER).post(map, callback);
     }
 
+    //支付
+    static String PAY = url + "update_pay";
+
+    public static void pay(StringCallback callback, String orderNum, String price, String goodsTitle) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("orders_num", orderNum);
+        map.put("price_shiji", price);
+        map.put("goods_title", goodsTitle);
+        HttpModel.newInstance(PAY).post(map, callback);
+    }
+
     //确认收货
     static String GET_SHOP = url + "confirm";
 

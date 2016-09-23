@@ -206,8 +206,9 @@ public class ShopCarFragment extends BaseFragment implements RecyclerViewModel.R
         for (ShopCarData t : model.dataList) {
             if (!t.isSelect())
                 continue;
-            cartId = t.getCart_id() + "," + cartId;
+            cartId=t.getCart_id()+","+cartId;
         }
+        cartId=cartId.substring(0,cartId.length()-1);
         return cartId;
     }
 

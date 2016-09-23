@@ -127,6 +127,20 @@ public class MallAndTravelModel {
         HttpModel.newInstance(CLEAR_SHOPCAR).post(map, callback);
     }
 
+    //创建订单
+    static String CREATE_ORDER = urlGoods + "create_order";
+
+    public static void createOrder(StringCallback callback, String price_sum, String price_shiji,
+                                   String address, String realName, String mobile, String number,
+                                   String jifen, String cartId) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("user_id", UserCenter.getInstance().getCurrentUserId());
+        map.put("price_sum",price_sum);
+        map.put("price_shij",price_shiji);
+        map.put("user_address",address);
+        HttpModel.newInstance(CREATE_ORDER).post(map, callback);
+    }
+
     static String SETTEL_ACCOUNTS = urlGoods + "to_settle_accounts";
 
     //结算
@@ -135,6 +149,15 @@ public class MallAndTravelModel {
         map.put("user_id", UserCenter.getInstance().getCurrentUserId());
         map.put("cart_id", cartId);
         HttpModel.newInstance(SETTEL_ACCOUNTS).post(map, callback);
+    }
+
+    static String PAY_NOW = urlGoods + "immediate_payment";
+
+    public static void payNow(StringCallback callback, String goodsId) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("user_id", UserCenter.getInstance().getCurrentUserId());
+        map.put("goods_id", goodsId);
+        HttpModel.newInstance(PAY_NOW).post(map, callback);
     }
 
     static String GOODS_DETAIL = urlGoods + "goods_details";
@@ -194,6 +217,16 @@ public class MallAndTravelModel {
         HttpModel.newInstance(TRAVEL_DETAIL).post(map, callback);
     }
 
+    static String TRAVEL_RESERVE = "tour_reserve";
+
+    //旅游预定
+    public static void travelReseve(StringCallback callback, String id, String date) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("id", id);
+        map.put("user_id", UserCenter.getInstance().getCurrentUserId());
+        map.put("chufa_date", date);
+        HttpModel.newInstance(TRAVEL_RESERVE).post(map, callback);
+    }
 
     static String HOME_MALL_URL = home + "index";
 

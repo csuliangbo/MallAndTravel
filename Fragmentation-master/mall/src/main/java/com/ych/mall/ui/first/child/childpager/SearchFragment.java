@@ -117,7 +117,7 @@ public class SearchFragment extends BaseFragment implements RecyclerViewModel.RM
                 rv,
                 layout,
                 R.layout.item_goods_list);
-        rvm.setMiniSize(10);
+        rvm.setMiniSize(9);
         rvm.init();
     }
 

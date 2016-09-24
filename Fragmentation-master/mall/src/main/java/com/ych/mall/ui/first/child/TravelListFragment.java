@@ -38,10 +38,12 @@ public class TravelListFragment extends BaseFragment implements RecyclerViewMode
     String id;
     @ViewById
     TextView mLoading;
+    int type;
 
-    public static TravelListFragment newInstance(String id) {
+    public static TravelListFragment newInstance(String id, int type) {
         Bundle bundle = new Bundle();
         bundle.putString(KV.ID, id);
+        bundle.putInt(KV.TYPE, type);
         TravelListFragment fragment = new TravelListFragment_();
         fragment.setArguments(bundle);
         return fragment;
@@ -50,6 +52,8 @@ public class TravelListFragment extends BaseFragment implements RecyclerViewMode
 
     @AfterViews
     public void initViews() {
+        setTAG("travel");
+        type=getArguments().getInt(KV.TYPE);
         id = getArguments().getString(KV.ID);
         RecyclerViewModel<GoodsListBean> rvm =
                 new RecyclerViewModel<GoodsListBean>(getActivity(),
@@ -64,7 +68,8 @@ public class TravelListFragment extends BaseFragment implements RecyclerViewMode
 
     @Override
     public void getData(StringCallback callback, int page) {
-        MallAndTravelModel.travelList(callback, page, id);
+        log(id);
+        MallAndTravelModel.travelList(callback, page, id, type);
     }
 
     @Override
@@ -75,6 +80,8 @@ public class TravelListFragment extends BaseFragment implements RecyclerViewMode
 
     @Override
     public List<TravelListData> getList(String str) {
+
+        log(str);
         mLoading.setVisibility(View.GONE);
         TravelListBean bean = Http.model(TravelListBean.class, str);
         if (bean.getCode().equals("200"))

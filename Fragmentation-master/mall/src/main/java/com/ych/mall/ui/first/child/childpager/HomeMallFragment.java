@@ -160,7 +160,7 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
         holder.getCovertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((SupportFragment) getParentFragment()).start(GoodsListFragment.newInstance(id));
+                ((SupportFragment) getParentFragment()).start(GoodsListFragment.newInstance(id,0));
             }
         });
     }
@@ -205,7 +205,9 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
         iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onWeb(url);
+                String id = url.split("=")[1];
+
+                ((SupportFragment) getParentFragment()).start(GoodsListFragment.newInstance(id,-1));
             }
         });
 

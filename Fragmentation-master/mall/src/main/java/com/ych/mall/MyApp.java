@@ -10,7 +10,7 @@ import com.ych.mall.utils.SharedPreferencesUtil;
  * Email : a18008112518@hotmail.com 叶昌洪 THX
  */
 public class MyApp extends Application {
-
+public static boolean isRelease=false;
     @Override
     public void onCreate() {
         super.onCreate();

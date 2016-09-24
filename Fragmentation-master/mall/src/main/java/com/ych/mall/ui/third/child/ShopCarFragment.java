@@ -133,6 +133,8 @@ public class ShopCarFragment extends BaseFragment implements RecyclerViewModel.R
         holder.setText(R.id.integral, "返利：" + t.getFanli_jifen() + "积分");
         holder.setText(R.id.num, num + "");
         holder.loadImg(getActivity(), R.id.pic, Http.GOODS_PIC_URL + t.getPic_url());
+        if (t.getTaocan_name() != null)
+            holder.setText(R.id.group, "套餐："+t.getTaocan_name());
         final CheckBox cb = holder.getView(R.id.select);
         final String id = t.getCart_id();
         if (t.isSelect()) {
@@ -206,9 +208,9 @@ public class ShopCarFragment extends BaseFragment implements RecyclerViewModel.R
         for (ShopCarData t : model.dataList) {
             if (!t.isSelect())
                 continue;
-            cartId=t.getCart_id()+","+cartId;
+            cartId = t.getCart_id() + "," + cartId;
         }
-        cartId=cartId.substring(0,cartId.length()-1);
+        cartId = cartId.substring(0, cartId.length() - 1);
         return cartId;
     }
 

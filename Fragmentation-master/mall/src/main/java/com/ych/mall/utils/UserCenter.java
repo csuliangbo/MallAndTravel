@@ -6,7 +6,7 @@ package com.ych.mall.utils;
 public class UserCenter {
     public static String USER_ID = "user_id";
     public static String USER_GRADE = "user_grade";
-
+public static String USER_PHONE="user_phone";
     private static UserCenter instance;
 
     public static UserCenter getInstance() {
@@ -36,6 +36,14 @@ public class UserCenter {
 
     public void setUserGrade(String grade) {
         SharedPreferencesUtil.putString(USER_GRADE, grade);
+    }
+
+    public String getCurrentUserPhone(){
+        return SharedPreferencesUtil.getString(USER_PHONE);
+    }
+
+    public void setCurrentUserPhone(String phone){
+        SharedPreferencesUtil.putString(USER_PHONE, phone);
     }
 
 }

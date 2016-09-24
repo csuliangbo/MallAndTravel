@@ -59,9 +59,9 @@ public class ViewPagerFragment extends BaseFragment {
                 SortFragment.mType=SortFragment.TRAVEL;
             viewPager.setScrollble(false);
         } else if(e.getCurrntType()==MallAndTravelEvent.TYPE_GOODS){
-            start(GoodsListFragment.newInstance("46"));
+            start(GoodsListFragment.newInstance("46",0));
         }else{
-            start(TravelListFragment.newInstance("12"));
+            start(TravelListFragment.newInstance("12",0));
         }
     }
 

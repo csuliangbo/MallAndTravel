@@ -41,6 +41,15 @@ public class HomeTravelBean extends ParentBean{
     }
     public class Class_page {
 
+        @Override
+        public String toString() {
+            return "Class_page{" +
+                    "class_id='" + class_id + '\'' +
+                    ", class_page_url='" + class_page_url + '\'' +
+                    ", class_name='" + class_name + '\'' +
+                    '}';
+        }
+
         private String class_page_url;
 
 

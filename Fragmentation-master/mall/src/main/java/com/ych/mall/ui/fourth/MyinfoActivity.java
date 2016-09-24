@@ -50,7 +50,7 @@ public class MyinfoActivity extends BaseActivity {
 
     @Click
     void onHead() {
-        showDialog();
+        //showDialog();
     }
 
     @Click
@@ -177,6 +177,7 @@ public class MyinfoActivity extends BaseActivity {
         sT(mIDNum, data.getIdcard());
         sT(mGender, data.getSex());
         sT(mPhone, data.getMobile());
+        UserCenter.getInstance().setCurrentUserPhone(data.getMobile());
         sT(mBirthday, data.getBirthday());
 
 

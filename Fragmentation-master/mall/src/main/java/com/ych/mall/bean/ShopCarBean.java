@@ -20,6 +20,7 @@ public class ShopCarBean extends ParentBean {
 
         private String cart_id;
 
+        private String taocan_name;
 
         private String id;
 
@@ -41,6 +42,13 @@ public class ShopCarBean extends ParentBean {
 
         private String goods_num;
 
+        public String getTaocan_name() {
+            return taocan_name;
+        }
+
+        public void setTaocan_name(String taocan_name) {
+            this.taocan_name = taocan_name;
+        }
 
         private boolean isSelect;
 

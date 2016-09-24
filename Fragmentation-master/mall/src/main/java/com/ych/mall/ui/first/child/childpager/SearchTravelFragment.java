@@ -87,7 +87,7 @@ public class SearchTravelFragment extends BaseFragment implements RecyclerViewMo
                 rv,
                 layout,
                 R.layout.item_travel_list);
-        rvm.setMiniSize(10);
+        rvm.setMiniSize(9);
         rvm.init();
     }
 

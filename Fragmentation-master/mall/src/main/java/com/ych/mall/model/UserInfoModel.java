@@ -3,6 +3,8 @@ package com.ych.mall.model;
 import com.ych.mall.utils.UserCenter;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.greenrobot.eventbus.util.HasExecutionScope;
+
 import java.util.HashMap;
 
 /**
@@ -28,6 +30,20 @@ public class UserInfoModel {
         map.put("id", UserCenter.getInstance().getCurrentUserId());
         map.put("realname", name);
         HttpModel.newInstance(CHANGE_NAME).post(map, callback);
+    }
+
+    static String CHANGE_PWD = url + "change_password";
+
+    //修改密码
+
+    public static void changePwd(StringCallback callback, String oldP, String newP) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("id", UserCenter.getInstance().getCurrentUserId());
+        map.put("password", oldP);
+        map.put("newpassword", newP);
+        map.put("newpasswordtwo", newP);
+        HttpModel.newInstance(CHANGE_PWD).post(map, callback);
+
     }
 
     static String CHANGE_ID = url + "change_idcard";
@@ -176,20 +192,20 @@ public class UserInfoModel {
     static String DEL_FOOT = url + "del_footprint";
 
     //删除单个足迹
-    public static void delFoot(StringCallback callback,String id){
-        HashMap<String,String> map=new HashMap<>();
-        map.put("id",id);
-        HttpModel.newInstance(DEL_FOOT).post(map,callback);
+    public static void delFoot(StringCallback callback, String id) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("id", id);
+        HttpModel.newInstance(DEL_FOOT).post(map, callback);
     }
 
     static String CLEAR_FOOT = url + "del_footprint";
 
 
     //清除数据
-    public static void clearFoot(StringCallback callback){
-        HashMap<String,String> map=new HashMap<>();
+    public static void clearFoot(StringCallback callback) {
+        HashMap<String, String> map = new HashMap<>();
         map.put("id", UserCenter.getInstance().getCurrentUserId());
-        HttpModel.newInstance(CLEAR_FOOT).post(map,callback);
+        HttpModel.newInstance(CLEAR_FOOT).post(map, callback);
 
     }
 
@@ -292,6 +308,15 @@ public class UserInfoModel {
         HashMap<String, String> map = new HashMap<>();
         map.put("id", UserCenter.getInstance().getCurrentUserId());
         HttpModel.newInstance(VIP_URL).post(map, callback);
+    }
+
+    static String CHANGE_PHONE = url + "change_phone";
+
+    public static void changePhone(StringCallback callback, String phone) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("mobile", phone);
+        map.put("id", UserCenter.getInstance().getCurrentUserId());
+        HttpModel.newInstance(CHANGE_PHONE).post(map, callback);
     }
 }
 

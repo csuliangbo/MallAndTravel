@@ -82,7 +82,9 @@ public class ChangeNameActivity extends BaseActivity {
                 UserInfoModel.changeName(getT(mEditText), callback);
                 break;
             case TYPE_PWD:
-
+                if (!getT(mNewPwd).trim().equals(getT(mNewPwd2).trim()))
+                    return;
+                UserInfoModel.changePwd(callback, getT(mEditText), getT(mNewPwd));
                 break;
         }
 
@@ -99,8 +101,8 @@ public class ChangeNameActivity extends BaseActivity {
             ParentBean bean = Http.model(ParentBean.class, response);
             TOT(bean.getMessage());
             if (bean.getCode().equals("200")) {
-
-                setResult(RESULT_OK, new Intent().putExtra(KV.DATA, mEditText.getText().toString()));
+                if (type != TYPE_PWD)
+                    setResult(RESULT_OK, new Intent().putExtra(KV.DATA, mEditText.getText().toString()));
                 finish();
             }
 

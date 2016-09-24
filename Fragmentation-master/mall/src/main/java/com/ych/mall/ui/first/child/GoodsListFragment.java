@@ -41,7 +41,7 @@ public class GoodsListFragment extends BaseFragment implements RecyclerViewModel
     TextView mLoading;
     @ViewById(R.id.onSearch)
     ClearEditText onSearch;
-
+int type;
     @Click
     void tvSearch() {
         start(SearchFragment.newInstance(onSearch.getText().toString(), GoodsFragment.TYPE_GOODS));
@@ -55,9 +55,10 @@ public class GoodsListFragment extends BaseFragment implements RecyclerViewModel
 
     String id;
 
-    public static GoodsListFragment newInstance(String id) {
+    public static GoodsListFragment newInstance(String id,int type) {
         Bundle bundle = new Bundle();
         bundle.putString(KV.ID, id);
+        bundle.putInt(KV.TYPE,type);
         GoodsListFragment fragment = new GoodsListFragment_();
         fragment.setArguments(bundle);
         return fragment;
@@ -65,6 +66,7 @@ public class GoodsListFragment extends BaseFragment implements RecyclerViewModel
 
     @AfterViews
     public void initViews() {
+        type=getArguments().getInt(KV.TYPE);
         id = getArguments().getString(KV.ID);
         RecyclerViewModel<GoodsListData> rvm =
                 new RecyclerViewModel<GoodsListData>(getActivity(),
@@ -80,7 +82,7 @@ public class GoodsListFragment extends BaseFragment implements RecyclerViewModel
     //获取数据
     @Override
     public void getData(StringCallback callback, int page) {
-        MallAndTravelModel.goodsList(callback, page, id);
+        MallAndTravelModel.goodsList(callback, page, id,type);
     }
 
     //解析JSON数据

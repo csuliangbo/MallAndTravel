@@ -114,9 +114,9 @@ public class SortFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     if (mType == MALL)
-                        start(GoodsListFragment.newInstance(id));
+                        start(GoodsListFragment.newInstance(id,0));
                     else
-                        start(TravelListFragment.newInstance(id));
+                        start(TravelListFragment.newInstance(id,0));
                 }
             });
         }

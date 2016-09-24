@@ -28,14 +28,14 @@
             android:textSize="@dimen/text_large"
             android:layout_marginLeft="10dp"
             android:textColor="@color/black"
-            android:text="123124124"
-            />
+            android:hint="输入验证码"
+            android:id="@+id/mCode" />
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="重新获取"
+            android:text="获取验证码"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_mid"
             android:paddingLeft="10dp"
@@ -44,7 +44,7 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:background="@drawable/shape_border_green"
-            />
+            android:id="@+id/mGetCode" />
     </LinearLayout>
     <View
         android:layout_width="match_parent"
@@ -74,20 +74,15 @@
             android:textSize="@dimen/text_large"
             android:layout_marginLeft="10dp"
             android:textColor="@color/black"
-            android:text="123124124"
-            />
+            android:hint="输入新手机号"
+            android:id="@+id/mPhone" />
 
 
     </LinearLayout>
-    <Button
-        android:layout_width="match_parent"
-        android:textSize="@dimen/text_large"
-        android:textColor="@color/white"
-        android:gravity="center"
-        android:text="修改手机"
-        android:background="@drawable/shape_green_5dp"
-        android:layout_margin="20dp"
-        android:layout_height="40dp" />
+   <com.ych.mall.widget.ProgressButton
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:id="@+id/onSubmit"></com.ych.mall.widget.ProgressButton>
 
 
 </LinearLayout>

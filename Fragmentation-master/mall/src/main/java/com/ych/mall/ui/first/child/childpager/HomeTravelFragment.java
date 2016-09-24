@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.umeng.socialize.utils.Log;
 import com.ych.mall.R;
 import com.ych.mall.adapter.HomeMallAdapter;
 import com.ych.mall.adapter.HomeTravelAdapter;
+import com.ych.mall.bean.HomeMallBean;
 import com.ych.mall.bean.HomeTravelBean;
 import com.ych.mall.event.MainEvent;
 import com.ych.mall.event.MallAndTravelEvent;
@@ -36,11 +38,13 @@ import com.ych.mall.widget.ClearEditText;
 import com.ych.mall.widget.SlideShowView;
 import com.ych.mall.zxingcode.activity.CaptureActivity;
 import com.zhy.http.okhttp.callback.StringCallback;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,13 +61,17 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
     RecyclerView list;
     @ViewById
     ClearEditText mSearch;
+
+
+    LinearLayout mItem1, mItem2, mItem3, mItem4, mItem5;
+
     HomeTravelBean mData;
     RecyclerViewModel<HomeTravelBean.Clas> model;
     RecyclerViewHeader header;
     List<HomeTravelBean.Bannner> mBanner;
     List<HomeTravelBean.Center> mCenter;
     List<HomeTravelBean.Hot> mHot;
-
+    List<HomeTravelBean.Class_page> page;
     public static int REQUEST_CODE = 123;
 
     public static HomeTravelFragment newInstance() {
@@ -138,10 +146,11 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
 
         HomeTravelBean bean = Http.model(HomeTravelBean.class, str);
         if (bean.getCode().equals("200")) {
-            if (mBanner == null || mCenter == null || mHot == null) {
+            if (mBanner == null) {
                 setBanner(bean.getData().getBannner());
                 setCenter(bean.getData().getCenter());
                 setHot(bean.getData().getHot());
+                setPage(bean.getData().getClass_page());
             }
             return bean.getData().getClas();
 
@@ -157,7 +166,7 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
         holder.getCovertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((SupportFragment) getParentFragment()).start(TravelListFragment.newInstance(id));
+                ((SupportFragment) getParentFragment()).start(TravelListFragment.newInstance(id,0));
             }
         });
     }
@@ -184,7 +193,7 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
         sv.setListener(new SlideShowView.OnVClick() {
             @Override
             public void Click(int position) {
-                String url=bannerUrl[position];
+                String url = bannerUrl[position];
                 String id = url.split("=")[1];
                 ((SupportFragment) getParentFragment()).start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_TRAVEL, id));
             }
@@ -200,7 +209,7 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
         iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onWeb(url);
+                //onWeb(url);
             }
         });
 
@@ -223,6 +232,36 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
 
                     ((SupportFragment) getParentFragment()).start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_TRAVEL, id));
 
+                }
+            });
+            i++;
+        }
+    }
+
+    List<LinearLayout> vList;
+
+    private void setPage(List<HomeTravelBean.Class_page> page) {
+        vList = new ArrayList<>();
+        mItem1 = (LinearLayout) header.findViewById(R.id.mItem1);
+        mItem2 = (LinearLayout) header.findViewById(R.id.mItem2);
+        mItem3 = (LinearLayout) header.findViewById(R.id.mItem3);
+        mItem4 = (LinearLayout) header.findViewById(R.id.mItem4);
+        mItem5 = (LinearLayout) header.findViewById(R.id.mItem5);
+        vList.add(mItem1);
+        vList.add(mItem2);
+        vList.add(mItem3);
+        vList.add(mItem4);
+        vList.add(mItem5);
+        int i = 0;
+        setTAG("travel");
+        log(page.size());
+
+        for (HomeTravelBean.Class_page p : page) {
+            final String id = p.getClass_id();
+            vList.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((SupportFragment) getParentFragment()).start(TravelListFragment.newInstance(id,-1));
                 }
             });
             i++;

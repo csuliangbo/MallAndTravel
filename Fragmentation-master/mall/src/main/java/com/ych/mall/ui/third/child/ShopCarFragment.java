@@ -82,7 +82,7 @@ public class ShopCarFragment extends BaseFragment implements RecyclerViewModel.R
 
     @Click
     void tiText() {
-
+MallAndTravelModel.clearShopCar(clearShopCar);
     }
 
     @AfterViews
@@ -134,7 +134,7 @@ public class ShopCarFragment extends BaseFragment implements RecyclerViewModel.R
         holder.setText(R.id.num, num + "");
         holder.loadImg(getActivity(), R.id.pic, Http.GOODS_PIC_URL + t.getPic_url());
         if (t.getTaocan_name() != null)
-            holder.setText(R.id.group, "套餐："+t.getTaocan_name());
+            holder.setText(R.id.group, "套餐：" + t.getTaocan_name());
         final CheckBox cb = holder.getView(R.id.select);
         final String id = t.getCart_id();
         if (t.isSelect()) {
@@ -245,6 +245,23 @@ public class ShopCarFragment extends BaseFragment implements RecyclerViewModel.R
             ParentBean bean = Http.model(ParentBean.class, response);
             if (bean.getCode().equals("200")) {
             }
+        }
+    };
+
+    StringCallback clearShopCar = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            TOT("网络连接失败");
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            ParentBean bean = Http.model(ParentBean.class, response);
+            if (bean.getCode().equals("200"))
+                model.onRefresh();
+            else
+                TOT(bean.getMessage());
+
         }
     };
 }

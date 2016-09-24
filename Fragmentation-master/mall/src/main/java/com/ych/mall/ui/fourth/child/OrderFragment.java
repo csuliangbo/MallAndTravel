@@ -160,7 +160,8 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
 
     @Override
     public List<OrderBean.OrderData> getList(String str) {
-        mLoading.setVisibility(View.GONE);
+        if (mLoading != null)
+            mLoading.setVisibility(View.GONE);
         OrderBean bean = Http.model(OrderBean.class, str);
         if (bean.getCode().equals("200")) {
             return bean.getData();

@@ -53,7 +53,7 @@
                         android:id="@+id/mID"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="加载中..."
+                        android:text=" "
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_mid" />
 
@@ -73,7 +73,7 @@
                     android:gravity="center"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text="加载中..."
+                    android:text=" "
                     android:textColor="@color/text_orange"
                     android:textSize="@dimen/text_mini" />
 

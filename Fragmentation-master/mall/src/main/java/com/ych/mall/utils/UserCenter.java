@@ -26,6 +26,7 @@ public class UserCenter {
     }
 
     public boolean isLoggin() {
+        Log.i(TAG,getCurrentUserId());
         if (SharedPreferencesUtil.getString(USER_ID).equals(""))
             return false;
         else

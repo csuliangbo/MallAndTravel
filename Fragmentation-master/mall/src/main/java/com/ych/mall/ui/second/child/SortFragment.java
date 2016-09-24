@@ -66,6 +66,7 @@ public class SortFragment extends BaseFragment {
 
     @AfterViews
     public void initView() {
+
         mOldType = mType;
         EventBus.getDefault().register(this);
         onBack.setVisibility(View.GONE);
@@ -99,6 +100,7 @@ public class SortFragment extends BaseFragment {
 
         @Override
         public List<SortRightData> getList(String str) {
+
             mLoading.setVisibility(View.GONE);
             SortRightBean bean = Http.model(SortRightBean.class, str);
             if (bean.getCode().equals("200"))

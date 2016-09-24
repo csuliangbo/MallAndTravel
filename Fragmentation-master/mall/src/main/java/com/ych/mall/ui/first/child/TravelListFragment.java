@@ -68,7 +68,6 @@ public class TravelListFragment extends BaseFragment implements RecyclerViewMode
 
     @Override
     public void getData(StringCallback callback, int page) {
-        log(id);
         MallAndTravelModel.travelList(callback, page, id, type);
     }
 
@@ -80,7 +79,6 @@ public class TravelListFragment extends BaseFragment implements RecyclerViewMode
 
     @Override
     public List<TravelListData> getList(String str) {
-
         log(str);
         mLoading.setVisibility(View.GONE);
         TravelListBean bean = Http.model(TravelListBean.class, str);

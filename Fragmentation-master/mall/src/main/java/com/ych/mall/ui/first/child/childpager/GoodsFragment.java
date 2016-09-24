@@ -90,7 +90,7 @@ public class GoodsFragment extends BaseFragment {
     }
 
     List<GoodsDetailBean.Taocan> datas;
-    List<String> mDate;
+    List<TravelDetailBean.Taocan> mDate;
     TagBaseAdapter tAdapter;
     String groupId;
     String groupTitle;
@@ -269,16 +269,16 @@ public class GoodsFragment extends BaseFragment {
 
     }
 
-    private void travel(TravelDetailBean.TravelDetaiData t) {
+    private void travel(TravelDetailBean.TravelDetailData t) {
         if (t == null)
             return;
         mPriceOld.setVisibility(View.GONE);
         sT(mTitle, t.getTitle());
-        sT(mPriceNew, t.getPrice_new());
-        sT(mPriceOld, t.getPrice_old());
+        //sT(mPriceNew, t.getPrice_new());
+        //sT(mPriceOld, t.getPrice_old());
         points.setText("送积分（" + t.getFanli_jifen() + "积分）");
         //stock.setText("库存：" + t.getKucun() + "件");
-        mPrice = t.getPrice_new();
+        // mPrice = t.getPrice_new();
         mPoint = t.getFanli_jifen();
         if (t.getPic_url() != null) {
             String[] banner = new String[t.getPic_tuji().size()];
@@ -292,21 +292,21 @@ public class GoodsFragment extends BaseFragment {
 
         sT(city, "出发城市：" + t.getChufa_address());
         time.setVisibility(View.GONE);
-        mDate = t.getChufa_date();
+        mDate = t.getTaocan();
         if (mDate == null)
             return;
         packagell.setVisibility(View.VISIBLE);
         mGroup.setVisibility(View.GONE);
         List<String> tagDatas = new ArrayList<>();
-        for (String s : mDate) {
-            tagDatas.add(s);
+        for (TravelDetailBean.Taocan tc : mDate) {
+            tagDatas.add(tc.getChufa_date());
         }
         tAdapter = new TagBaseAdapter(getActivity(), tagDatas);
         mTags.setAdapter(tAdapter);
         mTags.setItemClickListener(new TagCloudLayout.TagItemClickListener() {
             @Override
             public void itemClick(int position) {
-                groupTitle = mDate.get(position);
+                groupTitle = mDate.get(position).getChufa_date();
             }
         });
     }
@@ -325,8 +325,8 @@ public class GoodsFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response, int id) {
-            if (mLoading!=null)
-            mLoading.setVisibility(View.GONE);
+            if (mLoading != null)
+                mLoading.setVisibility(View.GONE);
 
             try {
                 GoodsDetailBean bean = Http.model(GoodsDetailBean.class, response);

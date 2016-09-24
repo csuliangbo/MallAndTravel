@@ -4,7 +4,9 @@
     android:layout_height="match_parent"
     android:background="#EEEEEE"
     android:orientation="vertical">
-<include layout="@layout/include_title"/>
+
+    <include layout="@layout/include_title" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,11 +29,12 @@
             android:padding="10dp">
 
             <TextView
+                android:id="@+id/tv_A"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textSize="@dimen/text_large"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"
+                android:textSize="@dimen/text_large" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -56,11 +59,12 @@
             android:padding="10dp">
 
             <TextView
+                android:id="@+id/tv_B"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textSize="@dimen/text_xxlarge"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"
+                android:textSize="@dimen/text_xxlarge" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -71,11 +75,11 @@
         </LinearLayout>
 
         <TextView
-            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
             android:text="小积分有大用，多领一些囤起来"
             android:textColor="#ffffff" />
     </LinearLayout>

@@ -83,6 +83,14 @@ public class GoodsFragment extends BaseFragment {
     CheckBox mProtocol;
     @ViewById
     FrameLayout mLoading;
+    @ViewById(R.id.ll_people_number)
+    LinearLayout llPeopleNumber;
+    @ViewById(R.id.tv_num_adult)
+    TextView tvNumAdult;
+    @ViewById(R.id.tv_num_children)
+    TextView tvNumChildren;
+    private int numAdult;
+    private int numChildren;
 
     @Click
     void onProtocol() {
@@ -101,6 +109,34 @@ public class GoodsFragment extends BaseFragment {
     String goodsUrl = "http://www.zzumall.com/index.php/Mobile/Goods/goods_detail_m.html?id=";
     String travelUrl = "http://www.zzumall.com/index.php/Mobile/Tourism/tourism_detail_m.html?id=";
     String protocolUrl = "http://www.zzumall.com/index.php/Mobile/Tourism/lvyou_xieyi";
+
+    @Click
+    void tv_sub_num_adult() {
+        numAdult--;
+        if (numAdult <= 0)
+            numAdult = 0;
+        tvNumAdult.setText(numAdult + "");
+    }
+
+    @Click
+    void tv_add_num_adult() {
+        numAdult++;
+        tvNumAdult.setText(numAdult + "");
+    }
+
+    @Click
+    void tv_sub_num_children() {
+        numChildren--;
+        if (numChildren <= 0)
+            numChildren = 0;
+        tvNumChildren.setText(numChildren + "");
+    }
+
+    @Click
+    void tv_add_num_children() {
+        numChildren++;
+        tvNumChildren.setText(numChildren + "");
+    }
 
     //商品购买
     @Click
@@ -206,7 +242,6 @@ public class GoodsFragment extends BaseFragment {
             }
         }
 
-
     }
 
     private void goodsInit() {
@@ -217,6 +252,7 @@ public class GoodsFragment extends BaseFragment {
         packagell.setVisibility(View.VISIBLE);
         bottomLL.setVisibility(View.VISIBLE);
         order.setVisibility(View.GONE);
+        llPeopleNumber.setVisibility(View.GONE);
     }
 
     @Click

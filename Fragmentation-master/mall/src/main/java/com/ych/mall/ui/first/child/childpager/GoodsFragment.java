@@ -28,6 +28,7 @@ import com.ych.mall.ui.PayActivity_;
 import com.ych.mall.ui.base.BaseFragment;
 import com.ych.mall.ui.fourth.WebViewActivity_;
 import com.ych.mall.utils.KV;
+import com.ych.mall.utils.UserCenter;
 import com.ych.mall.widget.SlideShowView;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -47,10 +48,8 @@ import okhttp3.Call;
  */
 @EFragment(R.layout.fragment_goods)
 public class GoodsFragment extends BaseFragment {
-    String TAG = GoodsFragment.class.getName();
     public static final int TYPE_GOODS = 11;
     public static final int TYPE_TRAVEL = 12;
-
     private int currentType = TYPE_TRAVEL;
     @ViewById(R.id.fg_img)
     SlideShowView showView;
@@ -64,16 +63,12 @@ public class GoodsFragment extends BaseFragment {
     TextView points;
     @ViewById(R.id.fg_protocol)
     FrameLayout protocol;
-    //库存
     @ViewById(R.id.fg_stock)
     TextView stock;
     @ViewById(R.id.fg_time)
     TextView time;
     @ViewById(R.id.fg_order)
     Button order;
-    String mId;
-
-
     @ViewById
     TextView mTitle;
     @ViewById
@@ -86,6 +81,8 @@ public class GoodsFragment extends BaseFragment {
     TextView mGroup;
     @ViewById
     CheckBox mProtocol;
+    @ViewById
+    FrameLayout mLoading;
 
     @Click
     void onProtocol() {
@@ -97,8 +94,7 @@ public class GoodsFragment extends BaseFragment {
     TagBaseAdapter tAdapter;
     String groupId;
     String groupTitle;
-    @ViewById
-    TextView mLoading;
+    String mId;
     String mPrice;
     String mPoint;
     String goodsID;
@@ -106,10 +102,37 @@ public class GoodsFragment extends BaseFragment {
     String travelUrl = "http://www.zzumall.com/index.php/Mobile/Tourism/tourism_detail_m.html?id=";
     String protocolUrl = "http://www.zzumall.com/index.php/Mobile/Tourism/lvyou_xieyi";
 
+    //商品购买
     @Click
     void onBuy() {
-
+        if (datas != null && datas.size() > 0) {
+            if (groupTitle == null) {
+                TOT("请选择套餐");
+                return;
+            }
+        }
         startActivity(new Intent(getActivity(), PayActivity_.class).putExtra(KV.GOODS_ID, mId));
+    }
+
+    //旅游预订
+    @Click
+    public void fg_order() {
+        if (UserCenter.getInstance().isTourist())
+            return;
+        if (groupTitle == null) {
+            TOT("请选择套餐");
+            return;
+        }
+        if (mProtocol.isChecked() == false) {
+            TOT("请同意旅游协议");
+            return;
+        }
+        Bundle bundle = new Bundle();
+        bundle.putString(KV.GOODS_ID, mId);
+        bundle.putInt("TYPE", TYPE_TRAVEL);
+        bundle.putString("Date", groupTitle);
+        startActivity(new Intent(getActivity(), PayActivity_.class).putExtras(bundle));
+
     }
 
     //分享
@@ -154,15 +177,6 @@ public class GoodsFragment extends BaseFragment {
                 .open();
     }
 
-    @Click
-    public void fg_order() {
-        Bundle bundle = new Bundle();
-        bundle.putString(KV.GOODS_ID, mId);
-        bundle.putInt("TYPE", TYPE_TRAVEL);
-        bundle.putString("Date", groupTitle);
-        startActivity(new Intent(getActivity(), PayActivity_.class).putExtras(bundle));
-
-    }
 
     public static GoodsFragment newInstance(int type, String id) {
         Bundle bundle = new Bundle();
@@ -183,6 +197,15 @@ public class GoodsFragment extends BaseFragment {
         } else {
             MallAndTravelModel.travelDetail(travelCallBack, mId);
         }
+        if (UserCenter.getInstance().isTourist()) {
+            order.setBackgroundColor(getActivity().getResources().getColor(R.color.text_gray));
+            order.setText("请晋升为会员，继续购物");
+            if (currentType == TYPE_GOODS) {
+                order.setVisibility(View.VISIBLE);
+                bottomLL.setVisibility(View.GONE);
+            }
+        }
+
 
     }
 
@@ -198,6 +221,12 @@ public class GoodsFragment extends BaseFragment {
 
     @Click
     void onShopCar() {
+        if (datas != null && datas.size() > 0) {
+            if (groupTitle == null) {
+                TOT("请选择套餐");
+                return;
+            }
+        }
         MallAndTravelModel.addShopCar(shopCallBack, mId, groupTitle, mPoint, mPrice);
     }
 

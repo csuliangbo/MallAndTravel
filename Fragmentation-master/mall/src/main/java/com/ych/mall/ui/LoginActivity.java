@@ -66,6 +66,7 @@ public class LoginActivity extends BaseActivity {
             if(bean.getCode().equals("200")){
                 TOT("登录成功");
                 UserCenter.getInstance().setCurrentUserId(bean.getData().get(0).getId());
+                UserCenter.getInstance().setUserGrade(bean.getData().get(0).getGrade_name());
                 finish();
             }else
                 TOT(bean.getMessage());

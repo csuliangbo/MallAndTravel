@@ -325,6 +325,7 @@ public class GoodsFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response, int id) {
+            if (mLoading!=null)
             mLoading.setVisibility(View.GONE);
 
             try {

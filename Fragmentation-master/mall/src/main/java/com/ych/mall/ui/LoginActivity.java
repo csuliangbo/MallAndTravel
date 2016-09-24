@@ -7,6 +7,7 @@ import android.widget.EditText;
 
 import com.ych.mall.R;
 import com.ych.mall.bean.LoginBean;
+import com.ych.mall.event.LoginEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.LoginAndRegistModel;
 import com.ych.mall.ui.base.BaseActivity;
@@ -20,6 +21,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.EventBus;
 
 import okhttp3.Call;
 
@@ -74,6 +76,7 @@ public class LoginActivity extends BaseActivity {
                 TOT("登录成功");
                 UserCenter.getInstance().setCurrentUserId(bean.getData().get(0).getId());
                 UserCenter.getInstance().setUserGrade(bean.getData().get(0).getGrade_name());
+                EventBus.getDefault().post(new LoginEvent());
                 finish();
             }else
                 TOT(bean.getMessage());

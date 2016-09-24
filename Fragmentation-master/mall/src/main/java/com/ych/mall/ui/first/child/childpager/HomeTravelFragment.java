@@ -34,6 +34,7 @@ import com.ych.mall.ui.first.child.GoodsViewPagerFragment;
 import com.ych.mall.ui.first.child.TravelListFragment;
 import com.ych.mall.ui.fourth.WebViewActivity_;
 import com.ych.mall.utils.KV;
+import com.ych.mall.utils.UserCenter;
 import com.ych.mall.widget.ClearEditText;
 import com.ych.mall.widget.SlideShowView;
 import com.ych.mall.zxingcode.activity.CaptureActivity;
@@ -104,7 +105,11 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
 
     @Click
     void onLogin() {
-        getActivity().startActivity(new Intent(getActivity(), LoginActivity_.class));
+
+        if (UserCenter.getInstance().isLoggin())
+            EventBus.getDefault().post(new MainEvent(3));
+        else
+            getActivity().startActivity(new Intent(getActivity(), LoginActivity_.class));
     }
 
     @Click
@@ -229,8 +234,8 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
         ivList.add((ImageView) header.findViewById(R.id.banner_bottom_iv4));
         int i = 0;
         for (ImageView iv : ivList) {
-            final String id = hot.get(i).getId();
-            loadPic(Http.GOODS_PIC_URL + hot.get(i).getSige_url(), iv);
+            final String id = hot.get(i).getAd_link().split("=")[1];
+            loadPic(Http.AD_PIC_URL + hot.get(i).getSige_url(), iv);
             iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

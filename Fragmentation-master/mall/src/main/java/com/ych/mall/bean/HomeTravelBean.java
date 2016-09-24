@@ -101,33 +101,24 @@ public class HomeTravelBean extends ParentBean{
         private String sige_url;
 
 
-        private String id;
+        private String ad_link;
 
 
-        public void setSige_url(String sige_url){
+        public String getAd_link() {
+            return ad_link;
+        }
 
+        public void setAd_link(String ad_link) {
+            this.ad_link = ad_link;
+        }
+
+        public String getSige_url() {
+            return sige_url;
+        }
+
+        public void setSige_url(String sige_url) {
             this.sige_url = sige_url;
-
         }
-
-        public String getSige_url(){
-
-            return this.sige_url;
-
-        }
-
-        public void setId(String id){
-
-            this.id = id;
-
-        }
-
-        public String getId(){
-
-            return this.id;
-
-        }
-
     }
     public class Center {
 

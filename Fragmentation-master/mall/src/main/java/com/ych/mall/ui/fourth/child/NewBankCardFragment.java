@@ -1,6 +1,7 @@
 package com.ych.mall.ui.fourth.child;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.ych.mall.R;
 import com.ych.mall.bean.ParentBean;
@@ -34,7 +35,9 @@ public class NewBankCardFragment extends BaseFragment {
         back();
     }
     @ViewById
-    ClearEditText mName, mID, mType, mBankName, mCardNum, mPhone,tiTitle;
+    ClearEditText mName, mID, mType, mBankName, mCardNum, mPhone;
+    @ViewById
+    TextView tiTitle;
     @ViewById
     ProgressButton onSubmit;
 

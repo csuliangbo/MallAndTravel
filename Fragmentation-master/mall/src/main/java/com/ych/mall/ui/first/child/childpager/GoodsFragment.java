@@ -22,12 +22,14 @@ import com.ych.mall.R;
 import com.ych.mall.bean.GoodsDetailBean;
 import com.ych.mall.bean.ParentBean;
 import com.ych.mall.bean.TravelDetailBean;
+import com.ych.mall.event.LoginEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.MallAndTravelModel;
 import com.ych.mall.ui.PayActivity_;
 import com.ych.mall.ui.base.BaseFragment;
 import com.ych.mall.ui.fourth.WebViewActivity_;
 import com.ych.mall.utils.KV;
+import com.ych.mall.utils.Tools;
 import com.ych.mall.utils.UserCenter;
 import com.ych.mall.widget.SlideShowView;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -36,6 +38,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +75,7 @@ public class GoodsFragment extends BaseFragment {
     @ViewById
     TextView mTitle;
     @ViewById
-    TextView mPriceNew;
+    TextView mPriceNew, mPriceTV, mPriceChildTV;
     @ViewById
     TextView mPriceOld;
     @ViewById
@@ -98,12 +101,15 @@ public class GoodsFragment extends BaseFragment {
     }
 
     List<GoodsDetailBean.Taocan> datas;
-    List<String> mDate;
+    List<TravelDetailBean.Taocan> mDate;
     TagBaseAdapter tAdapter;
     String groupId;
     String groupTitle;
     String mId;
+    //成人价
     String mPrice;
+    //儿童价
+    String mChildPrice;
     String mPoint;
     String goodsID;
     String goodsUrl = "http://www.zzumall.com/index.php/Mobile/Goods/goods_detail_m.html?id=";
@@ -116,12 +122,14 @@ public class GoodsFragment extends BaseFragment {
         if (numAdult <= 0)
             numAdult = 0;
         tvNumAdult.setText(numAdult + "");
+        //setPrice();
     }
 
     @Click
     void tv_add_num_adult() {
         numAdult++;
         tvNumAdult.setText(numAdult + "");
+        //setPrice();
     }
 
     @Click
@@ -130,12 +138,14 @@ public class GoodsFragment extends BaseFragment {
         if (numChildren <= 0)
             numChildren = 0;
         tvNumChildren.setText(numChildren + "");
+        //setChildPrice();
     }
 
     @Click
     void tv_add_num_children() {
         numChildren++;
         tvNumChildren.setText(numChildren + "");
+        // setChildPrice();
     }
 
     //商品购买
@@ -163,6 +173,11 @@ public class GoodsFragment extends BaseFragment {
             TOT("请同意旅游协议");
             return;
         }
+        if (Integer.parseInt(getT(tvNumChildren)) + Integer.parseInt(getT(tvNumAdult)) < 1) {
+            TOT("至少选择一个人数");
+            return;
+        }
+
         Bundle bundle = new Bundle();
         bundle.putString(KV.GOODS_ID, mId);
         bundle.putInt("TYPE", TYPE_TRAVEL);
@@ -263,6 +278,7 @@ public class GoodsFragment extends BaseFragment {
                 return;
             }
         }
+        EventBus.getDefault().post(new LoginEvent());
         MallAndTravelModel.addShopCar(shopCallBack, mId, groupTitle, mPoint, mPrice);
     }
 
@@ -300,21 +316,22 @@ public class GoodsFragment extends BaseFragment {
             @Override
             public void itemClick(int position) {
                 groupTitle = datas.get(position).getGuige_title();
+                sT(mPriceNew,datas.get(position).getGuige_price_new());
             }
         });
 
     }
 
-    private void travel(TravelDetailBean.TravelDetaiData t) {
+    private void travel(TravelDetailBean.TravelDetailData t) {
         if (t == null)
             return;
         mPriceOld.setVisibility(View.GONE);
         sT(mTitle, t.getTitle());
-        sT(mPriceNew, t.getPrice_new());
-        sT(mPriceOld, t.getPrice_old());
+        //sT(mPriceNew, t.getPrice_new());
+        //sT(mPriceOld, t.getPrice_old());
         points.setText("送积分（" + t.getFanli_jifen() + "积分）");
         //stock.setText("库存：" + t.getKucun() + "件");
-        mPrice = t.getPrice_new();
+        // mPrice = t.getPrice_new();
         mPoint = t.getFanli_jifen();
         if (t.getPic_url() != null) {
             String[] banner = new String[t.getPic_tuji().size()];
@@ -328,21 +345,26 @@ public class GoodsFragment extends BaseFragment {
 
         sT(city, "出发城市：" + t.getChufa_address());
         time.setVisibility(View.GONE);
-        mDate = t.getChufa_date();
+        mDate = t.getTaocan();
         if (mDate == null)
             return;
         packagell.setVisibility(View.VISIBLE);
         mGroup.setVisibility(View.GONE);
         List<String> tagDatas = new ArrayList<>();
-        for (String s : mDate) {
-            tagDatas.add(s);
+        for (TravelDetailBean.Taocan tc : mDate) {
+            tagDatas.add(tc.getChufa_date());
         }
         tAdapter = new TagBaseAdapter(getActivity(), tagDatas);
         mTags.setAdapter(tAdapter);
         mTags.setItemClickListener(new TagCloudLayout.TagItemClickListener() {
             @Override
             public void itemClick(int position) {
-                groupTitle = mDate.get(position);
+                groupTitle = mDate.get(position).getChufa_date();
+                sT(mPriceNew, mDate.get(position).getChufa_price());
+                mPrice = mDate.get(position).getChufa_price();
+                mChildPrice = mDate.get(position).getChufa_price_et();
+                sT(mPriceTV, mPrice);
+                sT(mPriceChildTV, mChildPrice);
             }
         });
     }
@@ -351,6 +373,17 @@ public class GoodsFragment extends BaseFragment {
         startActivity(new Intent(getActivity(), WebViewActivity_.class).putExtra(KV.URL, url));
     }
 
+    //    void setPrice() {
+//        double price = Double.parseDouble(mPrice);
+//        double total = Tools.mul(price, Double.parseDouble(getT(tvNumAdult)));
+//        sT(mPriceTV, total + "");
+//    }
+//
+//    void setChildPrice(){
+//        double price = Double.parseDouble(mChildPrice);
+//        double total = Tools.mul(price, Double.parseDouble(getT(tvNumChildren)));
+//        sT(mPriceChildTV, total + "");
+//    }
     //商品
     StringCallback goodsCallBack = new StringCallback() {
         @Override
@@ -361,8 +394,8 @@ public class GoodsFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response, int id) {
-            if (mLoading!=null)
-            mLoading.setVisibility(View.GONE);
+            if (mLoading != null)
+                mLoading.setVisibility(View.GONE);
 
             try {
                 GoodsDetailBean bean = Http.model(GoodsDetailBean.class, response);
@@ -413,4 +446,6 @@ public class GoodsFragment extends BaseFragment {
 
         }
     };
+
+
 }

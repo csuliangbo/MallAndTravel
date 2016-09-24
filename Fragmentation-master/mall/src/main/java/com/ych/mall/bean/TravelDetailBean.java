@@ -7,33 +7,64 @@ import java.util.List;
  */
 public class TravelDetailBean extends ParentBean {
 
-private List<TravelDetaiData> data;
+    private List<TravelDetailData> data;
 
-    public List<TravelDetaiData> getData() {
+    public List<TravelDetailData> getData() {
         return data;
     }
 
-    public void setData(List<TravelDetaiData> data) {
+    public void setData(List<TravelDetailData> data) {
         this.data = data;
     }
+    public class Taocan {
+
+        private String chufa_date;
 
 
+        private String chufa_price;
 
-    public class TravelDetaiData {
-        @Override
-        public String toString() {
-            return "TravelDetaiData{" +
-                    "chufa_address='" + chufa_address + '\'' +
-                    ", id='" + id + '\'' +
-                    ", title='" + title + '\'' +
-                    ", pic_url='" + pic_url + '\'' +
-                    ", pic_tuji=" + pic_tuji +
-                    ", price_old='" + price_old + '\'' +
-                    ", price_new='" + price_new + '\'' +
-                    ", chufa_date='" + chufa_date + '\'' +
-                    ", fanli_jifen='" + fanli_jifen + '\'' +
-                    '}';
+
+        private String chufa_price_et;
+
+
+        public void setChufa_date(String chufa_date){
+
+            this.chufa_date = chufa_date;
+
         }
+
+        public String getChufa_date(){
+
+            return this.chufa_date;
+
+        }
+
+        public void setChufa_price(String chufa_price){
+
+            this.chufa_price = chufa_price;
+
+        }
+
+        public String getChufa_price(){
+
+            return this.chufa_price;
+
+        }
+
+        public void setChufa_price_et(String chufa_price_et){
+
+            this.chufa_price_et = chufa_price_et;
+
+        }
+
+        public String getChufa_price_et(){
+
+            return this.chufa_price_et;
+
+        }
+
+    }
+    public class TravelDetailData {
 
         private String id;
 
@@ -42,33 +73,15 @@ private List<TravelDetaiData> data;
 
 
         private String pic_url;
-
-
         private List<String> pic_tuji ;
 
-
-        private String price_old;
-
-
-        private String price_new;
-
-
-        private String chufa_address;
-
-
-        private List<String> chufa_date;
+        private List<Taocan> taocan ;
 
 
         private String fanli_jifen;
 
-
-        public List<String> getChufa_date() {
-            return chufa_date;
-        }
-
-        public void setChufa_date(List<String> chufa_date) {
-            this.chufa_date = chufa_date;
-        }
+        private String chufa_address;
+        private String shoper_id;
 
         public String getChufa_address() {
             return chufa_address;
@@ -76,24 +89,6 @@ private List<TravelDetaiData> data;
 
         public void setChufa_address(String chufa_address) {
             this.chufa_address = chufa_address;
-        }
-
-
-
-        public String getFanli_jifen() {
-            return fanli_jifen;
-        }
-
-        public void setFanli_jifen(String fanli_jifen) {
-            this.fanli_jifen = fanli_jifen;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
         }
 
         public List<String> getPic_tuji() {
@@ -104,36 +99,77 @@ private List<TravelDetaiData> data;
             this.pic_tuji = pic_tuji;
         }
 
-        public String getPic_url() {
-            return pic_url;
+        public void setId(String id){
+
+            this.id = id;
+
         }
 
-        public void setPic_url(String pic_url) {
-            this.pic_url = pic_url;
+        public String getId(){
+
+            return this.id;
+
         }
 
-        public String getPrice_new() {
-            return price_new;
-        }
+        public void setTitle(String title){
 
-        public void setPrice_new(String price_new) {
-            this.price_new = price_new;
-        }
-
-        public String getPrice_old() {
-            return price_old;
-        }
-
-        public void setPrice_old(String price_old) {
-            this.price_old = price_old;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
             this.title = title;
+
         }
-    }
+
+        public String getTitle(){
+
+            return this.title;
+
+        }
+
+        public void setPic_url(String pic_url){
+
+            this.pic_url = pic_url;
+
+        }
+
+        public String getPic_url(){
+
+            return this.pic_url;
+
+        }
+
+        public void setTaocan(List<Taocan> taocan){
+
+            this.taocan = taocan;
+
+        }
+
+        public List<Taocan> getTaocan(){
+
+            return this.taocan;
+
+        }
+
+        public void setFanli_jifen(String fanli_jifen){
+
+            this.fanli_jifen = fanli_jifen;
+
+        }
+
+        public String getFanli_jifen(){
+
+            return this.fanli_jifen;
+
+        }
+
+        public void setShoper_id(String shoper_id){
+
+            this.shoper_id = shoper_id;
+
+        }
+
+        public String getShoper_id(){
+
+            return this.shoper_id;
+
+        }
+
+       }
 }

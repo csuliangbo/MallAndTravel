@@ -20,6 +20,7 @@ import com.ych.mall.R;
 import com.ych.mall.adapter.HomeMallAdapter;
 import com.ych.mall.adapter.HomeTravelAdapter;
 import com.ych.mall.bean.HomeMallBean;
+import com.ych.mall.event.MainEvent;
 import com.ych.mall.event.MallAndTravelEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.MallAndTravelModel;
@@ -34,6 +35,7 @@ import com.ych.mall.ui.first.child.GoodsViewPagerFragment;
 
 import com.ych.mall.ui.fourth.WebViewActivity_;
 import com.ych.mall.utils.KV;
+import com.ych.mall.utils.UserCenter;
 import com.ych.mall.widget.ClearEditText;
 import com.ych.mall.widget.SlideShowView;
 import com.ych.mall.zxingcode.activity.CaptureActivity;
@@ -102,6 +104,10 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
 
     @Click
     void onLogin() {
+
+        if (UserCenter.getInstance().isLoggin())
+            EventBus.getDefault().post(new MainEvent(3));
+            else
         getActivity().startActivity(new Intent(getActivity(), LoginActivity_.class));
     }
 

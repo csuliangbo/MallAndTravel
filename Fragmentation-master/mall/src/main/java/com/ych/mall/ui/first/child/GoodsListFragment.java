@@ -88,6 +88,7 @@ int type;
     //解析JSON数据
     @Override
     public List<GoodsListData> getList(String str) {
+        if (mLoading!=null)
         mLoading.setVisibility(View.GONE);
         GoodsListBean bean = Http.model(GoodsListBean.class, str);
         if (bean.getCode().equals("200"))

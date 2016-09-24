@@ -169,8 +169,10 @@ public class MainActivity extends SupportActivity implements BaseLazyMainFragmen
 
     @Subscribe
     public void onEvent(MainEvent e) {
-        mBottomBar.setCurrentItem(1);
-        EventBus.getDefault().post(new ClickEvent(1));
+
+        mBottomBar.setCurrentItem(e.getPosition());
+        EventBus.getDefault().post(new ClickEvent(e.getPosition()));
+
     }
 
 }

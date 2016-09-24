@@ -20,7 +20,6 @@ import com.ych.mall.R;
 import com.ych.mall.adapter.HomeMallAdapter;
 import com.ych.mall.adapter.HomeTravelAdapter;
 import com.ych.mall.bean.HomeMallBean;
-import com.ych.mall.event.MainEvent;
 import com.ych.mall.event.MallAndTravelEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.MallAndTravelModel;

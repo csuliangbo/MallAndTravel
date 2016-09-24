@@ -149,7 +149,12 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
             if (mBanner == null) {
                 setBanner(bean.getData().getBannner());
                 setCenter(bean.getData().getCenter());
-                setHot(bean.getData().getHot());
+                try {
+                    setHot(bean.getData().getHot());
+                }catch (Exception e)
+                {
+
+                }
                 setPage(bean.getData().getClass_page());
             }
             return bean.getData().getClas();
@@ -225,7 +230,7 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
         int i = 0;
         for (ImageView iv : ivList) {
             final String id = hot.get(i).getId();
-            loadPic(Http.AD_PIC_URL + hot.get(i).getSige_url(), iv);
+            loadPic(Http.GOODS_PIC_URL + hot.get(i).getSige_url(), iv);
             iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

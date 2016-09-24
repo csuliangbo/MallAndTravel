@@ -1,8 +1,10 @@
 package com.ych.mall.ui.third.child;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -15,6 +17,7 @@ import com.ych.mall.R;
 import com.ych.mall.bean.ParentBean;
 import com.ych.mall.bean.ShopCarBean;
 import com.ych.mall.bean.ShopCarBean.ShopCarData;
+import com.ych.mall.event.LoginEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.MallAndTravelModel;
 import com.ych.mall.model.RecyclerViewModel;
@@ -31,6 +34,8 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -80,13 +85,32 @@ public class ShopCarFragment extends BaseFragment implements RecyclerViewModel.R
     SwipeRefreshLayout mLayout;
     List<String> idList;
 
+    //清空购物车
     @Click
     void tiText() {
-MallAndTravelModel.clearShopCar(clearShopCar);
+        AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+        builder.setTitle("提示");
+        builder.setMessage("确定要清空购物车？");
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                MallAndTravelModel.clearShopCar(clearShopCar);
+            }
+        });
+        builder.show();
+
+
     }
 
     @AfterViews
     public void initViews() {
+        EventBus.getDefault().register(this);
         onBack.setVisibility(View.GONE);
         tiText.setVisibility(View.VISIBLE);
         tiText.setText("清空");
@@ -264,4 +288,18 @@ MallAndTravelModel.clearShopCar(clearShopCar);
 
         }
     };
+
+    @Subscribe
+    public void onEvent(LoginEvent e) {
+      if (model.isEmpty())
+          model.newInit();
+        else
+          model.onRefresh();
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
 }

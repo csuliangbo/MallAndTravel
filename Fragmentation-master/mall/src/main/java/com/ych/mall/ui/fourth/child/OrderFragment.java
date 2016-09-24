@@ -97,7 +97,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
         mTab.addTab(mTab.newTab().setText("全部"));
         mTab.addTab(mTab.newTab().setText("待付款"));
         mTab.addTab(mTab.newTab().setText("待收货"));
-        mTab.addTab(mTab.newTab().setText("待评价"));
+        //mTab.addTab(mTab.newTab().setText("待评价"));
 
 
         mTab.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

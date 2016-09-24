@@ -7,9 +7,12 @@ import android.widget.EditText;
 
 import com.ych.mall.R;
 import com.ych.mall.bean.LoginBean;
+import com.ych.mall.event.LoginEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.LoginAndRegistModel;
 import com.ych.mall.ui.base.BaseActivity;
+import com.ych.mall.ui.fourth.WebViewActivity_;
+import com.ych.mall.utils.KV;
 import com.ych.mall.utils.UserCenter;
 import com.ych.mall.widget.ProgressButton;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -18,6 +21,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.EventBus;
 
 import okhttp3.Call;
 
@@ -48,6 +52,11 @@ public class LoginActivity extends BaseActivity {
             return;
         if (isEmp(mPwd, "密码不能为空"))
             return;
+       if(getT(mPhone).charAt(1)=='9'){
+           web("http://www.zzumall.com/index.php/Mobile/Other/index.html");
+           return;
+       }
+
         onSubmit.startLoading();
         LoginAndRegistModel.login(getT(mPhone), getT(mPwd), callback);
     }
@@ -67,11 +76,15 @@ public class LoginActivity extends BaseActivity {
                 TOT("登录成功");
                 UserCenter.getInstance().setCurrentUserId(bean.getData().get(0).getId());
                 UserCenter.getInstance().setUserGrade(bean.getData().get(0).getGrade_name());
+                EventBus.getDefault().post(new LoginEvent());
                 finish();
             }else
                 TOT(bean.getMessage());
         }
     };
+    void web(String url) {
+        startActivity(new Intent(this, WebViewActivity_.class).putExtra(KV.URL, url));
+    }
 
     @Click
     void onForget(){

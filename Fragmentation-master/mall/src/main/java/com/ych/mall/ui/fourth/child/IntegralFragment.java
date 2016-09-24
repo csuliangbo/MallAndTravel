@@ -11,6 +11,7 @@ import com.ych.mall.ui.base.BaseFragment;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
@@ -30,13 +31,21 @@ public class IntegralFragment extends BaseFragment {
 
     }
 
+    @ViewById(R.id.tiTitle)
+    TextView tiTitle;
     @ViewById(R.id.tv_A)
     TextView tvA;
     @ViewById(R.id.tv_B)
     TextView tvB;
 
+    @Click
+    void onBack() {
+        back();
+    }
+
     @AfterViews
     void init() {
+        tiTitle.setText("会员积分");
         UserInfoModel.accountManage(accountCallback);
     }
 

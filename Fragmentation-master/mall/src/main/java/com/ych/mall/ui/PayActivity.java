@@ -15,6 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
+import com.tencent.mm.sdk.constants.Build;
+import com.tencent.mm.sdk.modelpay.PayReq;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.ych.mall.R;
 import com.ych.mall.bean.CreateOrderBean;
 import com.ych.mall.bean.GoodsDetailBean;
@@ -370,4 +374,30 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             tvAddress.setText(address);
         }
     }
+
+    /**
+     * 微信支付
+     */
+    private IWXAPI api;
+    private void payWeixin() {
+//        api = WXAPIFactory.createWXAPI(this,"wx5e85371c27606b8b");
+//        boolean isPaySupported = api.getWXAppSupportAPI() >= Build.PAY_SUPPORTED_SDK_INT;
+//        if (!isPaySupported) {
+//            TOT("当前微信不支持支付功能");
+//            return;
+//        }
+//        PayReq req = new PayReq();
+//        req.appId = jsonObject.getString("appid");
+//        req.partnerId = jsonObject.getString("partnerid");
+//        req.prepayId = jsonObject.getString("prepayid");
+//        req.nonceStr = jsonObject.getString("noncestr");
+//        req.timeStamp = jsonObject.getString("timestamp");
+//        req.packageValue = jsonObject.getString("package");
+//        req.sign = jsonObject.getString("sign");
+//        ViewInject.toast("正常调起支付");
+//        // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
+//        api.registerApp(MyApplication.APP_ID);
+//        api.sendReq(req);
+    }
+
 }

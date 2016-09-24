@@ -135,8 +135,8 @@ public class MallAndTravelModel {
         HttpModel.newInstance(CLEAR_SHOPCAR).post(map, callback);
     }
 
-    //创建订单
-    static String CREATE_ORDER = urlGoods + "create_order";
+    //创建商品订单
+    static String CREATE_TOUR_ORDER = urlGoods + "create_order";
 
     public static void createOrder(StringCallback callback, String price_sum, String price_shiji,
                                    String address, String realName, String mobile, String number,
@@ -146,6 +146,33 @@ public class MallAndTravelModel {
         map.put("price_sum", price_sum);
         map.put("price_shij", price_shiji);
         map.put("user_address", address);
+        map.put("realname", realName);
+        map.put("mobile", mobile);
+        map.put("num_sum", number);
+        map.put("fanli_jifen", jifen);
+        map.put("cart_id", cartId);
+        HttpModel.newInstance(CREATE_TOUR_ORDER).post(map, callback);
+    }
+
+    //创建旅游订单
+    static String CREATE_ORDER = urlTravel + "create_order";
+
+    public static void createTourOrder(StringCallback callback, String price_sum, String price_shiji,
+                                       String address, String realName, String mobile, String number,
+                                       String jifen, String goods_id, String jifenA, String jifenB, String date) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("user_id", UserCenter.getInstance().getCurrentUserId());
+        map.put("price_sum", price_sum);
+        map.put("price_shij", price_shiji);
+        map.put("user_address", address);
+        map.put("realname", realName);
+        map.put("mobile", mobile);
+        map.put("num_sum", number);
+        map.put("fanli_jifen", jifen);
+        map.put("goods_id", goods_id);
+        map.put("use_jf_limit", jifenA);
+        map.put("use_jf_currency", jifenB);
+        map.put("chufa_date", date);
         HttpModel.newInstance(CREATE_ORDER).post(map, callback);
     }
 
@@ -225,12 +252,12 @@ public class MallAndTravelModel {
         HttpModel.newInstance(TRAVEL_DETAIL).post(map, callback);
     }
 
-    static String TRAVEL_RESERVE = "tour_reserve";
+    static String TRAVEL_RESERVE = urlTravel + "tour_reserve";
 
     //旅游预定
-    public static void travelReseve(StringCallback callback, String id, String date) {
+    public static void travelReseve(StringCallback callback, String goodsId, String date) {
         HashMap<String, String> map = new HashMap<>();
-        map.put("id", id);
+        map.put("goods_id", goodsId);
         map.put("user_id", UserCenter.getInstance().getCurrentUserId());
         map.put("chufa_date", date);
         HttpModel.newInstance(TRAVEL_RESERVE).post(map, callback);

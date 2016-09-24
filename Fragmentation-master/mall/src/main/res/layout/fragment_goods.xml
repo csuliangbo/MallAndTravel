@@ -257,7 +257,7 @@
                             android:background="@drawable/textview_shape"
                             android:gravity="center"
                             android:padding="10dp"
-                            android:text="1" />
+                            android:text="0" />
 
                         <TextView
                             android:id="@+id/tv_add_num_adult"
@@ -278,10 +278,10 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tv_money_adult"
+                            android:id="@+id/mPriceTV"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="6990"
+                            android:text="0"
                             android:textColor="@color/text_red"
                             android:textSize="@dimen/text_xlarge" />
 
@@ -332,7 +332,7 @@
                             android:background="@drawable/textview_shape"
                             android:gravity="center"
                             android:padding="10dp"
-                            android:text="1" />
+                            android:text="0" />
 
                         <TextView
                             android:id="@+id/tv_add_num_children"
@@ -353,7 +353,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tv_money_children"
+                            android:id="@+id/mPriceChildTV"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"

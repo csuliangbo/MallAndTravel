@@ -26,6 +26,7 @@ import com.ych.mall.model.Http;
 import com.ych.mall.model.MallAndTravelModel;
 import com.ych.mall.model.RecyclerViewModel;
 import com.ych.mall.model.YViewHolder;
+import com.ych.mall.ui.BuyVipActivity_;
 import com.ych.mall.ui.LoginActivity_;
 import com.ych.mall.ui.base.BaseFragment;
 import com.ych.mall.ui.first.child.GoodsListFragment;
@@ -160,7 +161,7 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
         holder.getCovertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((SupportFragment) getParentFragment()).start(GoodsListFragment.newInstance(id,0));
+                ((SupportFragment) getParentFragment()).start(GoodsListFragment.newInstance(id, 0));
             }
         });
     }
@@ -188,7 +189,7 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
             @Override
             public void Click(int position) {
 
-                String url=bannerUrl[position];
+                String url = bannerUrl[position];
                 String id = url.split("=")[1];
                 ((SupportFragment) getParentFragment()).start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_GOODS, id));
 
@@ -207,7 +208,7 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
             public void onClick(View v) {
                 String id = url.split("=")[1];
 
-                ((SupportFragment) getParentFragment()).start(GoodsListFragment.newInstance(id,-1));
+                ((SupportFragment) getParentFragment()).start(GoodsListFragment.newInstance(id, -1));
             }
         });
 

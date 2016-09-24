@@ -15,19 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
-import com.tencent.mm.sdk.constants.Build;
-import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.ych.mall.R;
 import com.ych.mall.bean.CreateOrderBean;
 import com.ych.mall.bean.GoodsDetailBean;
-import com.ych.mall.bean.ParentBean;
 import com.ych.mall.bean.PayBean;
 import com.ych.mall.bean.PayRequestBean;
-import com.ych.mall.bean.SearchBean;
-import com.ych.mall.bean.SearchTravelBean;
-import com.ych.mall.bean.ShopCarBean;
 import com.ych.mall.bean.TravelRecverBean;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.MallAndTravelModel;
@@ -101,6 +94,8 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     private String goodTitle;
     private String jifenA = "";
     private String jifenB = "";
+    private double jifenATotal;
+    private double jifenBTotal;
 
     @Click
     public void addressLayout() {
@@ -255,6 +250,8 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         holder.loadImg(PayActivity.this, R.id.pic, Http.GOODS_PIC_URL + t.getPic_url());
         tvA.setText("A账户：" + t.getAdd_jf_limit());
         tvB.setText("B账户：" + t.getAdd_jf_currency());
+        jifenATotal = Double.parseDouble(t.getAdd_jf_limit());
+        jifenBTotal = Double.parseDouble(t.getAdd_jf_currency());
         tvPayPrice.setText("应付：" + totalPrice);
         fanli_jifen = Double.parseDouble(t.getFanli_jifen());
         address = t.getAddress();
@@ -274,10 +271,20 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     void createOrder() {
         payPrice = totalPrice;
         if (!TextUtils.isEmpty(cetA.getText().toString())) {
+            if (Double.parseDouble(cetA.getText().toString()) > jifenATotal) {
+                TOT("A账号的积分余额不足");
+                cetA.setText("");
+                return;
+            }
             totalPrice = totalPrice - Double.parseDouble(cetA.getText().toString());
             jifenA = cetA.getText().toString() + "";
         }
         if (!TextUtils.isEmpty(cetB.getText().toString())) {
+            if (Double.parseDouble(cetB.getText().toString()) > jifenBTotal) {
+                TOT("B账号的积分余额不足");
+                cetB.setText("");
+                return;
+            }
             totalPrice = totalPrice - Double.parseDouble(cetB.getText().toString());
             jifenB = cetB.getText().toString() + "";
         }
@@ -363,6 +370,8 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             holder.loadImg(PayActivity.this, R.id.pic, Http.GOODS_PIC_URL + t.getGoods().getPic_url());
             tvA.setText("A账户：" + t.getJifen().getAdd_jf_limit());
             tvB.setText("B账户：" + t.getJifen().getAdd_jf_currency());
+            jifenATotal = Double.parseDouble(t.getJifen().getAdd_jf_limit());
+            jifenBTotal = Double.parseDouble(t.getJifen().getAdd_jf_currency());
             tvPayPrice.setText("应付：" + totalPrice);
             number = 1 + "";
             fanli_jifen = Double.parseDouble(t.getGoods().getFanli_jifen());
@@ -375,29 +384,5 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         }
     }
 
-    /**
-     * 微信支付
-     */
-    private IWXAPI api;
-    private void payWeixin() {
-//        api = WXAPIFactory.createWXAPI(this,"wx5e85371c27606b8b");
-//        boolean isPaySupported = api.getWXAppSupportAPI() >= Build.PAY_SUPPORTED_SDK_INT;
-//        if (!isPaySupported) {
-//            TOT("当前微信不支持支付功能");
-//            return;
-//        }
-//        PayReq req = new PayReq();
-//        req.appId = jsonObject.getString("appid");
-//        req.partnerId = jsonObject.getString("partnerid");
-//        req.prepayId = jsonObject.getString("prepayid");
-//        req.nonceStr = jsonObject.getString("noncestr");
-//        req.timeStamp = jsonObject.getString("timestamp");
-//        req.packageValue = jsonObject.getString("package");
-//        req.sign = jsonObject.getString("sign");
-//        ViewInject.toast("正常调起支付");
-//        // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
-//        api.registerApp(MyApplication.APP_ID);
-//        api.sendReq(req);
-    }
 
 }

@@ -61,6 +61,10 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     @ViewById(R.id.rlv_pay)
     RecyclerView rlvPay;
+    @ViewById(R.id.tv_real_name)
+    TextView tvRealName;
+    @ViewById(R.id.tv_address)
+    TextView tvAddress;
     @ViewById(R.id.tv_A)
     TextView tvA;
     @ViewById(R.id.tv_B)
@@ -247,7 +251,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         holder.loadImg(PayActivity.this, R.id.pic, Http.GOODS_PIC_URL + t.getPic_url());
         tvA.setText("A账户：" + t.getAdd_jf_limit());
         tvB.setText("B账户：" + t.getAdd_jf_currency());
-        tvPayPrice.setText(totalPrice + "");
+        tvPayPrice.setText("应付：" + totalPrice);
         fanli_jifen = Double.parseDouble(t.getFanli_jifen());
         address = t.getAddress();
         if (t.getGoods_num() == null) {
@@ -259,7 +263,8 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         realName = t.getRealname();
         mobile = t.getMobile();
         goodTitle = t.getTitle();
-
+        tvRealName.setText("收货人：" + realName);
+        tvAddress.setText(address);
     }
 
     void createOrder() {
@@ -313,7 +318,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         @Override
         public void onResponse(String response, int id) {
             PayRequestBean bean = Http.model(PayRequestBean.class, response);
-            Log.e("KTY pay",response);
+            Log.e("KTY pay", response);
             if (bean.getCode().equals("200")) {
                 payInerface(bean.getData());
             }
@@ -354,13 +359,15 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             holder.loadImg(PayActivity.this, R.id.pic, Http.GOODS_PIC_URL + t.getGoods().getPic_url());
             tvA.setText("A账户：" + t.getJifen().getAdd_jf_limit());
             tvB.setText("B账户：" + t.getJifen().getAdd_jf_currency());
-            tvPayPrice.setText(totalPrice + "");
+            tvPayPrice.setText("应付：" + totalPrice);
             number = 1 + "";
             fanli_jifen = Double.parseDouble(t.getGoods().getFanli_jifen());
             address = t.getAddress().getAddress();
             realName = t.getAddress().getRealname();
             mobile = t.getAddress().getMobile();
             goodTitle = t.getGoods().getTitle();
+            tvRealName.setText("收货人：" + realName);
+            tvAddress.setText(address);
         }
     }
 }

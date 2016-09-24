@@ -1,8 +1,10 @@
 package com.ych.mall.ui.fourth.child;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -20,8 +22,10 @@ import com.ych.mall.model.RecyclerViewNormalModel;
 import com.ych.mall.model.UserInfoModel;
 import com.ych.mall.model.YViewHolder;
 
+import com.ych.mall.ui.LoginActivity_;
 import com.ych.mall.ui.base.BaseFragment;
 import com.ych.mall.ui.fourth.MyinfoActivity_;
+import com.ych.mall.utils.UserCenter;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.androidannotations.annotations.AfterViews;
@@ -47,7 +51,10 @@ public class MeFragment extends BaseFragment {
         return fragment;
 
     }
-
+    @ViewById
+    RecyclerView mGrid;
+    @ViewById
+    TextView mName, mID, mGrade, mIntegral;
     String[] iName = new String[]{
             "个人信息", "账户管理", "会员等级", "订单管理", "我的收藏", "分享掌中游", "我的足迹"
     };
@@ -65,78 +72,71 @@ public class MeFragment extends BaseFragment {
 
     @Click
     void onIntegration() {
+        if (judge())
+            return;
         start(IntegralFragment.newInstance());
     }
 
     @Click
     void onIvHead() {
+        if (judge())
+            return;
         goInfo();
     }
 
     @Click
     void onShare() {
+        if (judge())
+            return;
         start(ShareFragment.newInstance());
     }
 
     @Click
     void onWait() {
+
+        if (judge())
+            return;
         goOrder(OrderFragment.TYPE_WAIT);
     }
 
     @Click
     void onPay() {
+
+        if (judge())
+            return;
         goOrder(OrderFragment.TYPE_PAY);
     }
 
     @Click
     void onComment() {
+
+        if (judge())
+            return;
         goOrder(OrderFragment.TYPE_COMMENT);
     }
 
     @Click
     void onAll() {
+        if (judge())
+            return;
         goOrder(OrderFragment.TYPE_ALL);
 
     }
 
-    @ViewById
-    RecyclerView mGrid;
-    @ViewById
-    TextView mName, mID, mGrade, mIntegral;
-
     @AfterViews
     public void initViews() {
+        if (!UserCenter.getInstance().isLoggin())
+            mName.setText("请登录");
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 3);
         RecyclerViewNormalModel<MeItemBean> model = new RecyclerViewNormalModel<>(getActivity(), imp, mGrid, R.layout.item_me);
         model.init(manager);
         UserInfoModel.userCenter(infoCallBack);
     }
 
-    RModelListenerImpForMe imp = new RModelListenerImpForMe() {
-        @Override
-        public List<MeItemBean> getList(String str) {
-            List<MeItemBean> datas = new ArrayList<>();
-            for (int i = 0; i < iName.length; i++) {
-                datas.add(new MeItemBean(iName[i], iImg[i]));
-            }
-            return datas;
-        }
-
-        @Override
-        public void covert(YViewHolder holder, MeItemBean meItemBean) {
-            holder.setText(R.id.name, meItemBean.getName());
-            holder.setImgRes(R.id.img, meItemBean.getImg());
-            final int po = meItemBean.getImg();
-            holder.getCovertView().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onGridClick(po);
-                }
-            });
-        }
-    };
 
     private void onGridClick(int position) {
+        if (judge())
+            return;
         if (position == iImg[0]) {
             goInfo();
         }
@@ -160,6 +160,32 @@ public class MeFragment extends BaseFragment {
             start(MyFootFragment.newInstance());
         }
 
+    }
+
+    private boolean judge() {
+        if (!UserCenter.getInstance().isLoggin()) {
+            AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+            builder.setTitle("登录");
+            builder.setMessage("请登录后使用");
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(new Intent(getActivity(), LoginActivity_.class));
+                }
+            });
+            builder.show();
+            return true;
+        }
+        if (UserCenter.getInstance().isTourist()) {
+            return true;
+        }
+        return false;
     }
 
     //跳转个人信息界面
@@ -189,6 +215,30 @@ public class MeFragment extends BaseFragment {
                 mIntegral.setText(data.getIntegral());
             } else
                 TOT(bean.getMessage());
+        }
+    };
+
+    RModelListenerImpForMe imp = new RModelListenerImpForMe() {
+        @Override
+        public List<MeItemBean> getList(String str) {
+            List<MeItemBean> datas = new ArrayList<>();
+            for (int i = 0; i < iName.length; i++) {
+                datas.add(new MeItemBean(iName[i], iImg[i]));
+            }
+            return datas;
+        }
+
+        @Override
+        public void covert(YViewHolder holder, MeItemBean meItemBean) {
+            holder.setText(R.id.name, meItemBean.getName());
+            holder.setImgRes(R.id.img, meItemBean.getImg());
+            final int po = meItemBean.getImg();
+            holder.getCovertView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onGridClick(po);
+                }
+            });
         }
     };
 }

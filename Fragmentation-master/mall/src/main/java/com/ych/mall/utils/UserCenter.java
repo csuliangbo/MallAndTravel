@@ -1,12 +1,22 @@
 package com.ych.mall.utils;
 
+import android.nfc.Tag;
+import android.util.Log;
+
 /**
  * Created by ych on 2016/9/12.
  */
 public class UserCenter {
+
+    String TAG="usercenter";
     public static String USER_ID = "user_id";
     public static String USER_GRADE = "user_grade";
-public static String USER_PHONE="user_phone";
+    public static String USER_PHONE = "user_phone";
+    public static String TOURIST = "游客";
+    public static String VIP = "会员";
+    public static String MEMBER = "合伙";
+
+
     private static UserCenter instance;
 
     public static UserCenter getInstance() {
@@ -16,6 +26,7 @@ public static String USER_PHONE="user_phone";
     }
 
     public boolean isLoggin() {
+        Log.i(TAG,getCurrentUserId());
         if (SharedPreferencesUtil.getString(USER_ID).equals(""))
             return false;
         else
@@ -38,12 +49,20 @@ public static String USER_PHONE="user_phone";
         SharedPreferencesUtil.putString(USER_GRADE, grade);
     }
 
-    public String getCurrentUserPhone(){
+    public String getCurrentUserPhone() {
         return SharedPreferencesUtil.getString(USER_PHONE);
     }
 
-    public void setCurrentUserPhone(String phone){
+    public void setCurrentUserPhone(String phone) {
         SharedPreferencesUtil.putString(USER_PHONE, phone);
     }
 
+    public boolean isTourist(){
+        Log.i(TAG,getCurrentUserGrade());
+        if (getCurrentUserGrade().equals("")||getCurrentUserGrade().equals(TOURIST))
+            return true;
+        else
+            return false;
+
+    }
 }

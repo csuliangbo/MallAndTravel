@@ -159,7 +159,8 @@ public class MallAndTravelModel {
 
     public static void createTourOrder(StringCallback callback, String price_sum, String price_shiji,
                                        String address, String realName, String mobile, String number,
-                                       String jifen, String goods_id, String jifenA, String jifenB, String date) {
+                                       String jifen, String goods_id, String jifenA, String jifenB, String date,
+                                       String childNum, String childPrice, String adultNum, String adultPrice) {
         HashMap<String, String> map = new HashMap<>();
         map.put("user_id", UserCenter.getInstance().getCurrentUserId());
         map.put("price_sum", price_sum);
@@ -173,6 +174,10 @@ public class MallAndTravelModel {
         map.put("use_jf_limit", jifenA);
         map.put("use_jf_currency", jifenB);
         map.put("chufa_date", date);
+        map.put("price_cr", adultPrice);
+        map.put("cr_num", adultNum);
+        map.put("price_et", childPrice);
+        map.put("et_num", childNum);
         HttpModel.newInstance(CREATE_ORDER).post(map, callback);
     }
 
@@ -211,7 +216,7 @@ public class MallAndTravelModel {
     public static void goodsSearch(StringCallback callback, String title, int page) {
         HashMap<String, String> map = new HashMap<>();
         map.put("title", title);
-        HttpModel.newInstance(GOODS_SEARCH + "&page=" + (page + 1)+"&pagesize=10").post(map, callback);
+        HttpModel.newInstance(GOODS_SEARCH + "&page=" + (page + 1) + "&pagesize=10").post(map, callback);
 
     }
 
@@ -221,7 +226,7 @@ public class MallAndTravelModel {
     public static void travelSearch(StringCallback callback, String title, int page) {
         HashMap<String, String> map = new HashMap<>();
         map.put("title", title);
-        HttpModel.newInstance(TRAVEL_SEARCH + "&page=" + (page + 1)+"&pagesize=10").post(map, callback);
+        HttpModel.newInstance(TRAVEL_SEARCH + "&page=" + (page + 1) + "&pagesize=10").post(map, callback);
 
     }
 

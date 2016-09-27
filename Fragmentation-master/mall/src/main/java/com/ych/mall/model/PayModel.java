@@ -10,12 +10,17 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
+import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.ych.mall.bean.AuthResult;
 import com.ych.mall.bean.PayRequestBean;
 import com.ych.mall.bean.PayResult;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.Call;
@@ -27,12 +32,12 @@ public class PayModel {
 
     public static final int SDK_PAY_FLAG = 1;
     public static final int SDK_AUTH_FLAG = 2;
-    private Activity mActivity;
+    private Context mActivity;
     public static final int WEiXIN = 201;
-    public static final int ZHIFUBAO = 202;
-    private int currentType = ZHIFUBAO;
+    public static final int ALIPAY = 202;
+    private int currentType = ALIPAY;
 
-    public PayModel(Activity activity, String orderNum, String price, String title, int type) {
+    public PayModel(Context activity, String orderNum, String price, String title, int type) {
         mActivity = activity;
         UserInfoModel.pay(payCallBack, orderNum, price, title);
     }
@@ -68,7 +73,7 @@ public class PayModel {
 
             @Override
             public void run() {
-                PayTask alipay = new PayTask(mActivity);
+                PayTask alipay = new PayTask((Activity)mActivity);
                 Map<String, String> result = alipay.payV2(orderInfo, true);
                 Message msg = new Message();
                 msg.what = SDK_PAY_FLAG;
@@ -135,25 +140,51 @@ public class PayModel {
     private IWXAPI api;
 
     private void payWeixin() {
-//        api = WXAPIFactory.createWXAPI(this,"wx5e85371c27606b8b");
-//        boolean isPaySupported = api.getWXAppSupportAPI() >= Build.PAY_SUPPORTED_SDK_INT;
-//        if (!isPaySupported) {
-//            TOT("当前微信不支持支付功能");
-//            return;
-//        }
-//        PayReq req = new PayReq();
-//        req.appId = jsonObject.getString("appid");
-//        req.partnerId = jsonObject.getString("partnerid");
-//        req.prepayId = jsonObject.getString("prepayid");
-//        req.nonceStr = jsonObject.getString("noncestr");
-//        req.timeStamp = jsonObject.getString("timestamp");
-//        req.packageValue = jsonObject.getString("package");
-//        req.sign = jsonObject.getString("sign");
-//        ViewInject.toast("正常调起支付");
-//        // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
-//        api.registerApp(MyApplication.APP_ID);
-//        api.sendReq(req);
+        api = WXAPIFactory.createWXAPI(mActivity, "wxb4ba3c02aa476ea1");
+        String url = "http://wxpay.weixin.qq.com/pub_v2/app/app_pay.php?plat=android";
+        TOT("获取订单中...");
+        HashMap<String, String> map = new HashMap<>();
+        HttpModel.newInstance(url).post(map, callback);
+
     }
+
+    StringCallback callback = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            try {
+
+                Log.e("get server pay params:", response);
+                JSONObject json = new JSONObject(response);
+                if (null != json && !json.has("retcode")) {
+                    PayReq req = new PayReq();
+                    //req.appId = "wxf8b4f85f3a794e77";  // 测试用appId
+                    req.appId = json.getString("appid");
+                    req.partnerId = json.getString("partnerid");
+                    req.prepayId = json.getString("prepayid");
+                    req.nonceStr = json.getString("noncestr");
+                    req.timeStamp = json.getString("timestamp");
+                    req.packageValue = json.getString("package");
+                    req.sign = json.getString("sign");
+                    req.extData = "app data"; // optional
+                    TOT("正常调起支付");
+                    // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
+                    api.sendReq(req);
+                } else {
+                    Log.d("PAY_GET", "返回错误" + json.getString("retmsg"));
+                    TOT("返回错误" + json.getString("retmsg"));
+                }
+
+            } catch (Exception e) {
+                Log.e("PAY_GET", "异常：" + e.getMessage());
+                TOT("异常：" + e.getMessage());
+            }
+        }
+    };
 
     public void TOT(String str) {
         try {

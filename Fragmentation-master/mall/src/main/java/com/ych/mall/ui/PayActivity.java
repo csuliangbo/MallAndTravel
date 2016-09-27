@@ -1,7 +1,9 @@
 package com.ych.mall.ui;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,12 +12,19 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
+import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.ych.mall.R;
 import com.ych.mall.bean.CreateOrderBean;
 import com.ych.mall.bean.GoodsDetailBean;
@@ -23,7 +32,9 @@ import com.ych.mall.bean.PayBean;
 import com.ych.mall.bean.PayRequestBean;
 import com.ych.mall.bean.TravelRecverBean;
 import com.ych.mall.model.Http;
+import com.ych.mall.model.HttpModel;
 import com.ych.mall.model.MallAndTravelModel;
+import com.ych.mall.model.PayModel;
 import com.ych.mall.model.RecyclerViewModel;
 import com.ych.mall.model.RecyclerViewNormalModel;
 import com.ych.mall.model.UserInfoModel;
@@ -40,8 +51,10 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -96,6 +109,11 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     private String jifenB = "";
     private double jifenATotal;
     private double jifenBTotal;
+    private String childrenPrice = "";
+    private String childrenNum = "";
+    private String adultPrice = "";
+    private String adultNum = "";
+    private String jifenTravelTotal = "";
 
     @Click
     public void addressLayout() {
@@ -109,6 +127,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     @Click
     void onPay() {
+        // payChoosePopupwindow();
         createOrder();
     }
 
@@ -193,6 +212,10 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         if (bundle.getInt("TYPE") == GoodsFragment.TYPE_TRAVEL) {
             isTravel = true;
             date = bundle.getString("Date");
+            childrenNum = bundle.getString("ChildrenNum");
+            childrenPrice = bundle.getString("ChildrenPrice");
+            adultNum = bundle.getString("AdultNum");
+            adultPrice = bundle.getString("AdultPrice");
             llA.setVisibility(View.GONE);
         }
         if (!TextUtils.isEmpty(goods_id)) {
@@ -242,6 +265,9 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         holder.setText(R.id.name, t.getTitle());
         holder.setText(R.id.price, "￥" + t.getPrice_new());
         holder.setText(R.id.num, t.getFanli_jifen());
+        holder.setVisible(R.id.ll_taocan,View.VISIBLE);
+        holder.setText(R.id.tv_taocan, t.getTaocan_name());
+        holder.setText(R.id.tv_number, t.getGoods_num());
         totalPrice = totalPrice + Double.parseDouble(t.getPrice_new());
         tvTotalPrice.setText(totalPrice + "");
         if (TextUtils.isEmpty(t.getFanli_jifen())) {
@@ -289,11 +315,9 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             jifenB = cetB.getText().toString() + "";
         }
         tvPayPrice.setText(totalPrice + "");
-        // Log.e("KTY", " " + payPrice + " " + totalPrice + " " + address + " " + realName + " " + mobile + " " + number + " " + fanli_jifen + " " + cart_id);
         if (isTravel) {
-            //Log.e("KTY", " " + payPrice + " " + totalPrice + " " + address + " " + realName + " " + mobile + " " + number + " " + fanli_jifen + " " + goods_id + " " + jifenA + " " + jifenB + " " + date);
             MallAndTravelModel.createTourOrder(createCallback, payPrice + "", totalPrice + "", address, realName,
-                    mobile, number, fanli_jifen + "", goods_id, jifenA, jifenB, date);
+                    mobile, number, jifenTravelTotal, goods_id, jifenA, jifenB, date, childrenNum, childrenPrice, adultNum, adultPrice);
         } else {
             MallAndTravelModel.createOrder(createCallback, payPrice + "", totalPrice + "", address, realName,
                     mobile, number, fanli_jifen + "", cart_id);
@@ -315,6 +339,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             Log.e("KTY  order ", response);
             CreateOrderBean bean = Http.model(CreateOrderBean.class, response);
             if (bean.getCode().equals("200")) {
+
                 UserInfoModel.pay(payCallBack, bean.getData().get(0), totalPrice + "", goodTitle);
             }
         }
@@ -331,7 +356,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             PayRequestBean bean = Http.model(PayRequestBean.class, response);
             Log.e("KTY pay", response);
             if (bean.getCode().equals("200")) {
-                payInerface(bean.getData());
+                payChoosePopupwindow(bean.getData());
             }
         }
     };
@@ -362,17 +387,34 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
         @Override
         public void covert(YViewHolder holder, TravelRecverBean.TravelRecverData t) {
+            holder.setVisible(R.id.ll_number, View.VISIBLE);
             holder.setText(R.id.name, t.getGoods().getTitle());
             holder.setText(R.id.price, "￥" + t.getGoods().getPrice_new());
             holder.setText(R.id.num, t.getGoods().getFanli_jifen());
-            totalPrice = totalPrice + Double.parseDouble(t.getGoods().getPrice_new());
+            holder.setText(R.id.tv_adult_number, adultNum);
+            holder.setText(R.id.tv_adult_price, adultPrice);
+            Double adultPriceTotal = Integer.parseInt(adultNum) * Double.parseDouble(adultPrice);
+            holder.setText(R.id.tv_adult_total_price, adultPriceTotal + "");
+            holder.setText(R.id.tv_children_number, childrenNum);
+            holder.setText(R.id.tv_children_price, childrenPrice);
+            Double childrenPriceTotal = Integer.parseInt(childrenNum) * Double.parseDouble(childrenPrice);
+            holder.setText(R.id.tv_children_total_price, childrenPriceTotal + "");
+            holder.setText(R.id.tv_date, t.getGoods().getChufa_date());
+            holder.setText(R.id.tv_address, t.getGoods().getChufa_address());
+            int numTotal = Integer.parseInt(childrenNum) + Integer.parseInt(adultNum);
+            holder.setText(R.id.tv_jifen_num, numTotal + "");
+            holder.setText(R.id.tv_jifen, t.getGoods().getFanli_jifen());
+            jifenTravelTotal = Double.parseDouble(t.getGoods().getFanli_jifen()) * numTotal + "";
+            holder.setText(R.id.tv_jifen_total, jifenTravelTotal);
+
+            totalPrice = totalPrice + adultPriceTotal + childrenPriceTotal;
             tvTotalPrice.setText(totalPrice + "");
             holder.loadImg(PayActivity.this, R.id.pic, Http.GOODS_PIC_URL + t.getGoods().getPic_url());
             tvA.setText("A账户：" + t.getJifen().getAdd_jf_limit());
             tvB.setText("B账户：" + t.getJifen().getAdd_jf_currency());
             jifenATotal = Double.parseDouble(t.getJifen().getAdd_jf_limit());
             jifenBTotal = Double.parseDouble(t.getJifen().getAdd_jf_currency());
-            tvPayPrice.setText("应付：" + totalPrice);
+            tvPayPrice.setText("应付：￥" + totalPrice);
             number = 1 + "";
             fanli_jifen = Double.parseDouble(t.getGoods().getFanli_jifen());
             address = t.getAddress().getAddress();
@@ -384,5 +426,90 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         }
     }
 
+    private void payChoosePopupwindow(final String orderInfo) {
 
+        View popupWindow_view = getLayoutInflater().inflate(R.layout.item_dialog_pay, null, false);
+        final PopupWindow popupWindow = new PopupWindow(popupWindow_view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+        popupWindow.showAtLocation(llA, Gravity.NO_GRAVITY, 0, 0);
+        // 实例化一个ColorDrawable颜色为半透明
+        ColorDrawable dw = new ColorDrawable(0xb0000000);
+        popupWindow.setBackgroundDrawable(dw);
+        LinearLayout llWeixin = (LinearLayout) popupWindow_view.findViewById(R.id.ll_weixin);
+        LinearLayout llAlipay = (LinearLayout) popupWindow_view.findViewById(R.id.ll_alipay);
+        llWeixin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                payWeixin();
+            }
+        });
+        llAlipay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                payInerface(orderInfo);
+            }
+        });
+        popupWindow_view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (popupWindow != null && popupWindow.isShowing()) {
+                    popupWindow.dismiss();
+                }
+                return false;
+            }
+        });
+    }
+
+    /**
+     * 微信支付
+     */
+    private IWXAPI api;
+
+    private void payWeixin() {
+        api = WXAPIFactory.createWXAPI(this, "wxb4ba3c02aa476ea1");
+        String url = "http://wxpay.weixin.qq.com/pub_v2/app/app_pay.php?plat=android";
+        TOT("获取订单中...");
+        HashMap<String, String> map = new HashMap<>();
+        HttpModel.newInstance(url).post(map, callback);
+
+    }
+
+    StringCallback callback = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            try {
+
+                Log.e("get server pay params:", response);
+                JSONObject json = new JSONObject(response);
+                if (null != json && !json.has("retcode")) {
+                    PayReq req = new PayReq();
+                    //req.appId = "wxf8b4f85f3a794e77";  // 测试用appId
+                    req.appId = json.getString("appid");
+                    req.partnerId = json.getString("partnerid");
+                    req.prepayId = json.getString("prepayid");
+                    req.nonceStr = json.getString("noncestr");
+                    req.timeStamp = json.getString("timestamp");
+                    req.packageValue = json.getString("package");
+                    req.sign = json.getString("sign");
+                    //req.extData = "app data"; // optional
+                    TOT("正常调起支付");
+                    // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
+                    api.sendReq(req);
+                } else {
+                    Log.d("PAY_GET", "返回错误" + json.getString("retmsg"));
+                    TOT("返回错误" + json.getString("retmsg"));
+                }
+
+            } catch (Exception e) {
+                Log.e("PAY_GET", "异常：" + e.getMessage());
+                TOT("异常：" + e.getMessage());
+            }
+        }
+    };
 }

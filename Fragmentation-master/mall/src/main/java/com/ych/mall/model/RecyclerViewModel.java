@@ -92,7 +92,8 @@ public class RecyclerViewModel<T> implements SwipeRefreshLayout.OnRefreshListene
 
     public RecyclerViewModel(Context context, RModelListener listener, RecyclerView recyclerView, SwipeRefreshLayout swipeRefreshLayout, int layout) {
         this.mRecyclerView = recyclerView;
-        this.mSwipeRefreshLayout = swipeRefreshLayout;
+        if (swipeRefreshLayout != null)
+            this.mSwipeRefreshLayout = swipeRefreshLayout;
         mListener = listener;
         mLayout = layout;
         mContext = context;
@@ -107,8 +108,10 @@ public class RecyclerViewModel<T> implements SwipeRefreshLayout.OnRefreshListene
         mLayoutManager = new LinearLayoutManager(mContext);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mSwipeRefreshLayout.setColorSchemeColors(R.color.colorPrimary, R.color.text_blue, R.color.text_red, R.color.text_orange);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setColorSchemeColors(R.color.colorPrimary, R.color.text_blue, R.color.text_red, R.color.text_orange);
+            mSwipeRefreshLayout.setOnRefreshListener(this);
+        }
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -132,40 +135,52 @@ public class RecyclerViewModel<T> implements SwipeRefreshLayout.OnRefreshListene
         });
         mListener.getData(callback, page);
     }
+
     private int previousTotal = 0;
     int firstVisibleItem, visibleItemCount, totalItemCount;
-    public void initWithHead(RecyclerViewHeader header){
+
+    public void initWithHead(RecyclerViewHeader header) {
         mLayoutManager = new LinearLayoutManager(mContext);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mSwipeRefreshLayout.setColorSchemeColors(R.color.colorPrimary, R.color.text_blue, R.color.text_red, R.color.text_orange);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                visibleItemCount = recyclerView.getChildCount();
-                totalItemCount = mLayoutManager.getItemCount();
-                firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
-
-                if (!isLoadOver) {
-                    if (totalItemCount > previousTotal) {
-
-                        previousTotal = totalItemCount;
-                    }
-                }
-                if (isLoadOver
-                        && (totalItemCount - visibleItemCount) <= firstVisibleItem) {
-                    CURRENT_STATE = STATE_LOAD;
-                    isLoadOver = false;
-                    mListener.getData(callback, page);
-                }
-            }
-        });
+        if (mSwipeRefreshLayout!=null) {
+            mSwipeRefreshLayout.setColorSchemeColors(R.color.colorPrimary, R.color.text_blue, R.color.text_red, R.color.text_orange);
+            mSwipeRefreshLayout.setOnRefreshListener(this);
+        }
+//        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                visibleItemCount = recyclerView.getChildCount();
+//                totalItemCount = mLayoutManager.getItemCount();
+//                firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
+//
+//                if (!isLoadOver) {
+//                    if (totalItemCount > previousTotal) {
+//
+//                        previousTotal = totalItemCount;
+//                    }
+//                }
+//                if (isLoadOver
+//                        && (totalItemCount - visibleItemCount) <= firstVisibleItem) {
+//                    CURRENT_STATE = STATE_LOAD;
+//                    isLoadOver = false;
+//                    mListener.getData(callback, page);
+//                }
+//            }
+//        });
         header.attachTo(mRecyclerView);
         mListener.getData(callback, page);
     }
+
+    public void onLoad(){
+        if (isLoadOver) {
+            CURRENT_STATE = STATE_LOAD;
+            isLoadOver = false;
+            mListener.getData(callback, page);
+        }
+    }
+
     @Override
     public void onRefresh() {
         page = 0;
@@ -173,11 +188,12 @@ public class RecyclerViewModel<T> implements SwipeRefreshLayout.OnRefreshListene
         mListener.getData(callback, page);
     }
 
-    public void newInit(){
-        CURRENT_STATE=STATE_NEW;
+    public void newInit() {
+        CURRENT_STATE = STATE_NEW;
         mListener.getData(callback, page);
     }
-    public void noti(){
+
+    public void noti() {
         mAdapter.notifyDataSetChanged();
     }
 
@@ -186,12 +202,13 @@ public class RecyclerViewModel<T> implements SwipeRefreshLayout.OnRefreshListene
 
     }
 
-    public boolean isEmpty(){
-        if (mAdapter==null)
+    public boolean isEmpty() {
+        if (mAdapter == null)
             return true;
         else
             return false;
     }
+
     StringCallback callback = new StringCallback() {
         @Override
         public void onError(Call call, Exception e, int id) {
@@ -219,10 +236,12 @@ public class RecyclerViewModel<T> implements SwipeRefreshLayout.OnRefreshListene
 
                         isLoadOver = true;
                     }
-                    dataList.addAll(mTempList);
-                    mAdapter.notifyDataSetChanged();
+                    if (dataList!=null) {
+                        dataList.addAll(mTempList);
+                        mAdapter.notifyDataSetChanged();
+                        page++;
+                    }
 
-                    page++;
                     break;
                 case STATE_NEW:
 
@@ -244,7 +263,7 @@ public class RecyclerViewModel<T> implements SwipeRefreshLayout.OnRefreshListene
                         if (getLists == null) {
                             isLoadOver = false;
 
-                        }else {
+                        } else {
                             dataList.addAll(getLists);
                             if (getLists.size() <= miniSize)
                                 isLoadOver = false;

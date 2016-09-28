@@ -18,6 +18,7 @@ private List<MyFootData> data;
 
     public class MyFootData {
 
+
         private String gid;
 
 

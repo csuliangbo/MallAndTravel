@@ -43,7 +43,9 @@ public class DetailFragment extends BaseFragment {
             url = goodsUrl + id;
         else
             url = travelUrl + id;
-
+        wv.getSettings().setSupportZoom(true);
+        wv.getSettings().setBuiltInZoomControls(true);
+        wv.getSettings().setDisplayZoomControls(false);//
         wv.loadUrl(url);
 
     }

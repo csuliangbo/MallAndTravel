@@ -29,6 +29,7 @@ import com.ych.mall.bean.SearchBean;
 import com.ych.mall.bean.SearchTravelBean;
 import com.ych.mall.bean.ShopCarBean;
 import com.ych.mall.bean.TravelRecverBean;
+import com.ych.mall.event.AddressEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.MallAndTravelModel;
 import com.ych.mall.model.RecyclerViewModel;
@@ -47,6 +48,8 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,9 +97,11 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     private Double fanli_jifen;
     private String date;
     private boolean isTravel = false;
+    //收货地址
     private String address;
-    private String number;
+    //收货人
     private String realName;
+    private String number;
     private String mobile;
     private String goodTitle;
     private String jifenA = "";
@@ -104,7 +109,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     @Click
     public void addressLayout() {
-        startActivity(new Intent(this, AddressActivity_.class));
+        startActivity(new Intent(this, AddressActivity_.class).putExtra("address",true));
     }
 
     @Click
@@ -192,6 +197,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     @AfterViews
     void init() {
+        EventBus.getDefault().register(this);
         goods_id = getIntent().getExtras().getString(KV.GOODS_ID);
         Bundle bundle = getIntent().getExtras();
         goods_id = bundle.getString(KV.GOODS_ID);
@@ -379,6 +385,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
      * 微信支付
      */
     private IWXAPI api;
+
     private void payWeixin() {
 //        api = WXAPIFactory.createWXAPI(this,"wx5e85371c27606b8b");
 //        boolean isPaySupported = api.getWXAppSupportAPI() >= Build.PAY_SUPPORTED_SDK_INT;
@@ -400,4 +407,18 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 //        api.sendReq(req);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onEvent(AddressEvent e){
+        realName=e.getName();
+        address=e.getAddress();
+        tvRealName.setText("收货人：" + realName+"\t\t\t"+e.getPhone());
+        tvAddress.setText(address);
+
+    }
 }

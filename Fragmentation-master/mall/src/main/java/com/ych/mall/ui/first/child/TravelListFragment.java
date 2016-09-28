@@ -20,6 +20,7 @@ import com.ych.mall.utils.KV;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
@@ -39,7 +40,10 @@ public class TravelListFragment extends BaseFragment implements RecyclerViewMode
     @ViewById
     TextView mLoading;
     int type;
-
+    @Click
+    void onBack() {
+        back();
+    }
     public static TravelListFragment newInstance(String id, int type) {
         Bundle bundle = new Bundle();
         bundle.putString(KV.ID, id);
@@ -80,6 +84,7 @@ public class TravelListFragment extends BaseFragment implements RecyclerViewMode
     @Override
     public List<TravelListData> getList(String str) {
         log(str);
+        if (mLoading!=null)
         mLoading.setVisibility(View.GONE);
         TravelListBean bean = Http.model(TravelListBean.class, str);
         if (bean.getCode().equals("200"))

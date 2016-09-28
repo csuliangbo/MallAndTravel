@@ -9,6 +9,7 @@ import com.ych.mall.R;
 import com.ych.mall.bean.ParentBean;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.LoginAndRegistModel;
+import com.ych.mall.model.UserInfoModel;
 import com.ych.mall.ui.base.BaseActivity;
 import com.ych.mall.utils.UserCenter;
 import com.ych.mall.widget.ClearEditText;
@@ -41,7 +42,7 @@ public class ChangePhoneActivity extends BaseActivity {
         if (isEmp(mPhone,"输入手机号码"))
             return;
         onSubmit.startLoading();
-
+        UserInfoModel.changePhone(callback,getT(mPhone));
     }
     @Click
     void mGetCode(){

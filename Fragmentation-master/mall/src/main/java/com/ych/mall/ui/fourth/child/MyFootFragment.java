@@ -1,6 +1,8 @@
 package com.ych.mall.ui.fourth.child;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -10,6 +12,7 @@ import com.ych.mall.R;
 import com.ych.mall.bean.MyFootBean;
 import com.ych.mall.bean.ParentBean;
 import com.ych.mall.model.Http;
+import com.ych.mall.model.MallAndTravelModel;
 import com.ych.mall.model.RecyclerViewModel;
 import com.ych.mall.model.RecyclerViewNormalModel;
 import com.ych.mall.model.UserInfoModel;
@@ -53,13 +56,29 @@ public class MyFootFragment extends BaseFragment implements RecyclerViewModel.RM
 
     @Click
     void tiText() {
-        UserInfoModel.clearFoot(callback);
+        AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+        builder.setTitle("提示");
+        builder.setMessage("确定要清足迹？");
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              UserInfoModel.clearFoot(callback);
+            }
+        });
+        builder.show();
     }
 
     RecyclerViewNormalModel<MyFootBean.MyFootData> model;
 
     @AfterViews
     void init() {
+        setTAG("foot");
         tiText.setVisibility(View.VISIBLE);
         tiText.setText("清除");
         tiTitle.setText("我的足迹");
@@ -95,6 +114,7 @@ public class MyFootFragment extends BaseFragment implements RecyclerViewModel.RM
     @Override
     public void covert(YViewHolder holder, MyFootBean.MyFootData t) {
         final String id = t.getGid();
+
         holder.setText(R.id.name, t.getGoods_name());
         holder.setText(R.id.price, t.getGoods_price());
         holder.loadImg(getActivity(), R.id.pic, Http.GOODS_PIC_URL + t.getGoods_pic());
@@ -117,7 +137,7 @@ public class MyFootFragment extends BaseFragment implements RecyclerViewModel.RM
         public void onResponse(String response, int id) {
             ParentBean bean = Http.model(ParentBean.class, response);
             if (bean.getCode().equals("200"))
-                model.refresh();
+                model.reset();
             else
                 TOT(bean.getMessage());
         }

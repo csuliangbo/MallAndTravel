@@ -65,4 +65,11 @@ public class UserCenter {
             return false;
 
     }
+
+    public void out(){
+         setCurrentUserId("");
+        setUserGrade("");
+        setCurrentUserPhone("");
+
+    }
 }

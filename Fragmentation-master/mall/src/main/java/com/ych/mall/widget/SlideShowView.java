@@ -189,6 +189,12 @@ public class SlideShowView extends FrameLayout {
         viewPager.setOnPageChangeListener(new MyPageChangeListener());
     }
 
+    public void setScaleType(){
+        for (ImageView iv:imageViewsList){
+            iv.setScaleType(ScaleType.FIT_XY);
+        }
+    }
+
     public interface OnVClick {
         void Click(int position);
     }

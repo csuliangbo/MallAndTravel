@@ -5,6 +5,7 @@
     android:layout_height="wrap_content">
 <ImageView
     android:id="@+id/it_img"
+    android:scaleType="fitXY"
     android:layout_width="match_parent"
     android:src="@drawable/ic_search"
     android:layout_height="220dp" />

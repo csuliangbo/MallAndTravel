@@ -147,71 +147,73 @@ public class ShopCarFragment extends BaseFragment implements RecyclerViewModel.R
 
     @Override
     public void covert(YViewHolder holder, final ShopCarData t) {
-        final ShopCarData d = t;
-        final int num = Integer.parseInt(t.getGoods_num());
-        final double pri = Double.parseDouble(t.getPrice_new());
-        final double totleP = Tools.mul(num, pri);
-        holder.setText(R.id.name, t.getTitle());
-        holder.setText(R.id.price, "￥" + t.getPrice_new());
-        holder.setText(R.id.priceAll, totleP + "");
-        holder.setText(R.id.integral, "返利：" + t.getFanli_jifen() + "积分");
-        holder.setText(R.id.num, num + "");
-        holder.loadImg(getActivity(), R.id.pic, Http.GOODS_PIC_URL + t.getPic_url());
-        if (t.getTaocan_name() != null)
-            holder.setText(R.id.group, "套餐：" + t.getTaocan_name());
-        final CheckBox cb = holder.getView(R.id.select);
-        final String id = t.getCart_id();
-        if (t.isSelect()) {
-            cb.setChecked(true);
-        } else
-            cb.setChecked(false);
-        cb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cb.isChecked()) {
-                    idList.add(id);
-                    d.setSelect(true);
+       try {
+           final ShopCarData d = t;
+           final int num = Integer.parseInt(t.getGoods_num());
+           final double pri = Double.parseDouble(t.getPrice_new());
+           final double totleP = Tools.mul(num, pri);
+           holder.setText(R.id.name, t.getTitle());
+           holder.setText(R.id.price, "￥" + t.getPrice_new());
+           holder.setText(R.id.priceAll, totleP + "");
+           holder.setText(R.id.integral, "返利：" + t.getFanli_jifen() + "积分");
+           holder.setText(R.id.num, num + "");
+           holder.loadImg(getActivity(), R.id.pic, Http.GOODS_PIC_URL + t.getPic_url());
+           if (t.getTaocan_name() != null)
+               holder.setText(R.id.group, "套餐：" + t.getTaocan_name());
+           final CheckBox cb = holder.getView(R.id.select);
+           final String id = t.getCart_id();
+           if (t.isSelect()) {
+               cb.setChecked(true);
+           } else
+               cb.setChecked(false);
+           cb.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   if (cb.isChecked()) {
+                       idList.add(id);
+                       d.setSelect(true);
 
-                } else {
-                    idList.remove(id);
-                    d.setSelect(false);
+                   } else {
+                       idList.remove(id);
+                       d.setSelect(false);
 
-                }
-                getTotle();
-            }
-        });
+                   }
+                   getTotle();
+               }
+           });
 
-        holder.getView(R.id.add).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+           holder.getView(R.id.add).setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
 
-                int n = num + 1;
-                d.setGoods_num(n + "");
-                MallAndTravelModel.shopCarNum(shopCarNumCallback, t.getCart_id(), n + "");
-                model.noti();
-                getTotle();
-            }
-        });
-        holder.getView(R.id.cut).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int n = num - 1;
-                if (n == 0)
-                    n = 1;
-                else
-                    d.setGoods_num(n + "");
-                MallAndTravelModel.shopCarNum(shopCarNumCallback, t.getCart_id(), n + "");
-                model.noti();
-                getTotle();
-            }
-        });
-        holder.getView(R.id.delete).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MallAndTravelModel.shopCarDel(delCallback, id);
-                mLoading.setVisibility(View.VISIBLE);
-            }
-        });
+                   int n = num + 1;
+                   d.setGoods_num(n + "");
+                   MallAndTravelModel.shopCarNum(shopCarNumCallback, t.getCart_id(), n + "");
+                   model.noti();
+                   getTotle();
+               }
+           });
+           holder.getView(R.id.cut).setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   int n = num - 1;
+                   if (n == 0)
+                       n = 1;
+                   else
+                       d.setGoods_num(n + "");
+                   MallAndTravelModel.shopCarNum(shopCarNumCallback, t.getCart_id(), n + "");
+                   model.noti();
+                   getTotle();
+               }
+           });
+           holder.getView(R.id.delete).setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   MallAndTravelModel.shopCarDel(delCallback, id);
+                   mLoading.setVisibility(View.VISIBLE);
+               }
+           });
+       }catch (Exception e){}
     }
 
     void getTotle() {

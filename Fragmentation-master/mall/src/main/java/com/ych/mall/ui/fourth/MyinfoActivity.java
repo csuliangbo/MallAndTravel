@@ -20,6 +20,7 @@ import com.ych.mall.bean.UserInfoBean;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.UserInfoModel;
 import com.ych.mall.ui.AddressActivity_;
+import com.ych.mall.ui.LoginActivity_;
 import com.ych.mall.ui.base.BaseActivity;
 import com.ych.mall.utils.KV;
 import com.ych.mall.utils.UserCenter;
@@ -135,6 +136,13 @@ public class MyinfoActivity extends BaseActivity {
     @Click
     void onBack() {
         finish();
+    }
+
+    @Click
+    void onOut(){
+        finish();
+        UserCenter.getInstance().out();
+        startActivity(new Intent(this, LoginActivity_.class));
     }
 
     @ViewById

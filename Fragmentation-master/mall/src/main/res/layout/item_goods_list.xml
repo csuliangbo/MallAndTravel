@@ -2,71 +2,385 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-  android:background="@drawable/selector_layout_pressed"
-    android:layout_marginTop="5dp"
-    android:padding="10dp">
-
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/test"
-        android:id="@+id/pic" />
-
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/selector_layout_pressed"
+        android:orientation="horizontal"
         android:padding="10dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" "
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_mid"
-            android:id="@+id/name" />
+        <ImageView
+            android:id="@+id/pic"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/test" />
+
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <TextView
+                android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="￥123"
-                android:textColor="@color/text_orange"
-                android:id="@+id/price" />
-<View
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:layout_weight="1"
-    />
+                android:text=" "
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_mid" />
+
+            <RelativeLayout
+                android:id="@+id/ll_taocan"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="套餐：" />
+
+                    <TextView
+                        android:id="@+id/tv_taocan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="x" />
+
+                    <TextView
+                        android:id="@+id/tv_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </RelativeLayout>
+
             <LinearLayout
-                android:id="@+id/ll_fanli"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="￥123"
+                    android:textColor="@color/text_orange" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <LinearLayout
+                    android:id="@+id/ll_fanli"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="返利："
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="123"
+                        android:textColor="@color/text_orange" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/ll_number"
+        android:background="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/divider"></View>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="返利："
-                    android:textColor="@color/black"
-                    />
+                    android:text="送："
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:id="@+id/tv_jifen_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="4"
+                    android:textSize="@dimen/text_large" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="123"
-                    android:textColor="@color/text_orange"
-                    android:id="@+id/num" />
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="x"
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:id="@+id/tv_jifen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="150"
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="="
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:id="@+id/tv_jifen_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="600"
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="积分"
+                    android:textSize="@dimen/text_large" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="出发城市："
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:id="@+id/tv_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="上海"
+                    android:textSize="@dimen/text_large" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="出发日期："
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2017-01-10"
+                    android:textSize="@dimen/text_large" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/divider"></View>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="成人："
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:id="@+id/tv_adult_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="5"
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="人 *"
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:id="@+id/tv_adult_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="5799"
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="元 ="
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:id="@+id/tv_adult_total_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="23196"
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="元(小计)"
+                    android:textSize="@dimen/text_large" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="儿童："
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:id="@+id/tv_children_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="0"
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="人 *"
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:id="@+id/tv_children_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="0"
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="元 ="
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:id="@+id/tv_children_total_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="0"
+                    android:textSize="@dimen/text_large" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="元(小计)"
+                    android:textSize="@dimen/text_large" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -17,6 +17,8 @@ import com.fyales.tagcloud.library.TagCloudLayout;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.editorpage.ShareActivity;
+import com.umeng.socialize.media.UMImage;
 import com.ych.mall.R;
 
 import com.ych.mall.bean.GoodsDetailBean;
@@ -186,6 +188,10 @@ public class GoodsFragment extends BaseFragment {
         bundle.putString(KV.GOODS_ID, mId);
         bundle.putInt("TYPE", TYPE_TRAVEL);
         bundle.putString("Date", groupTitle);
+        bundle.putString("ChildrenPrice", mChildPrice);
+        bundle.putString("AdultPrice", mPrice);
+        bundle.putString("ChildrenNum", tvNumChildren.getText().toString());
+        bundle.putString("AdultNum", tvNumAdult.getText().toString());
         startActivity(new Intent(getActivity(), PayActivity_.class).putExtras(bundle));
 
     }
@@ -214,6 +220,7 @@ public class GoodsFragment extends BaseFragment {
     };
 
     private void umShare() {
+        UMImage image = new UMImage(getActivity(), R.drawable.icon_logo);//资源文件
         String url;
         if (currentType == TYPE_GOODS)
             url = goodsUrl + mId;
@@ -227,6 +234,7 @@ public class GoodsFragment extends BaseFragment {
         new ShareAction(getActivity()).setDisplayList(displaylist)
                 .withText(mTitle.getText().toString())
                 .withTitle("掌中游")
+                .withMedia(image)
                 .withTargetUrl(url)
                 .setListenerList(umShareListener)
                 .open();
@@ -333,7 +341,7 @@ public class GoodsFragment extends BaseFragment {
             @Override
             public void itemClick(int position) {
                 groupTitle = datas.get(position).getGuige_title();
-                sT(mPriceNew,datas.get(position).getGuige_price_new());
+                sT(mPriceNew, datas.get(position).getGuige_price_new());
             }
         });
 
@@ -456,7 +464,8 @@ public class GoodsFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response, int id) {
-            mLoading.setVisibility(View.GONE);
+            if (mLoading != null)
+                mLoading.setVisibility(View.GONE);
             ParentBean bean = Http.model(ParentBean.class, response);
             if (bean.getCode().equals("200")) {
                 EventBus.getDefault().post(new LoginEvent());

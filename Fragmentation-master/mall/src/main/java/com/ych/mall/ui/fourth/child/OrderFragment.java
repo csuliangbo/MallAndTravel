@@ -205,6 +205,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 btnLeft.setVisibility(View.VISIBLE);
                 btnMiddle.setVisibility(View.VISIBLE);
                 btnLeft.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
+                btnRight.setBackgroundResource(R.drawable.shape_green_dark_5dp);
                 btnLeft.setTextColor(getResources().getColor(R.color.gray2));
                 btnLeft.setText(cancleOreder);
                 btnMiddle.setText(nowPay);
@@ -253,7 +254,6 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 btnRight.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.e("KTY  @@", id);
                         start(LogisticsFragment.newInstance(id));
                     }
                 });
@@ -266,28 +266,28 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 break;
             case 5:
                 typeText = "已完成";
-                btnLeft.setVisibility(View.VISIBLE);
-                btnLeft.setText(complete);
-                btnLeft.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle("掌中游商城提醒您")
-                                .setMessage(titleHead + id + titleFoot)
-                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                }).create();
-                        dialog.show();
-                    }
-                });
+//                btnLeft.setVisibility(View.VISIBLE);
+//                btnLeft.setText(complete);
+//                btnLeft.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle("掌中游商城提醒您")
+//                                .setMessage(titleHead + id + titleFoot)
+//                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        dialog.dismiss();
+//                                    }
+//                                })
+//                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        dialog.dismiss();
+//                                    }
+//                                }).create();
+//                        dialog.show();
+//                    }
+//                });
                 break;
         }
         if (t.getCreate_time() != null) {

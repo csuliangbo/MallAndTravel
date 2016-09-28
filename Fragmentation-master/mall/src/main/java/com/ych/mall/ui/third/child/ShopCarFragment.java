@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
@@ -68,11 +69,10 @@ public class ShopCarFragment extends BaseFragment implements RecyclerViewModel.R
 
     @Click
     void onSubmit() {
-        if (getCartId().equals("")) {
-            TOT("请选中需要结算的商品");
+        if (TextUtils.isEmpty(getCartId())) {
+            TOT("请选择商品在结算");
             return;
         }
-
         Intent intent = new Intent(getActivity(), PayActivity_.class);
         intent.putExtra(KV.CART_ID, getCartId());
         startActivity(intent);
@@ -236,6 +236,9 @@ public class ShopCarFragment extends BaseFragment implements RecyclerViewModel.R
                 continue;
             cartId = t.getCart_id() + "," + cartId;
         }
+
+        if (cartId.equals(""))
+            return cartId;
         cartId = cartId.substring(0, cartId.length() - 1);
         return cartId;
     }
@@ -293,10 +296,10 @@ public class ShopCarFragment extends BaseFragment implements RecyclerViewModel.R
 
     @Subscribe
     public void onEvent(LoginEvent e) {
-      if (model.isEmpty())
-          model.newInit();
+        if (model.isEmpty())
+            model.newInit();
         else
-          model.onRefresh();
+            model.onRefresh();
     }
 
     @Override

@@ -45,7 +45,7 @@ dependencies {
     compile files('libs/zxing.jar')
     compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.0'
     compile files('libs/alipaySdk-20160825.jar')
-    //compile files('libs/libammsdk.jar')
+
 }
 
 apt {

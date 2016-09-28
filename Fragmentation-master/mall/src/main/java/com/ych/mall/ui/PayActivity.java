@@ -1,7 +1,6 @@
 package com.ych.mall.ui;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -10,13 +9,16 @@ import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -34,7 +36,6 @@ import com.ych.mall.bean.TravelRecverBean;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.HttpModel;
 import com.ych.mall.model.MallAndTravelModel;
-import com.ych.mall.model.PayModel;
 import com.ych.mall.model.RecyclerViewModel;
 import com.ych.mall.model.RecyclerViewNormalModel;
 import com.ych.mall.model.UserInfoModel;
@@ -91,6 +92,20 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     ClearEditText cetB;
     @ViewById(R.id.tv_pay_price)
     TextView tvPayPrice;
+    @ViewById(R.id.cb_pay_alipay)
+    CheckBox cbPayAlipay;
+    @ViewById(R.id.cb_pay_weixin)
+    CheckBox cbPayWeixin;
+    @ViewById(R.id.ll_pay_weixin)
+    LinearLayout llPayWeixin;
+    @ViewById(R.id.addressLayout)
+    LinearLayout addressLayout;
+    @ViewById(R.id.ll_contact)
+    LinearLayout llContact;
+    @ViewById(R.id.tv_contact_name)
+    TextView tvContactName;
+    @ViewById(R.id.tv_contact_phone)
+    TextView tvContactPhone;
 
     private String cart_id;
     private String goods_id;
@@ -114,6 +129,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     private String adultPrice = "";
     private String adultNum = "";
     private String jifenTravelTotal = "";
+    private boolean isPay = false;
 
     @Click
     public void addressLayout() {
@@ -127,8 +143,12 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     @Click
     void onPay() {
-        // payChoosePopupwindow();
-        createOrder();
+        if (!isPay) {
+            createOrder();
+            isPay = true;
+        } else {
+            TOT("你已经创建了订单，请到订单页面进行支付");
+        }
     }
 
     /**
@@ -217,6 +237,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             adultNum = bundle.getString("AdultNum");
             adultPrice = bundle.getString("AdultPrice");
             llA.setVisibility(View.GONE);
+            addressLayout.setVisibility(View.GONE);
         }
         if (!TextUtils.isEmpty(goods_id)) {
             isPayNow = true;
@@ -234,6 +255,105 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             rvmTravel = new RecyclerViewNormalModel<>(this, new TravelRecver(), rlvPay, R.layout.item_goods_list);
             rvmTravel.init(layoutManager1);
         }
+        initClearEdittext();
+        initCheckbox();
+    }
+
+    /**
+     * 监听积分输入框
+     */
+    void initClearEdittext() {
+        cetA.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (TextUtils.isEmpty(cetA.getText().toString())) {
+                    return;
+                }
+                double jifenA = Double.parseDouble(cetA.getText().toString());
+                if (jifenA > jifenATotal) {
+                    TOT("A账号的积分余额不足");
+                } else {
+                    tvPayPrice.setText("应付：￥" + (totalPrice - jifenA));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (TextUtils.isEmpty(cetA.getText().toString())) {
+                    if (TextUtils.isEmpty(cetB.getText().toString())) {
+                        tvPayPrice.setText("应付：￥" + totalPrice);
+                    } else {
+                        tvPayPrice.setText("应付：￥" + (totalPrice - Double.parseDouble(cetB.getText().toString())));
+                    }
+                }
+            }
+        });
+        cetB.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (TextUtils.isEmpty(cetB.getText().toString())) {
+                    return;
+                }
+                double jifenB = Double.parseDouble(cetB.getText().toString());
+                if (jifenB > jifenBTotal) {
+                    TOT("B账号的积分余额不足");
+                } else {
+                    if (TextUtils.isEmpty(cetA.getText().toString())) {
+                        tvPayPrice.setText("应付：￥" + (totalPrice - jifenB));
+                    } else {
+                        tvPayPrice.setText("应付：￥" + (totalPrice - Double.parseDouble(cetA.getText().toString())
+                                - jifenB));
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (TextUtils.isEmpty(cetB.getText().toString())) {
+                    if (TextUtils.isEmpty(cetA.getText().toString())) {
+                        tvPayPrice.setText("应付：￥" + totalPrice);
+                    } else {
+                        tvPayPrice.setText("应付：￥" + (totalPrice - Double.parseDouble(cetA.getText().toString())));
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * 监听支付方式的选择
+     */
+    void initCheckbox() {
+        cbPayAlipay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    cbPayWeixin.setChecked(false);
+                } else {
+                    cbPayWeixin.setChecked(true);
+                }
+            }
+        });
+        cbPayWeixin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    cbPayAlipay.setChecked(false);
+                } else {
+                    cbPayAlipay.setChecked(true);
+                }
+            }
+        });
     }
 
     @Override
@@ -265,9 +385,9 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         holder.setText(R.id.name, t.getTitle());
         holder.setText(R.id.price, "￥" + t.getPrice_new());
         holder.setText(R.id.num, t.getFanli_jifen());
-        holder.setVisible(R.id.ll_taocan,View.VISIBLE);
+        holder.setVisible(R.id.ll_taocan, View.VISIBLE);
         holder.setText(R.id.tv_taocan, t.getTaocan_name());
-        holder.setText(R.id.tv_number, t.getGoods_num());
+
         totalPrice = totalPrice + Double.parseDouble(t.getPrice_new());
         tvTotalPrice.setText(totalPrice + "");
         if (TextUtils.isEmpty(t.getFanli_jifen())) {
@@ -286,6 +406,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         } else {
             number = t.getGoods_num();
         }
+        holder.setText(R.id.tv_number, number);
         cart_id = t.getCart_id();
         realName = t.getRealname();
         mobile = t.getMobile();
@@ -314,7 +435,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             totalPrice = totalPrice - Double.parseDouble(cetB.getText().toString());
             jifenB = cetB.getText().toString() + "";
         }
-        tvPayPrice.setText(totalPrice + "");
+        tvPayPrice.setText("￥" + totalPrice);
         if (isTravel) {
             MallAndTravelModel.createTourOrder(createCallback, payPrice + "", totalPrice + "", address, realName,
                     mobile, number, jifenTravelTotal, goods_id, jifenA, jifenB, date, childrenNum, childrenPrice, adultNum, adultPrice);
@@ -356,7 +477,12 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             PayRequestBean bean = Http.model(PayRequestBean.class, response);
             Log.e("KTY pay", response);
             if (bean.getCode().equals("200")) {
-                payChoosePopupwindow(bean.getData());
+                if (cbPayAlipay.isChecked()) {
+                    payInerface(bean.getData());
+                } else {
+                    payWeixin();
+                }
+                //payChoosePopupwindow(bean.getData());
             }
         }
     };
@@ -428,9 +554,9 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     private void payChoosePopupwindow(final String orderInfo) {
 
-        View popupWindow_view = getLayoutInflater().inflate(R.layout.item_dialog_pay, null, false);
+        View popupWindow_view = getLayoutInflater().inflate(R.layout.item_popupwindow_pay, null, false);
         final PopupWindow popupWindow = new PopupWindow(popupWindow_view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
-        popupWindow.showAtLocation(llA, Gravity.NO_GRAVITY, 0, 0);
+        popupWindow.showAtLocation(llA, Gravity.BOTTOM, 0, 0);
         // 实例化一个ColorDrawable颜色为半透明
         ColorDrawable dw = new ColorDrawable(0xb0000000);
         popupWindow.setBackgroundDrawable(dw);

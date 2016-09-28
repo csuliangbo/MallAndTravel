@@ -254,7 +254,7 @@ public class UserInfoModel {
     }
 
     //取消订单
-    static String CANCEL_ORDER = url + "update_payment_success";
+    static String CANCEL_ORDER = url + "cancel_order";
 
     public static void cancelOrder(StringCallback callback, String id) {
         HashMap<String, String> map = new HashMap<>();

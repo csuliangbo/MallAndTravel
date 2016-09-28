@@ -1,7 +1,9 @@
 package com.ych.mall.ui;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -11,6 +13,7 @@ import com.ych.mall.R;
 import com.ych.mall.bean.ParentBean;
 import com.ych.mall.bean.UserInfoBean;
 import com.ych.mall.model.Http;
+import com.ych.mall.model.MallAndTravelModel;
 import com.ych.mall.model.UserInfoModel;
 import com.ych.mall.ui.base.BaseActivity;
 import com.ych.mall.utils.KV;
@@ -125,8 +128,34 @@ public class NewAddressActivity extends BaseActivity {
 
         } else {
             newAdd = false;
+            tiText.setVisibility(View.VISIBLE);
+            tiText.setText("删除");
+
             tiTitle.setText("修改地址");
             mData = (UserInfoBean.UserInfoData) getIntent().getSerializableExtra(KV.DATA);
+            tiText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(NewAddressActivity.this);
+                    builder.setTitle("提示");
+                    builder.setMessage("确定删除此地址？");
+                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            onSubmit.startLoading();
+                            UserInfoModel.delAddress(delCallBack,mData.getAddressid());
+                        }
+                    });
+                    builder.show();
+                }
+            });
             mReceiver.setText(mData.getAddressrealname());
             mPhone.setText(mData.getAddressmobile());
             onCityPicker.setText(mData.getProv() + mData.getCity() + mData.getDist());
@@ -168,6 +197,26 @@ public class NewAddressActivity extends BaseActivity {
                 finish();
             }
             TOT(bean.getMessage());
+        }
+    };
+
+    StringCallback delCallBack = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            onSubmit.stop();
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+
+            onSubmit.stop();
+            ParentBean bean = Http.model(ParentBean.class, response);
+            if (bean.getCode().equals("200")){
+                UserInfoBean b = new UserInfoBean();
+                UserInfoBean.UserInfoData data = b.new UserInfoData();
+                data.setStatus("1");
+                EventBus.getDefault().post(data);
+                finish();}
         }
     };
 }

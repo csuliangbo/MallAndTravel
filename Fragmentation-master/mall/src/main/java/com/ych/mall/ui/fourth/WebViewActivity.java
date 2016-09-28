@@ -32,9 +32,8 @@ public class WebViewActivity extends BaseActivity {
 
     @AfterViews
     void init() {
-        tiTitle.setText("加载网页");
+        tiTitle.setText("网页");
         url = getIntent().getStringExtra(KV.URL);
-        TOT(url);
         webView.loadUrl(url);
         webView.setWebViewClient(new WebViewClient(){
             @Override

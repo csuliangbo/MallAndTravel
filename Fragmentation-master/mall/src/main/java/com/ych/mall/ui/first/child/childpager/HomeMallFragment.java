@@ -1,8 +1,13 @@
 package com.ych.mall.ui.first.child.childpager;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.Image;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +15,8 @@ import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +44,7 @@ import com.ych.mall.ui.fourth.WebViewActivity_;
 import com.ych.mall.utils.KV;
 import com.ych.mall.utils.UserCenter;
 import com.ych.mall.widget.ClearEditText;
+import com.ych.mall.widget.MyScrollView;
 import com.ych.mall.widget.SlideShowView;
 import com.ych.mall.zxingcode.activity.CaptureActivity;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -58,14 +66,17 @@ import okhttp3.Call;
  */
 @EFragment(R.layout.fragment_home_travel)
 public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.RModelListener<HomeMallBean.Class> {
-    @ViewById(R.id.refresh_layout)
-    SwipeRefreshLayout rLayout;
+    //    @ViewById(R.id.refresh_layout)
+//    SwipeRefreshLayout rLayout;
     @ViewById(R.id.rv_list)
     RecyclerView list;
     @ViewById
     ClearEditText mSearch;
-
-    public static int REQUEST_CODE = 123;
+    @ViewById
+    MyScrollView mScroll;
+    @ViewById
+    LinearLayout mLL;
+    public final static int REQUEST_CODE = 123;
 
     HomeMallBean.Class mData;
     RecyclerViewModel<HomeMallBean.Class> model;
@@ -95,10 +106,22 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
         model = new RecyclerViewModel<>(getActivity(),
                 this,
                 list,
-                rLayout,
+                null,
                 R.layout.item_home_travel_goods);
 
         model.initWithHead(header);
+        mScroll.setmListener(new MyScrollView.OnBorderListener() {
+            @Override
+            public void onBottom() {
+                model.onLoad();
+            }
+
+            @Override
+            public void onTop() {
+
+            }
+        });
+
     }
 
 
@@ -107,8 +130,8 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
 
         if (UserCenter.getInstance().isLoggin())
             EventBus.getDefault().post(new MainEvent(3));
-            else
-        getActivity().startActivity(new Intent(getActivity(), LoginActivity_.class));
+        else
+            getActivity().startActivity(new Intent(getActivity(), LoginActivity_.class));
     }
 
     @Click
@@ -120,15 +143,35 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
      * 点击扫一扫按钮，开启扫描二维码
      */
     public void startScan() {
-        //跳转到扫一扫
-        Intent intent = new Intent(getActivity(), CaptureActivity.class);
-        startActivityForResult(intent, REQUEST_CODE);
+        //检查权限
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            //进入到这里代表没有权限.
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_CODE);
+        } else {
+            //跳转到扫一扫
+            Intent intent = new Intent(getActivity(), CaptureActivity.class);
+            startActivityForResult(intent, REQUEST_CODE);
+        }
+
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case REQUEST_CODE:
+                    //跳转到扫一扫
+                    Intent intent = new Intent(getActivity(), CaptureActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE);
+                break;
+        }
     }
 
     @Click
     void onSearch() {
         hideSoftKeyBord();
-        ((SupportFragment) getParentFragment()).start(SearchFragment.newInstance(mSearch.getText().toString(), GoodsFragment.TYPE_TRAVEL));
+        ((SupportFragment) getParentFragment()).start(SearchFragment.newInstance(mSearch.getText().toString(), GoodsFragment.TYPE_GOODS));
     }
 
 
@@ -200,6 +243,7 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
 
             }
         });
+        sv.setScaleType();
 
     }
 

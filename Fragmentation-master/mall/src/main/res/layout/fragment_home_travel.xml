@@ -6,17 +6,19 @@
 
     <include layout="@layout/include_search_title"></include>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/refresh_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/main_bg">
+    <!--<android.support.v4.widget.SwipeRefreshLayout-->
+        <!--android:id="@+id/refresh_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@color/main_bg">-->
 
-        <ScrollView
+        <com.ych.mall.widget.MyScrollView
+            android:id="@+id/mScroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:id="@+id/mLL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -28,7 +30,7 @@
                     android:layout_height="match_parent" />
 
             </LinearLayout>
-        </ScrollView>
+        </com.ych.mall.widget.MyScrollView>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 </LinearLayout>

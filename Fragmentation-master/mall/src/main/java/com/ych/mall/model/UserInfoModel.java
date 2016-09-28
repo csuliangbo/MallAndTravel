@@ -128,6 +128,14 @@ public class UserInfoModel {
 
     }
 
+    static String DEL_ADDRESS = url + "del_address";
+
+    //刪除收貨地址
+    public static void delAddress(StringCallback callback, String id) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("addressid", id);
+        HttpModel.newInstance(DEL_ADDRESS).post(map, callback);
+    }
 
     static String USER_CENTER = url + "person_center";
 
@@ -198,7 +206,7 @@ public class UserInfoModel {
         HttpModel.newInstance(DEL_FOOT).post(map, callback);
     }
 
-    static String CLEAR_FOOT = url + "del_footprint";
+    static String CLEAR_FOOT = url + "empty_footprint";
 
 
     //清除数据

@@ -141,6 +141,7 @@ public class SortFragment extends BaseFragment {
 
         @Override
         public List<SortLeftData> getList(String str) {
+            if (mLoading!=null)
             mLoading.setVisibility(View.GONE);
             SortLeftBean bean = Http.model(SortLeftBean.class, str);
             if (bean.getCode().equals("200"))

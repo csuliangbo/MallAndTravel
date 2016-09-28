@@ -1,40 +1,30 @@
 package com.ych.mall;
-
-import android.support.v7.app.AppCompatActivity;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.view.Window;
-import android.widget.Toast;
-
 import me.yokeyword.fragmentation.SupportActivity;
 import me.yokeyword.fragmentation.SupportFragment;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
-
-import com.ych.mall.bean.ParentBean;
 import com.ych.mall.event.ClickEvent;
 import com.ych.mall.event.MainEvent;
-import com.ych.mall.model.RecyclerViewModel;
 import com.ych.mall.ui.base.BaseLazyMainFragment;
 import com.ych.mall.ui.first.FirstFragment;
 import com.ych.mall.ui.first.child.ViewPagerFragment;
 import com.ych.mall.ui.fourth.FourthFragment;
-import com.ych.mall.ui.fourth.child.MeFragment;
 import com.ych.mall.ui.fourth.child.MeFragment_;
 import com.ych.mall.ui.second.SecondFragment;
-import com.ych.mall.ui.second.child.SortFragment;
 import com.ych.mall.ui.second.child.SortFragment_;
 import com.ych.mall.ui.third.ThridFragment;
-import com.ych.mall.ui.third.child.ShopCarFragment;
 import com.ych.mall.ui.third.child.ShopCarFragment_;
 import com.ych.mall.widget.BottomBar;
 import com.ych.mall.widget.BottomBarTab;
-import com.zhy.http.okhttp.callback.StringCallback;
-
 import org.androidannotations.annotations.EActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.List;
-//修改by ych
 @EActivity
 public class MainActivity extends SupportActivity implements BaseLazyMainFragment.OnBackToFirstListener {
     public static final int FIRST = 0;
@@ -85,7 +75,10 @@ public class MainActivity extends SupportActivity implements BaseLazyMainFragmen
     }
 
     private void initView() {
-
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 011);
+        }
         mBottomBar = (BottomBar) findViewById(R.id.bottomBar);
 
         mBottomBar.addItem(new BottomBarTab(this, R.drawable.home))
@@ -150,17 +143,6 @@ public class MainActivity extends SupportActivity implements BaseLazyMainFragmen
         mBottomBar.setCurrentItem(0);
     }
 
-    /**
-     * 这里暂没实现,忽略
-     */
-//    @Subscribe
-//    public void onHiddenBottombarEvent(boolean hidden) {
-//        if (hidden) {
-//            mBottomBar.hide();
-//        } else {
-//            mBottomBar.show();
-//        }
-//    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

@@ -12,6 +12,7 @@ import com.ych.mall.R;
 import com.ych.mall.adapter.AddressAdapter;
 import com.ych.mall.bean.AddressBean;
 import com.ych.mall.bean.UserInfoBean;
+import com.ych.mall.event.AddressEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.MallAndTravelModel;
 import com.ych.mall.model.MeModel;
@@ -114,11 +115,23 @@ public class AddressActivity extends BaseActivity implements RecyclerViewModel.R
         final UserInfoBean.UserInfoData d = t;
         holder.setText(R.id.name, t.getAddressrealname() + "\t\t\t\t" + t.getAddressmobile());
         holder.setText(R.id.add, t.getProv() + t.getCity() + t.getDist() + t.getAddress());
+        final String name = t.getAddressrealname();
+        final String phone = t.getMobile();
+        final String address = t.getProv() + t.getCity() + t.getDist() + t.getAddress();
         if (t.getStatus().equals("1"))
             holder.getView(R.id.defalut).setVisibility(View.VISIBLE);
         else
             holder.getView(R.id.defalut).setVisibility(View.GONE);
         holder.getCovertView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getIntent().getBooleanExtra("address", false)) {
+                    finish();
+                    EventBus.getDefault().post(new AddressEvent(address, name, phone));
+                }
+            }
+        });
+        holder.getView(R.id.mEdit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AddressActivity.this, NewAddressActivity_.class).putExtra(KV.DATA, d));

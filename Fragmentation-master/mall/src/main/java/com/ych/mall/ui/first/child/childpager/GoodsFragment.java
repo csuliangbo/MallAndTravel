@@ -27,9 +27,13 @@ import com.ych.mall.bean.TravelDetailBean;
 import com.ych.mall.event.LoginEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.MallAndTravelModel;
+import com.ych.mall.ui.BuyVipActivity;
+import com.ych.mall.ui.BuyVipActivity_;
+import com.ych.mall.ui.LoginActivity_;
 import com.ych.mall.ui.PayActivity_;
 import com.ych.mall.ui.base.BaseFragment;
 import com.ych.mall.ui.fourth.WebViewActivity_;
+import com.ych.mall.ui.fourth.child.VipGradeFragment;
 import com.ych.mall.utils.KV;
 import com.ych.mall.utils.Tools;
 import com.ych.mall.utils.UserCenter;
@@ -248,6 +252,7 @@ public class GoodsFragment extends BaseFragment {
 
     @AfterViews
     public void initView() {
+        setTAG("goods");
         currentType = getArguments().getInt(KV.TYPE, TYPE_TRAVEL);
         mId = getArguments().getString(KV.ID);
         if (currentType == TYPE_GOODS) {
@@ -259,6 +264,16 @@ public class GoodsFragment extends BaseFragment {
         if (UserCenter.getInstance().isTourist()) {
             order.setBackgroundColor(getActivity().getResources().getColor(R.color.text_gray));
             order.setText("请晋升为会员，继续购物");
+            order.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    back();
+                    if (UserCenter.getInstance().isLoggin())
+                     startActivity(new Intent(getActivity(),BuyVipActivity_.class));
+                    else
+                        startActivity(new Intent(getActivity(), LoginActivity_.class));
+                }
+            });
             if (currentType == TYPE_GOODS) {
                 order.setVisibility(View.VISIBLE);
                 bottomLL.setVisibility(View.GONE);
@@ -286,7 +301,7 @@ public class GoodsFragment extends BaseFragment {
                 return;
             }
         }
-        EventBus.getDefault().post(new LoginEvent());
+
         MallAndTravelModel.addShopCar(shopCallBack, mId, groupTitle, mPoint, mPrice);
     }
 
@@ -301,7 +316,9 @@ public class GoodsFragment extends BaseFragment {
         stock.setText("库存：" + t.getKucun() + "件");
         mPrice = t.getPrice_new();
         mPoint = t.getFanli_jifen();
+
         if (t.getPic_tuji() != null) {
+
             String[] banner = new String[t.getPic_tuji().size()];
             int c = 0;
             for (String s : t.getPic_tuji()) {
@@ -341,7 +358,8 @@ public class GoodsFragment extends BaseFragment {
         //stock.setText("库存：" + t.getKucun() + "件");
         // mPrice = t.getPrice_new();
         mPoint = t.getFanli_jifen();
-        if (t.getPic_url() != null) {
+        if (t.getPic_tuji()!=null&&t.getPic_tuji().size()!=0) {
+            log(t.getPic_tuji().toString());
             String[] banner = new String[t.getPic_tuji().size()];
             int c = 0;
             for (String s : t.getPic_tuji()) {
@@ -440,6 +458,7 @@ public class GoodsFragment extends BaseFragment {
         @Override
         public void onError(Call call, Exception e, int id) {
             TOT("网络连接失败");
+            if (mLoading!=null)
             mLoading.setVisibility(View.GONE);
         }
 
@@ -449,7 +468,7 @@ public class GoodsFragment extends BaseFragment {
                 mLoading.setVisibility(View.GONE);
             ParentBean bean = Http.model(ParentBean.class, response);
             if (bean.getCode().equals("200")) {
-
+                EventBus.getDefault().post(new LoginEvent());
             }
             TOT(bean.getMessage());
 

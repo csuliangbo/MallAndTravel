@@ -18,6 +18,7 @@ public class CollectBean extends ParentBean{
 
     public class CollectData {
 
+        private String id;
         private String goods_id;
 
 
@@ -32,6 +33,13 @@ public class CollectBean extends ParentBean{
 
         private String is_type;
 
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
 
         public void setGoods_id(String goods_id){
 

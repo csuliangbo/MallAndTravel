@@ -23,33 +23,8 @@ public class MainActivity extends SupportActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String url="http://180.173.56.12:8099/WebAPI/AddArticle/";
-        Map<String,String> p=new HashMap<String, String>();
-        p.put("userCode","18008112518");
-        p.put("title","okHttp Test");
-        p.put("content","this is a test");
-        p.put("files"," ");
-       Post(p);
-
+      loadRootFragment(R.id.home_container,FragmentHome.getInstance());
 
     }
 
-    public void Post(Map<String, String> p) {
-        Toast.makeText(MainActivity.this,"start",Toast.LENGTH_SHORT).show();
-        PostFormBuilder builder = OkHttpUtils.post().url(url);
-        for (String key : p.keySet()) {
-            builder.addParams(key, p.get(key));
-        }
-        builder.build().buildCall(new StringCallback() {
-            @Override
-            public void onError(Call call, Exception e, int id) {
-                Toast.makeText(MainActivity.this,"err",0).show();
-            }
-
-            @Override
-            public void onResponse(String response, int id) {
-                Toast.makeText(MainActivity.this,response,0).show();
-            }
-        });
-    }
 }

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ import com.ych.mall.bean.TravelDetailBean;
 import com.ych.mall.event.LoginEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.MallAndTravelModel;
+import com.ych.mall.model.UserInfoModel;
 import com.ych.mall.ui.BuyVipActivity;
 import com.ych.mall.ui.BuyVipActivity_;
 import com.ych.mall.ui.LoginActivity_;
@@ -57,8 +59,8 @@ import okhttp3.Call;
  */
 @EFragment(R.layout.fragment_goods)
 public class GoodsFragment extends BaseFragment {
-    public static final int TYPE_GOODS = 11;
-    public static final int TYPE_TRAVEL = 12;
+    public static final int TYPE_GOODS = 1;
+    public static final int TYPE_TRAVEL = 2;
     private int currentType = TYPE_TRAVEL;
     @ViewById(R.id.fg_img)
     SlideShowView showView;
@@ -100,9 +102,10 @@ public class GoodsFragment extends BaseFragment {
     TextView tvNumChildren;
     @ViewById(R.id.ll_children)
     LinearLayout llChildren;
+    @ViewById
+    ImageView onCollect;
     private int numAdult;
     private int numChildren;
-
     @Click
     void onProtocol() {
         web("http://www.zzumall.com/index.php/Mobile/Tourism/lvyou_xieyi");
@@ -116,6 +119,8 @@ public class GoodsFragment extends BaseFragment {
     String mId;
     //成人价
     String mPrice;
+    String mImgUrl;
+    String mTitleText;
     //儿童价
 
     String mChildPrice;
@@ -203,6 +208,16 @@ public class GoodsFragment extends BaseFragment {
     @Click
     void ivShare() {
         umShare();
+    }
+
+    @Click
+    void onCollect() {
+        if (mPrice != null) {
+            mLoading.setVisibility(View.VISIBLE);
+            UserInfoModel.addCollect(addCallBack, mId, mImgUrl, mPrice, mTitleText, "0", currentType);
+        }
+        else
+            TOT("请选择出发时间");
     }
 
     UMShareListener umShareListener = new UMShareListener() {
@@ -312,6 +327,8 @@ public class GoodsFragment extends BaseFragment {
     private void goods(GoodsDetailBean.GoodsDetailData t) {
         if (t == null)
             return;
+        mImgUrl = Http.GOODS_PIC_URL + t.getPic_url();
+        mTitleText = t.getTitle();
         sT(mTitle, t.getTitle());
         sT(mPriceNew, "￥" + t.getPrice_new());
         sT(mPriceOld, t.getPrice_old());
@@ -353,13 +370,16 @@ public class GoodsFragment extends BaseFragment {
     private void travel(TravelDetailBean.TravelDetailData t) {
         if (t == null)
             return;
+        mImgUrl = Http.GOODS_PIC_URL + t.getPic_url();
+        mTitleText = t.getTitle();
         mPriceOld.setVisibility(View.GONE);
         sT(mTitle, t.getTitle());
-        //sT(mPriceNew, t.getPrice_new());
+
+        sT(mPriceNew, t.getPrice_new());
         //sT(mPriceOld, t.getPrice_old());
         points.setText("送积分（" + t.getFanli_jifen() + "积分）");
         //stock.setText("库存：" + t.getKucun() + "件");
-        // mPrice = t.getPrice_new();
+        //mPrice = t.getPrice_new();
         mPoint = t.getFanli_jifen();
         if (t.getPic_tuji() != null && t.getPic_tuji().size() != 0) {
             log(t.getPic_tuji().toString());
@@ -436,7 +456,8 @@ public class GoodsFragment extends BaseFragment {
                 GoodsDetailBean bean = Http.model(GoodsDetailBean.class, response);
                 if (bean.getCode().equals("200")) {
                     goods(bean.getData().get(0));
-                } else
+                    onCollect.setVisibility(View.VISIBLE);
+            } else
                     TOT(bean.getMessage());
             } catch (Exception e) {
 
@@ -455,9 +476,12 @@ public class GoodsFragment extends BaseFragment {
         @Override
         public void onResponse(String response, int id) {
             mLoading.setVisibility(View.GONE);
+            log(response);
             TravelDetailBean bean = Http.model(TravelDetailBean.class, response);
-            if (bean.getCode().equals("200"))
+            if (bean.getCode().equals("200")) {
                 travel(bean.getData().get(0));
+                onCollect.setVisibility(View.VISIBLE);
+            }
             else
                 TOT(bean.getMessage());
         }
@@ -483,6 +507,24 @@ public class GoodsFragment extends BaseFragment {
 
         }
     };
+    //添加收藏
+    StringCallback addCallBack = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            TOT("网络连接失败");
+            if (mLoading!=null)
+            mLoading.setVisibility(View.GONE);
+        }
 
-
+        @Override
+        public void onResponse(String response, int id) {
+            if (mLoading!=null)
+                mLoading.setVisibility(View.GONE);
+            ParentBean bean = Http.model(ParentBean.class, response);
+            if (bean.getCode().equals("200")) {
+                TOT("收藏成功");
+            } else
+                TOT(bean.getMessage());
+        }
+    };
 }

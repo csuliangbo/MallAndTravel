@@ -119,6 +119,14 @@ public class HomeTravelBean extends ParentBean{
         public void setSige_url(String sige_url) {
             this.sige_url = sige_url;
         }
+
+        @Override
+        public String toString() {
+            return "Hot{" +
+                    "ad_link='" + ad_link + '\'' +
+                    ", sige_url='" + sige_url + '\'' +
+                    '}';
+        }
     }
     public class Center {
 

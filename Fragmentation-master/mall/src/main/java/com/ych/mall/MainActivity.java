@@ -81,10 +81,10 @@ public class MainActivity extends SupportActivity implements BaseLazyMainFragmen
         }
         mBottomBar = (BottomBar) findViewById(R.id.bottomBar);
 
-        mBottomBar.addItem(new BottomBarTab(this, R.drawable.home))
-                .addItem(new BottomBarTab(this, R.drawable.fbxs))
-                .addItem(new BottomBarTab(this, R.drawable.buy))
-                .addItem(new BottomBarTab(this, R.drawable.me));
+        mBottomBar.addItem(new BottomBarTab(this, R.drawable.home,"首页"))
+                .addItem(new BottomBarTab(this, R.drawable.fbxs,"分类"))
+                .addItem(new BottomBarTab(this, R.drawable.buy,"购物车"))
+                .addItem(new BottomBarTab(this, R.drawable.me,"个人中心"));
 
         mBottomBar.setOnTabSelectedListener(new BottomBar.OnTabSelectedListener() {
             @Override

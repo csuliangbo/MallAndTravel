@@ -68,7 +68,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="10"></View>
-
+                    <ImageView
+                        android:id="@+id/onCollect"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_collect" />
                     <ImageView
                         android:id="@+id/ivShare"
                         android:layout_width="wrap_content"

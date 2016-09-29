@@ -1,6 +1,7 @@
 package com.ych.mall.ui.fourth.child;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,8 @@ import com.ych.mall.model.RecyclerViewNormalModel;
 import com.ych.mall.model.UserInfoModel;
 import com.ych.mall.model.YViewHolder;
 import com.ych.mall.ui.base.BaseFragment;
+import com.ych.mall.ui.first.child.GoodsViewPagerFragment;
+import com.ych.mall.ui.first.child.childpager.GoodsFragment;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.androidannotations.annotations.AfterViews;
@@ -48,7 +51,6 @@ public class MyFootFragment extends BaseFragment implements RecyclerViewModel.RM
     RecyclerView mRecyclerView;
     @ViewById
     TextView mLoading;
-
     @Click
     void onBack() {
         back();
@@ -113,7 +115,7 @@ public class MyFootFragment extends BaseFragment implements RecyclerViewModel.RM
 
     @Override
     public void covert(YViewHolder holder, MyFootBean.MyFootData t) {
-        final String id = t.getGid();
+        final String id = t.getId();
 
         holder.setText(R.id.name, t.getGoods_name());
         holder.setText(R.id.price, t.getGoods_price());
@@ -124,6 +126,23 @@ public class MyFootFragment extends BaseFragment implements RecyclerViewModel.RM
                 UserInfoModel.delFoot(delCallBack, id);
             }
         });
+        final String gId=t.getGid();
+        final String type=t.getIs_type();
+        holder.getCovertView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //商品
+                if (type.equals("1")){
+                    start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_GOODS, gId));
+                }
+                //旅游
+                else{
+                    start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_TRAVEL, gId));
+                }
+
+            }
+        });
+
     }
 
     //清除足迹

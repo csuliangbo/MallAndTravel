@@ -217,6 +217,24 @@ public class UserInfoModel {
 
     }
 
+    static String ADD_COLLECT = url + "add_collect";
+
+    //添加收藏
+    public static void addCollect(StringCallback callback, String goods_id, String pic_url,
+                                  String price_new, String detail_title, String price_old,int type
+    ) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("goods_id", goods_id);
+        map.put("user_id", UserCenter.getInstance().getCurrentUserId());
+        map.put("pic_url", pic_url);
+        map.put("price_new", price_new);
+        map.put("detail_title", detail_title);
+        map.put("price_old", price_old);
+        map.put("is_type",type+"");
+        HttpModel.newInstance(ADD_COLLECT).post(map, callback);
+
+    }
+
     static String COLLECT_URL = url + "person_collect";
 
     //用户收藏
@@ -224,6 +242,24 @@ public class UserInfoModel {
         HashMap<String, String> map = new HashMap<>();
         map.put("id", UserCenter.getInstance().getCurrentUserId());
         HttpModel.newInstance(COLLECT_URL).post(map, callback);
+    }
+
+    static String DEL_COLLECT = url + "del_collect";
+
+    //删除收藏
+    public static void delCollect(StringCallback callback, String id) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("id", id);
+        HttpModel.newInstance(DEL_COLLECT).post(map, callback);
+    }
+
+    static String CLEAR_COLLECT = url + "empty_collect";
+
+    //清空收藏
+    public static void clearCollect(StringCallback callback) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("id", UserCenter.getInstance().getCurrentUserId());
+        HttpModel.newInstance(CLEAR_COLLECT).post(map, callback);
     }
 
     //订单

@@ -2,6 +2,7 @@ package com.ych.mall.ui;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
@@ -22,6 +23,7 @@ import com.ych.mall.model.Http;
 import com.ych.mall.model.LoginAndRegistModel;
 import com.ych.mall.model.UserInfoModel;
 import com.ych.mall.ui.base.BaseActivity;
+import com.ych.mall.utils.UserCenter;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.androidannotations.annotations.AfterViews;
@@ -59,6 +61,12 @@ public class BuyVipActivity extends BaseActivity {
         canBuyVip();
     }
 
+    @Click
+    void onQuit(){
+        finish();
+        UserCenter.getInstance().out();
+        startActivity(new Intent(this, LoginActivity_.class));
+    }
     boolean canBuyVip() {
         LoginAndRegistModel.canBuyVip(canBuyCallback);
         return false;

@@ -429,6 +429,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         TOT("支付成功");
+                        model.onRefresh();
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         TOT("支付失败");

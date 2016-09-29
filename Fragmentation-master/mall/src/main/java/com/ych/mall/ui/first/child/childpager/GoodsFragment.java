@@ -98,6 +98,8 @@ public class GoodsFragment extends BaseFragment {
     TextView tvNumAdult;
     @ViewById(R.id.tv_num_children)
     TextView tvNumChildren;
+    @ViewById(R.id.ll_children)
+    LinearLayout llChildren;
     private int numAdult;
     private int numChildren;
 
@@ -115,6 +117,7 @@ public class GoodsFragment extends BaseFragment {
     //成人价
     String mPrice;
     //儿童价
+
     String mChildPrice;
     String mPoint;
     String goodsID;
@@ -269,7 +272,7 @@ public class GoodsFragment extends BaseFragment {
                 public void onClick(View v) {
                     back();
                     if (UserCenter.getInstance().isLoggin())
-                     startActivity(new Intent(getActivity(),BuyVipActivity_.class));
+                        startActivity(new Intent(getActivity(), BuyVipActivity_.class));
                     else
                         startActivity(new Intent(getActivity(), LoginActivity_.class));
                 }
@@ -358,7 +361,7 @@ public class GoodsFragment extends BaseFragment {
         //stock.setText("库存：" + t.getKucun() + "件");
         // mPrice = t.getPrice_new();
         mPoint = t.getFanli_jifen();
-        if (t.getPic_tuji()!=null&&t.getPic_tuji().size()!=0) {
+        if (t.getPic_tuji() != null && t.getPic_tuji().size() != 0) {
             log(t.getPic_tuji().toString());
             String[] banner = new String[t.getPic_tuji().size()];
             int c = 0;
@@ -389,6 +392,12 @@ public class GoodsFragment extends BaseFragment {
                 sT(mPriceNew, mDate.get(position).getChufa_price());
                 mPrice = mDate.get(position).getChufa_price();
                 mChildPrice = mDate.get(position).getChufa_price_et();
+                Log.e("KTY  price", mChildPrice + "");
+                if (mChildPrice == null || mChildPrice == "0") {
+                    llChildren.setVisibility(View.GONE);
+                }else{
+                    llChildren.setVisibility(View.VISIBLE);
+                }
                 sT(mPriceTV, mPrice);
                 sT(mPriceChildTV, mChildPrice);
             }
@@ -420,9 +429,9 @@ public class GoodsFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response, int id) {
+            Log.e("KTY@@@", response);
             if (mLoading != null)
                 mLoading.setVisibility(View.GONE);
-
             try {
                 GoodsDetailBean bean = Http.model(GoodsDetailBean.class, response);
                 if (bean.getCode().equals("200")) {
@@ -458,8 +467,8 @@ public class GoodsFragment extends BaseFragment {
         @Override
         public void onError(Call call, Exception e, int id) {
             TOT("网络连接失败");
-            if (mLoading!=null)
-            mLoading.setVisibility(View.GONE);
+            if (mLoading != null)
+                mLoading.setVisibility(View.GONE);
         }
 
         @Override

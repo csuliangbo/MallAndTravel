@@ -2,14 +2,24 @@ package com.ych.mall.ui;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
+import com.tencent.mm.sdk.modelpay.PayReq;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.ych.mall.R;
 import com.ych.mall.bean.AuthResult;
 import com.ych.mall.bean.CreateOrderBean;
@@ -19,6 +29,7 @@ import com.ych.mall.bean.PayBean;
 import com.ych.mall.bean.PayRequestBean;
 import com.ych.mall.bean.PayResult;
 import com.ych.mall.model.Http;
+import com.ych.mall.model.HttpModel;
 import com.ych.mall.model.LoginAndRegistModel;
 import com.ych.mall.model.UserInfoModel;
 import com.ych.mall.ui.base.BaseActivity;
@@ -28,7 +39,9 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.Call;
@@ -82,14 +95,14 @@ public class BuyVipActivity extends BaseActivity {
                 TOT("可以任意购买");
                 final AlertDialog.Builder builder = new AlertDialog.Builder(
                         BuyVipActivity.this);
-                builder.setTitle("请选择一下城市");
+                builder.setTitle("请选择一下购买类型");
                 builder.setSingleChoiceItems(new String[]{"会员", "合伙人"}, 1,
                         new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if (which == 0) {
-                                    money = 365 + "";
+                                    money = 0.01 + "";
                                 } else {
                                     money = 30000 + "";
                                     TOT("大额支付功能尚未开发");
@@ -137,7 +150,7 @@ public class BuyVipActivity extends BaseActivity {
             } else if (code.equals("200")) {
                 Log.e("KTY", response);
                 TOT("创建订单成功");
-                UserInfoModel.pay(payCallBack, bean.getData().getOrders_num(), bean.getData().getOrders_num(), "购买会员");
+                UserInfoModel.pay(payCallBack, bean.getData().getOrders_num(), 0.01+"", "购买会员");
             }
         }
     };
@@ -153,10 +166,44 @@ public class BuyVipActivity extends BaseActivity {
             PayRequestBean bean = Http.model(PayRequestBean.class, response);
             Log.e("KTY pay", response);
             if (bean.getCode().equals("200")) {
-                payInerface(bean.getData());
+                payChoosePopupwindow(bean.getData());
             }
         }
     };
+
+    private void payChoosePopupwindow(final String orderInfo) {
+
+        View popupWindow_view = getLayoutInflater().inflate(R.layout.item_popupwindow_pay, null, false);
+        final PopupWindow popupWindow = new PopupWindow(popupWindow_view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+        popupWindow.showAtLocation(tiTitle, Gravity.BOTTOM, 0, 0);
+        // 实例化一个ColorDrawable颜色为半透明
+        ColorDrawable dw = new ColorDrawable(0xb0000000);
+        popupWindow.setBackgroundDrawable(dw);
+        LinearLayout llWeixin = (LinearLayout) popupWindow_view.findViewById(R.id.ll_weixin);
+        LinearLayout llAlipay = (LinearLayout) popupWindow_view.findViewById(R.id.ll_alipay);
+        ImageView ivQuit = (ImageView) popupWindow_view.findViewById(R.id.iv_quit);
+        llWeixin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                payWeixin();
+            }
+        });
+        llAlipay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                payInerface(orderInfo);
+            }
+        });
+        ivQuit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+
+    }
 
     /**
      * 支付宝支付
@@ -197,6 +244,7 @@ public class BuyVipActivity extends BaseActivity {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         TOT("支付成功");
+                        finish();
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         TOT("支付失败");
@@ -227,5 +275,56 @@ public class BuyVipActivity extends BaseActivity {
         }
 
         ;
+    };
+    /**
+     * 微信支付
+     */
+    private IWXAPI api;
+
+    private void payWeixin() {
+        api = WXAPIFactory.createWXAPI(this, "wxb4ba3c02aa476ea1");
+        String url = "http://wxpay.weixin.qq.com/pub_v2/app/app_pay.php?plat=android";
+        TOT("获取订单中...");
+        HashMap<String, String> map = new HashMap<>();
+        HttpModel.newInstance(url).post(map, callback);
+
+    }
+
+    StringCallback callback = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            try {
+
+                Log.e("get server pay params:", response);
+                JSONObject json = new JSONObject(response);
+                if (null != json && !json.has("retcode")) {
+                    PayReq req = new PayReq();
+                    //req.appId = "wxf8b4f85f3a794e77";  // 测试用appId
+                    req.appId = json.getString("appid");
+                    req.partnerId = json.getString("partnerid");
+                    req.prepayId = json.getString("prepayid");
+                    req.nonceStr = json.getString("noncestr");
+                    req.timeStamp = json.getString("timestamp");
+                    req.packageValue = json.getString("package");
+                    req.sign = json.getString("sign");
+                    //req.extData = "app data"; // optional
+                    TOT("正常调起支付");
+                    // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
+                    api.sendReq(req);
+                } else {
+                    Log.d("PAY_GET", "返回错误" + json.getString("retmsg"));
+                    TOT("返回错误" + json.getString("retmsg"));
+                }
+
+            } catch (Exception e) {
+                Log.e("PAY_GET", "异常：" + e.getMessage());
+                TOT("异常：" + e.getMessage());
+            }
+        }
     };
 }

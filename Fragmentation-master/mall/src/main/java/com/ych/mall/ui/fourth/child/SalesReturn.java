@@ -2,6 +2,7 @@ package com.ych.mall.ui.fourth.child;
 
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.ych.mall.R;
 import com.ych.mall.bean.ParentBean;
@@ -27,6 +28,8 @@ public class SalesReturn extends BaseFragment {
     @ViewById(R.id.et_reason)
     EditText etReason;
     private String orderNum;
+    @ViewById(R.id.tiTitle)
+    TextView tvTitle;
 
     public static SalesReturn newInstance(String orderNum) {
         Bundle bundle = new Bundle();
@@ -37,6 +40,11 @@ public class SalesReturn extends BaseFragment {
     }
 
     @Click
+    void onBack() {
+        back();
+    }
+
+    @Click
     void onCommit() {
         UserInfoModel.salesReturn(salesReturnCallback, orderNum, etReason.getText().toString());
     }
@@ -44,9 +52,10 @@ public class SalesReturn extends BaseFragment {
     @AfterViews
     void initData() {
         orderNum = getArguments().getString(KV.ORDER_NUM);
+        tvTitle.setText("退货申请");
     }
 
-    //确认收货
+    //退货申请
     StringCallback salesReturnCallback = new StringCallback() {
         @Override
         public void onError(Call call, Exception e, int id) {
@@ -59,6 +68,8 @@ public class SalesReturn extends BaseFragment {
             if (bean.getCode().equals("200")) {
                 TOT(bean.getMessage());
                 back();
+            } else {
+                TOT(bean.getMessage());
             }
         }
     };

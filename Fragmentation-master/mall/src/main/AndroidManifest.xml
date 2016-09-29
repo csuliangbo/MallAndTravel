@@ -56,6 +56,7 @@
         <activity android:name=".ui.SplashActivity_"></activity>
         <activity android:name=".ui.fourth.WebViewActivity_"></activity>
         <activity android:name=".ui.BuyVipActivity_"></activity>
+        <activity android:name=".ui.ContactActivity_"></activity>
         <!-- 二维码 -->
         <activity android:name=".zxingcode.activity.CaptureActivity"></activity>
         <!-- umeng分享 -->

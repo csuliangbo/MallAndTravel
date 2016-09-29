@@ -43,6 +43,7 @@
             android:background="@color/divider"></View>
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/ll_weixin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,6 +71,7 @@
             android:background="@color/divider"></View>
 
         <LinearLayout
+            android:visibility="visible"
             android:id="@+id/ll_alipay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -335,13 +335,15 @@ public class UserInfoModel {
         HttpModel.newInstance(KUAIDI).post(map, callback);
     }
 
-    //查看物流
+    //退货申请
+
+    static String TUIHUO = url + "tuihuo";
 
     public static void salesReturn(StringCallback callback, String id, String reson) {
         HashMap<String, String> map = new HashMap<>();
         map.put("orders_num", id);
         map.put("tuihuo_case", reson);
-        HttpModel.newInstance(KUAIDI).post(map, callback);
+        HttpModel.newInstance(TUIHUO).post(map, callback);
     }
 
     static String VIP_URL = url + "vip";

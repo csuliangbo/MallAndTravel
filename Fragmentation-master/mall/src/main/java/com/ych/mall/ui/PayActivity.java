@@ -22,6 +22,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.alipay.sdk.app.PayTask;
 import com.tencent.mm.sdk.modelpay.PayReq;
@@ -46,6 +47,7 @@ import com.ych.mall.bean.AuthResult;
 import com.ych.mall.bean.PayResult;
 import com.ych.mall.ui.first.child.childpager.GoodsFragment;
 import com.ych.mall.utils.KV;
+import com.ych.mall.utils.Tools;
 import com.ych.mall.widget.ClearEditText;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -125,6 +127,8 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     private String address;
     //收货人
     private String realName;
+
+    //旅游
     private String number;
     private String mobile;
     private String goodTitle;
@@ -141,7 +145,15 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     @Click
     public void addressLayout() {
-        startActivity(new Intent(this, AddressActivity_.class).putExtra("address",true));
+        startActivity(new Intent(this, AddressActivity_.class).putExtra("address", true));
+    }
+
+    @Click
+    public void ll_contact() {
+        Bundle bundle = new Bundle();
+        bundle.putString("ContactName", tvContactName.getText().toString());
+        bundle.putString("ContactPhone", tvContactPhone.getText().toString());
+        startActivity(new Intent(this, ContactActivity_.class).putExtras(bundle));
     }
 
     @Click
@@ -153,7 +165,6 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     void onPay() {
         if (!isPay) {
             createOrder();
-            isPay = true;
         } else {
             TOT("你已经创建了订单，请到订单页面进行支付");
         }
@@ -198,6 +209,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         TOT("支付成功");
+                        finish();
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         TOT("支付失败");
@@ -243,16 +255,20 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             date = bundle.getString("Date");
             childrenNum = bundle.getString("ChildrenNum");
             childrenPrice = bundle.getString("ChildrenPrice");
+            if (childrenPrice == null) {
+                childrenNum = "0";
+                childrenPrice = "0";
+            }
             adultNum = bundle.getString("AdultNum");
             adultPrice = bundle.getString("AdultPrice");
             llA.setVisibility(View.GONE);
             addressLayout.setVisibility(View.GONE);
+            llContact.setVisibility(View.VISIBLE);
         }
         if (!TextUtils.isEmpty(goods_id)) {
             isPayNow = true;
         }
         cart_id = getIntent().getExtras().getString(KV.CART_ID);
-        Log.e("KTY", " cart ID  " + cart_id + "  goods id  " + goods_id + "  data " + date);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(this);
@@ -287,7 +303,8 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
                 if (jifenA > jifenATotal) {
                     TOT("A账号的积分余额不足");
                 } else {
-                    tvPayPrice.setText("应付：￥" + (totalPrice - jifenA));
+
+                    tvPayPrice.setText("应付：￥" + Tools.sub(totalPrice, jifenA));
                 }
             }
 
@@ -297,7 +314,8 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
                     if (TextUtils.isEmpty(cetB.getText().toString())) {
                         tvPayPrice.setText("应付：￥" + totalPrice);
                     } else {
-                        tvPayPrice.setText("应付：￥" + (totalPrice - Double.parseDouble(cetB.getText().toString())));
+                        tvPayPrice.setText("应付：￥" + Tools.sub(totalPrice, Double.parseDouble(cetB.getText().toString())));
+
                     }
                 }
             }
@@ -318,10 +336,12 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
                     TOT("B账号的积分余额不足");
                 } else {
                     if (TextUtils.isEmpty(cetA.getText().toString())) {
-                        tvPayPrice.setText("应付：￥" + (totalPrice - jifenB));
+                        tvPayPrice.setText("应付：￥" + Tools.sub(totalPrice, jifenB));
+
                     } else {
-                        tvPayPrice.setText("应付：￥" + (totalPrice - Double.parseDouble(cetA.getText().toString())
-                                - jifenB));
+                        tvPayPrice.setText("应付：￥" + Tools.sub(Tools.sub(totalPrice,
+                                Double.parseDouble(cetA.getText().toString())), jifenB));
+
                     }
                 }
             }
@@ -332,7 +352,8 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
                     if (TextUtils.isEmpty(cetA.getText().toString())) {
                         tvPayPrice.setText("应付：￥" + totalPrice);
                     } else {
-                        tvPayPrice.setText("应付：￥" + (totalPrice - Double.parseDouble(cetA.getText().toString())));
+
+                        tvPayPrice.setText("应付：￥" + Tools.sub(totalPrice, Double.parseDouble(cetA.getText().toString())));
                     }
                 }
             }
@@ -424,6 +445,9 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         tvAddress.setText(address);
     }
 
+    /**
+     * 创建订单
+     */
     void createOrder() {
         payPrice = totalPrice;
         if (!TextUtils.isEmpty(cetA.getText().toString())) {
@@ -432,7 +456,8 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
                 cetA.setText("");
                 return;
             }
-            totalPrice = totalPrice - Double.parseDouble(cetA.getText().toString());
+
+            totalPrice = Tools.sub(totalPrice, Double.parseDouble(cetA.getText().toString()));
             jifenA = cetA.getText().toString() + "";
         }
         if (!TextUtils.isEmpty(cetB.getText().toString())) {
@@ -441,13 +466,13 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
                 cetB.setText("");
                 return;
             }
-            totalPrice = totalPrice - Double.parseDouble(cetB.getText().toString());
+            totalPrice = Tools.sub(totalPrice, Double.parseDouble(cetB.getText().toString()));
             jifenB = cetB.getText().toString() + "";
         }
         tvPayPrice.setText("￥" + totalPrice);
         if (isTravel) {
-            MallAndTravelModel.createTourOrder(createCallback, payPrice + "", totalPrice + "", address, realName,
-                    mobile, number, jifenTravelTotal, goods_id, jifenA, jifenB, date, childrenNum, childrenPrice, adultNum, adultPrice);
+            MallAndTravelModel.createTourOrder(createCallback, payPrice + "", totalPrice + "", realName,
+                    mobile, number, jifenTravelTotal, goods_id, jifenB, date, childrenNum, childrenPrice, adultNum, adultPrice);
         } else {
             MallAndTravelModel.createOrder(createCallback, payPrice + "", totalPrice + "", address, realName,
                     mobile, number, fanli_jifen + "", cart_id);
@@ -466,11 +491,10 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
         @Override
         public void onResponse(String response, int id) {
-            Log.e("KTY  order ", response);
             CreateOrderBean bean = Http.model(CreateOrderBean.class, response);
             if (bean.getCode().equals("200")) {
-
-                UserInfoModel.pay(payCallBack, bean.getData().get(0), totalPrice + "", goodTitle);
+                isPay = true;
+                UserInfoModel.pay(payCallBack, bean.getData().get(0), 0.01 + "", goodTitle);
             }
         }
     };
@@ -491,6 +515,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
                 } else {
                     payWeixin();
                 }
+                TOT(bean.getMessage());
                 //payChoosePopupwindow(bean.getData());
             }
         }
@@ -522,6 +547,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
         @Override
         public void covert(YViewHolder holder, TravelRecverBean.TravelRecverData t) {
+            Double childrenPriceTotal = 0.00d;
             holder.setVisible(R.id.ll_number, View.VISIBLE);
             holder.setText(R.id.name, t.getGoods().getTitle());
             holder.setText(R.id.price, "￥" + t.getGoods().getPrice_new());
@@ -530,10 +556,15 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             holder.setText(R.id.tv_adult_price, adultPrice);
             Double adultPriceTotal = Integer.parseInt(adultNum) * Double.parseDouble(adultPrice);
             holder.setText(R.id.tv_adult_total_price, adultPriceTotal + "");
-            holder.setText(R.id.tv_children_number, childrenNum);
-            holder.setText(R.id.tv_children_price, childrenPrice);
-            Double childrenPriceTotal = Integer.parseInt(childrenNum) * Double.parseDouble(childrenPrice);
-            holder.setText(R.id.tv_children_total_price, childrenPriceTotal + "");
+            if (childrenPrice == "0") {
+                holder.setVisible(R.id.ll_children, View.GONE);
+            } else {
+                holder.setText(R.id.tv_children_number, childrenNum);
+                holder.setText(R.id.tv_children_price, childrenPrice);
+                childrenPriceTotal = Integer.parseInt(childrenNum) * Double.parseDouble(childrenPrice);
+                holder.setText(R.id.tv_children_total_price, childrenPriceTotal + "");
+            }
+
             holder.setText(R.id.tv_date, t.getGoods().getChufa_date());
             holder.setText(R.id.tv_address, t.getGoods().getChufa_address());
             int numTotal = Integer.parseInt(childrenNum) + Integer.parseInt(adultNum);
@@ -541,8 +572,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             holder.setText(R.id.tv_jifen, t.getGoods().getFanli_jifen());
             jifenTravelTotal = Double.parseDouble(t.getGoods().getFanli_jifen()) * numTotal + "";
             holder.setText(R.id.tv_jifen_total, jifenTravelTotal);
-
-            totalPrice = totalPrice + adultPriceTotal + childrenPriceTotal;
+            totalPrice = Tools.add(Tools.add(totalPrice, adultPriceTotal), childrenPriceTotal);
             tvTotalPrice.setText(totalPrice + "");
             holder.loadImg(PayActivity.this, R.id.pic, Http.GOODS_PIC_URL + t.getGoods().getPic_url());
             tvA.setText("A账户：" + t.getJifen().getAdd_jf_limit());
@@ -558,6 +588,8 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             goodTitle = t.getGoods().getTitle();
             tvRealName.setText("收货人：" + realName);
             tvAddress.setText(address);
+            tvContactPhone.setText(t.getAddress().getMobile());
+            tvContactName.setText(t.getAddress().getRealname());
         }
     }
 
@@ -617,11 +649,16 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     }
 
     @Subscribe
-    public void onEvent(AddressEvent e){
-        realName=e.getName();
-        address=e.getAddress();
-        tvRealName.setText("收货人：" + realName+"\t\t\t"+e.getPhone());
+    public void onEvent(AddressEvent e) {
+        realName = e.getName();
+        address = e.getAddress();
+        mobile = e.getPhone();
+        tvRealName.setText("收货人：" + realName + "\t\t\t" + e.getPhone());
         tvAddress.setText(address);
+        //旅游联系方式
+        tvContactName.setText(e.getName());
+        tvContactPhone.setText(e.getPhone());
+
 
     }
 
@@ -662,5 +699,5 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             }
         }
     };
- 
+
 }

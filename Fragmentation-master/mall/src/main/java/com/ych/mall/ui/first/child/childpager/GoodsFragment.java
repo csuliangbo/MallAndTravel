@@ -100,6 +100,8 @@ public class GoodsFragment extends BaseFragment {
     TextView tvNumAdult;
     @ViewById(R.id.tv_num_children)
     TextView tvNumChildren;
+    @ViewById(R.id.ll_children)
+    LinearLayout llChildren;
     @ViewById
     ImageView onCollect;
     private int numAdult;
@@ -120,6 +122,7 @@ public class GoodsFragment extends BaseFragment {
     String mImgUrl;
     String mTitleText;
     //儿童价
+
     String mChildPrice;
     String mPoint;
     String goodsID;
@@ -409,6 +412,12 @@ public class GoodsFragment extends BaseFragment {
                 sT(mPriceNew, mDate.get(position).getChufa_price());
                 mPrice = mDate.get(position).getChufa_price();
                 mChildPrice = mDate.get(position).getChufa_price_et();
+                Log.e("KTY  price", mChildPrice + "");
+                if (mChildPrice == null || mChildPrice == "0") {
+                    llChildren.setVisibility(View.GONE);
+                }else{
+                    llChildren.setVisibility(View.VISIBLE);
+                }
                 sT(mPriceTV, mPrice);
                 sT(mPriceChildTV, mChildPrice);
             }
@@ -440,9 +449,9 @@ public class GoodsFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response, int id) {
+            Log.e("KTY@@@", response);
             if (mLoading != null)
                 mLoading.setVisibility(View.GONE);
-
             try {
                 GoodsDetailBean bean = Http.model(GoodsDetailBean.class, response);
                 if (bean.getCode().equals("200")) {

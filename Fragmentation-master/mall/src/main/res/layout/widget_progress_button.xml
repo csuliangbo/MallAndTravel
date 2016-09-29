@@ -19,13 +19,12 @@
         android:id="@+id/wp_text" />
 
     <com.ych.mall.widget.ProgressWheel
-
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="right|center_vertical"
         android:layout_marginRight="20dp"
         wheel:matProg_barColor="#fff"
-        android:visibility="gone"
         wheel:matProg_barWidth="2dp"
         wheel:matProg_progressIndeterminate="true"
         android:id="@+id/wp_wheel" />

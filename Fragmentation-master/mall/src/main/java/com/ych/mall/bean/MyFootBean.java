@@ -6,7 +6,7 @@ import java.util.List;
  * Created by ych on 2016/9/14.
  */
 public class MyFootBean extends ParentBean {
-private List<MyFootData> data;
+    private List<MyFootData> data;
 
     public List<MyFootData> getData() {
         return data;
@@ -18,6 +18,7 @@ private List<MyFootData> data;
 
     public class MyFootData {
 
+        private String id;
 
         private String gid;
 
@@ -33,6 +34,13 @@ private List<MyFootData> data;
 
         private String is_type;
 
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
 
         public void setGid(String gid) {
 

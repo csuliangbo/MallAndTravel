@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import me.yokeyword.fragmentation.SupportFragment;
 
 /**
@@ -21,8 +20,9 @@ public class FragmentHome extends SupportFragment {
         return home;
     }
 
-    Button button;
+    ProgressButton button;
     View view;
+    Button load, stop, err;
 
     @Nullable
     @Override
@@ -34,11 +34,37 @@ public class FragmentHome extends SupportFragment {
 
 
     private void initView() {
-button= (Button) view.findViewById(R.id.btn1);
-        button.setOnClickListener(new View.OnClickListener() {
+
+        button = (ProgressButton) view.findViewById(R.id.btn1);
+        button.setText("你好", "加載中...","加载错误");
+        button.setTextColor(getResources().getColor(R.color.white));
+        button.setPBClickListener(new ProgressButton.PBClickListener() {
+            @Override
+            public void onClick() {
+
+            }
+        });
+
+        load = (Button) view.findViewById(R.id.load);
+        stop = (Button) view.findViewById(R.id.stop);
+        err = (Button) view.findViewById(R.id.err);
+
+        load.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start(FragmentOne.getInstance());
+                button.startLoading();
+            }
+        });
+        stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                button.stop();
+            }
+        });
+        err.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                button.err();
             }
         });
 

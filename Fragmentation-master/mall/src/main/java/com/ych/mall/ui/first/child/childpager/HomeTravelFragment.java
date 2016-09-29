@@ -94,7 +94,7 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
 
     @AfterViews
     public void ininList() {
-
+setTAG("hometravel");
         header = RecyclerViewHeader.fromXml(getActivity(), R.layout.head_travel);
         header.findViewById(R.id.toMall).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -267,6 +267,7 @@ public class HomeTravelFragment extends BaseFragment implements RecyclerViewMode
 
     private void setHot(final List<HomeTravelBean.Hot> hot) {
         mHot = hot;
+        log(hot.toString());
         List<ImageView> ivList = new ArrayList<>();
         ivList.add((ImageView) header.findViewById(R.id.banner_bottom_iv1));
         ivList.add((ImageView) header.findViewById(R.id.banner_bottom_iv2));

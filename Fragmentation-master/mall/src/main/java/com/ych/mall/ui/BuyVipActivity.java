@@ -27,6 +27,7 @@ import com.ych.mall.bean.ParentBean;
 import com.ych.mall.bean.PayBean;
 import com.ych.mall.bean.PayRequestBean;
 import com.ych.mall.bean.PayResult;
+import com.ych.mall.event.LoginEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.HttpModel;
 import com.ych.mall.model.LoginAndRegistModel;
@@ -39,6 +40,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -258,6 +260,7 @@ public class BuyVipActivity extends BaseActivity {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         TOT("支付成功");
+                        EventBus.getDefault().post(new LoginEvent());
                         finish();
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。

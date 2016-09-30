@@ -1,11 +1,13 @@
 package com.ych.fragmenttest;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
 import me.yokeyword.fragmentation.SupportFragment;
 
 /**
@@ -22,7 +24,7 @@ public class FragmentHome extends SupportFragment {
 
     ProgressButton button;
     View view;
-    Button load, stop, err;
+    Button load, stop, err,change;
 
     @Nullable
     @Override
@@ -36,7 +38,7 @@ public class FragmentHome extends SupportFragment {
     private void initView() {
 
         button = (ProgressButton) view.findViewById(R.id.btn1);
-        button.setText("你好", "加載中...","加载错误");
+        button.setText("你好", "加載中...", "加载错误");
         button.setTextColor(getResources().getColor(R.color.white));
         button.setPBClickListener(new ProgressButton.PBClickListener() {
             @Override
@@ -48,7 +50,7 @@ public class FragmentHome extends SupportFragment {
         load = (Button) view.findViewById(R.id.load);
         stop = (Button) view.findViewById(R.id.stop);
         err = (Button) view.findViewById(R.id.err);
-
+        change = (Button)view.findViewById(R.id.change);
         load.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +67,12 @@ public class FragmentHome extends SupportFragment {
             @Override
             public void onClick(View v) {
                 button.err();
+            }
+        });
+        change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                button.setErrDrawale(getResources().getDrawable(R.drawable.shape_red_5dp));
             }
         });
 

@@ -17,8 +17,7 @@ import me.yokeyword.fragmentation.SupportActivity;
 import okhttp3.Call;
 
 public class MainActivity extends SupportActivity {
-    final String TAG="httpmodel";
-    String url="http://180.173.56.12:8099/WebAPI/AddArticle/";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

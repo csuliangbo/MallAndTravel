@@ -1,4 +1,4 @@
-package me.yokeyword.sample.demo_zhihu.ui.view;
+package com.ych.library.widget;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -144,7 +144,7 @@ public class BottomBar extends LinearLayout {
             out.writeInt(position);
         }
 
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+        public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
             public SavedState createFromParcel(Parcel in) {
                 return new SavedState(in);
             }

@@ -57,6 +57,7 @@ public class MeFragment extends BaseFragment {
         return fragment;
 
     }
+
     @ViewById
     RecyclerView mGrid;
     @ViewById
@@ -142,7 +143,6 @@ public class MeFragment extends BaseFragment {
         model.init(manager);
         UserInfoModel.userCenter(infoCallBack);
     }
-
 
     private void onGridClick(int position) {
         if (judge())
@@ -252,8 +252,9 @@ public class MeFragment extends BaseFragment {
         }
     };
 
+    //重新获取信息
     @Subscribe
-    public void onEvent(LoginEvent e){
+    public void onEvent(LoginEvent e) {
         UserInfoModel.userCenter(infoCallBack);
     }
 

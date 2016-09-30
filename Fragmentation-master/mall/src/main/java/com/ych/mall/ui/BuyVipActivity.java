@@ -16,14 +16,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import com.alipay.sdk.app.PayTask;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.ych.mall.R;
 import com.ych.mall.bean.AuthResult;
-import com.ych.mall.bean.CreateOrderBean;
 import com.ych.mall.bean.CreateVipBean;
 import com.ych.mall.bean.ParentBean;
 import com.ych.mall.bean.PayBean;

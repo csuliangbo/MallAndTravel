@@ -37,5 +37,14 @@
         android:text="错误"
         android:textColor="#fff"
         />
+    <Button
+        android:layout_marginTop="10dp"
+        android:id="@+id/change"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#000"
+        android:text="改变错误背景"
+        android:textColor="#fff"
+        />
 
 </LinearLayout>

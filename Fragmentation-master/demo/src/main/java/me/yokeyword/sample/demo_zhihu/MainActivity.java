@@ -3,12 +3,14 @@ package me.yokeyword.sample.demo_zhihu;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.ych.library.widget.BottomBar;
+import com.ych.library.widget.BottomBarTab;
+
 import org.greenrobot.eventbus.EventBus;
 
 import me.yokeyword.fragmentation.SupportActivity;
 import me.yokeyword.fragmentation.SupportFragment;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
-import me.yokeyword.sample.R;
 import me.yokeyword.sample.demo_zhihu.event.TabSelectedEvent;
 import me.yokeyword.sample.demo_zhihu.base.BaseLazyMainFragment;
 import me.yokeyword.sample.demo_zhihu.ui.fragment.first.child.FirstHomeFragment;
@@ -19,8 +21,6 @@ import me.yokeyword.sample.demo_zhihu.ui.fragment.second.ZhihuSecondFragment;
 import me.yokeyword.sample.demo_zhihu.ui.fragment.second.child.ViewPagerFragment;
 import me.yokeyword.sample.demo_zhihu.ui.fragment.third.ZhihuThirdFragment;
 import me.yokeyword.sample.demo_zhihu.ui.fragment.third.child.ShopFragment;
-import me.yokeyword.sample.demo_zhihu.ui.view.BottomBar;
-import me.yokeyword.sample.demo_zhihu.ui.view.BottomBarTab;
 
 /**
  * 类知乎 复杂嵌套Demo tip: 多使用右上角的"查看栈视图"
@@ -73,11 +73,12 @@ public class MainActivity extends SupportActivity implements BaseLazyMainFragmen
 
     private void initView() {
         mBottomBar = (BottomBar) findViewById(R.id.bottomBar);
-
-        mBottomBar.addItem(new BottomBarTab(this, R.drawable.ic_home_white_24dp))
-                .addItem(new BottomBarTab(this, R.drawable.ic_discover_white_24dp))
-                .addItem(new BottomBarTab(this, R.drawable.ic_message_white_24dp))
-                .addItem(new BottomBarTab(this, R.drawable.ic_account_circle_white_24dp));
+BottomBarTab tab=new BottomBarTab(this, R.drawable.ic_home_white_24dp,"你好");
+        tab.setPrimaryColor(R.color.colorPrimary);
+        mBottomBar.addItem(tab)
+                .addItem(new BottomBarTab(this, R.drawable.ic_discover_white_24dp,"你好"))
+                .addItem(new BottomBarTab(this, R.drawable.ic_message_white_24dp,"你好"))
+                .addItem(new BottomBarTab(this, R.drawable.ic_account_circle_white_24dp,"你好"));
 
         mBottomBar.setOnTabSelectedListener(new BottomBar.OnTabSelectedListener() {
             @Override

@@ -1,23 +1,20 @@
-package com.ych.fragmenttest;
+package com.ych.library.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.ych.ychwidgetlibrary.R;
 
 
 /**
@@ -65,7 +62,7 @@ public class ProgressButton extends FrameLayout {
     public ProgressButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mContext = context;
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ProgressButton);
+        TypedArray a = context.obtainStyledAttributes(attrs,R.styleable.ProgressButton);
         mErrDrawale = a.getDrawable(R.styleable.ProgressButton_err_background);
         init();
     }

@@ -38,6 +38,7 @@ public class RegistActivity extends BaseActivity {
     @AfterViews
     void init() {
         onSubmit.setText("注册", "注册中...");
+        tiTitle.setText("注册");
     }
 
     @Click
@@ -58,6 +59,13 @@ public class RegistActivity extends BaseActivity {
                 getT(mInvitation), callback);
     }
 
+    @Click
+    void onBack() {
+        finish();
+    }
+
+    @ViewById
+    TextView tiTitle;
     StringCallback callback = new StringCallback() {
         @Override
         public void onError(Call call, Exception e, int id) {

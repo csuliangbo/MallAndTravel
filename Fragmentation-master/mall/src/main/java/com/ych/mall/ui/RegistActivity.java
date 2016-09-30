@@ -34,9 +34,17 @@ public class RegistActivity extends BaseActivity {
     TextView mGetCode;
     @ViewById
     ProgressButton onSubmit;
+    @ViewById(R.id.tiTitle)
+    TextView tvTitle;
+
+    @Click
+    void onBack() {
+        finish();
+    }
 
     @AfterViews
     void init() {
+        tvTitle.setText("注册");
         onSubmit.setText("注册", "注册中...");
     }
 

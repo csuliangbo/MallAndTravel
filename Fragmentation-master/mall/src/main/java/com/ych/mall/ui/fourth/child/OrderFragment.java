@@ -85,6 +85,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
 
     private String titleHead = "点击后该订单(";
     private String titleFoot = ")所有商品不可退货，积分返利立即到账，是否同意?";
+    boolean canSalesReturn = false;
 
     @Click
     void onBack() {
@@ -221,7 +222,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 btnMiddle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        UserInfoModel.pay(payCallBack, t.getOrders_num(), t.getPrice_sum(), t.getGoods_title());
+                        UserInfoModel.pay(payCallBack, t.getOrders_num(), 0.01+"", t.getGoods_title());
                     }
                 });
                 break;
@@ -229,7 +230,46 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 typeText = "已支付";
                 break;
             case 2:
+
                 typeText = "已发货";
+                btnLeft.setVisibility(View.VISIBLE);
+                btnMiddle.setVisibility(View.VISIBLE);
+                btnRight.setVisibility(View.VISIBLE);
+                btnLeft.setBackgroundResource(R.drawable.shape_green_dark_5dp);
+                btnMiddle.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
+                btnRight.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
+                btnMiddle.setTextColor(getResources().getColor(R.color.gray2));
+                btnRight.setTextColor(getResources().getColor(R.color.gray2));
+                btnLeft.setTextColor(getResources().getColor(R.color.white));
+                btnLeft.setText(getShop);
+                btnMiddle.setText(refund);
+                btnRight.setText(logistics);
+                btnLeft.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UserInfoModel.getShop(getShopCallBack, id);
+                    }
+                });
+                btnMiddle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (canSalesReturn) {
+                            TOT("请先确认收货");
+                        } else {
+                            start(SalesReturn.newInstance(id));
+                        }
+
+                    }
+                });
+                btnRight.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        start(LogisticsFragment.newInstance(id));
+                    }
+                });
+                break;
+            case 3:
+                typeText = "已签收";
                 btnLeft.setVisibility(View.VISIBLE);
                 btnMiddle.setVisibility(View.VISIBLE);
                 btnRight.setVisibility(View.VISIBLE);
@@ -260,9 +300,6 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                         start(LogisticsFragment.newInstance(id));
                     }
                 });
-                break;
-            case 3:
-                typeText = "已签收";
                 break;
             case 4:
                 typeText = "已申请退货";
@@ -334,6 +371,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
         public void onResponse(String response, int id) {
             ParentBean bean = Http.model(ParentBean.class, response);
             if (bean.getCode().equals("200")) {
+                canSalesReturn = true;
                 model.onRefresh();
             }
             TOT(bean.getMessage());

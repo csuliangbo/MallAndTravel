@@ -508,14 +508,12 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         @Override
         public void onResponse(String response, int id) {
             PayRequestBean bean = Http.model(PayRequestBean.class, response);
-            Log.e("KTY pay", response);
             if (bean.getCode().equals("200")) {
                 if (cbPayAlipay.isChecked()) {
                     payInerface(bean.getData());
                 } else {
                     payWeixin();
                 }
-                TOT(bean.getMessage());
                 //payChoosePopupwindow(bean.getData());
             }
         }

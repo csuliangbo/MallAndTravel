@@ -58,6 +58,8 @@ public class BuyVipActivity extends BaseActivity {
     public static final int SDK_AUTH_FLAG = 2;
     @ViewById(R.id.tiTitle)
     TextView tiTitle;
+    @ViewById(R.id.tvLoading)
+    TextView tvLoading;
 
     @Click
     void onBack() {
@@ -71,15 +73,17 @@ public class BuyVipActivity extends BaseActivity {
 
     @Click
     void onJoin() {
+        tvLoading.setVisibility(View.VISIBLE);
         canBuyVip();
     }
 
     @Click
-    void onQuit(){
+    void onQuit() {
         finish();
         UserCenter.getInstance().out();
         startActivity(new Intent(this, LoginActivity_.class));
     }
+
     boolean canBuyVip() {
         LoginAndRegistModel.canBuyVip(canBuyCallback);
         return false;
@@ -88,7 +92,7 @@ public class BuyVipActivity extends BaseActivity {
     StringCallback canBuyCallback = new StringCallback() {
         @Override
         public void onError(Call call, Exception e, int id) {
-            TOT("网络连接失败");
+           tvLoading.setText("网络连接失败");
         }
 
         @Override
@@ -98,19 +102,20 @@ public class BuyVipActivity extends BaseActivity {
             if (code.equals("41")) {
                 TOT("已经具有会员资格,无需购买");
             } else if (code.equals("201")) {
+                TOT("只能购买会员");
                 LoginAndRegistModel.createVipOrder(buyVipCallback, 365 + "");
             } else if (code.equals("200")) {
                 TOT("可以任意购买");
                 final AlertDialog.Builder builder = new AlertDialog.Builder(
                         BuyVipActivity.this);
                 builder.setTitle("请选择一下购买类型");
-                builder.setSingleChoiceItems(new String[]{"会员", "合伙人"}, 1,
+                builder.setSingleChoiceItems(new String[]{"会员", "合伙人"}, 0,
                         new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if (which == 0) {
-                                    money = 0.01 + "";
+                                    money = 365.0 + "";
                                 } else {
                                     money = 30000 + "";
                                     TOT("大额支付功能尚未开发");
@@ -123,6 +128,8 @@ public class BuyVipActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         LoginAndRegistModel.createVipOrder(buyVipCallback, money);
+                        tvLoading.setVisibility(View.VISIBLE);
+
                     }
                 });
                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -140,11 +147,12 @@ public class BuyVipActivity extends BaseActivity {
     StringCallback buyVipCallback = new StringCallback() {
         @Override
         public void onError(Call call, Exception e, int id) {
-            TOT("网络连接失败");
+            tvLoading.setText("网络连接失败");
         }
 
         @Override
         public void onResponse(String response, int id) {
+            Log.e("KEy 123", response);
             CreateVipBean bean = Http.model(CreateVipBean.class, response);
             String code = bean.getCode();
             if (code.equals("401")) {
@@ -158,7 +166,7 @@ public class BuyVipActivity extends BaseActivity {
             } else if (code.equals("200")) {
                 Log.e("KTY", response);
                 TOT("创建订单成功");
-                UserInfoModel.pay(payCallBack, bean.getData().getOrders_num(), 0.01+"", "购买会员");
+                UserInfoModel.pay(payCallBack, bean.getData().getOrders_num(), 0.01 + "", "购买会员");
             }
         }
     };
@@ -166,13 +174,13 @@ public class BuyVipActivity extends BaseActivity {
     private StringCallback payCallBack = new StringCallback() {
         @Override
         public void onError(Call call, Exception e, int id) {
-            TOT("网络连接失败");
+            tvLoading.setText("网络连接失败");
         }
 
         @Override
         public void onResponse(String response, int id) {
+            tvLoading.setVisibility(View.GONE);
             PayRequestBean bean = Http.model(PayRequestBean.class, response);
-            Log.e("KTY pay", response);
             if (bean.getCode().equals("200")) {
                 payChoosePopupwindow(bean.getData());
             }

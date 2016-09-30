@@ -51,7 +51,7 @@ public class LogisticsFragment extends BaseFragment {
     void init() {
         tiTitle.setText("查看物流");
         orderNum = getArguments().getString(KV.ORDER_NUM);
-        if (kuaidiCallback == null || orderNum == null) {
+        if (orderNum == null) {
             TOT("没有订单号");
             return;
         }
@@ -67,7 +67,6 @@ public class LogisticsFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response, int id) {
-            Log.e("Key****", response + "");
             LogisticsBean bean = Http.model(LogisticsBean.class, response);
             if (bean.getCode().equals("200")) {
                 TOT("快递");

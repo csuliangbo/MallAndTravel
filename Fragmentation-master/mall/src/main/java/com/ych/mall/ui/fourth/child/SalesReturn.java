@@ -1,6 +1,7 @@
 package com.ych.mall.ui.fourth.child;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -53,6 +54,7 @@ public class SalesReturn extends BaseFragment {
     void initData() {
         orderNum = getArguments().getString(KV.ORDER_NUM);
         tvTitle.setText("退货申请");
+        Log.e("KTY orderNum", orderNum);
     }
 
     //退货申请

@@ -194,7 +194,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
     public void covert(YViewHolder holder, final OrderBean.OrderData t) {
         final String id = t.getOrders_num();
         holder.setText(R.id.id, "订单号:" + t.getOrders_num());
-        int type = Integer.parseInt(t.getOrders_status());
+        final int type = Integer.parseInt(t.getOrders_status());
         String typeText = null;
         Button btnLeft = holder.getView(R.id.btnLeft);
         Button btnMiddle = holder.getView(R.id.btnMiddle);
@@ -208,32 +208,65 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 btnLeft.setVisibility(View.VISIBLE);
                 btnMiddle.setVisibility(View.VISIBLE);
                 btnLeft.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
-                btnRight.setBackgroundResource(R.drawable.shape_green_dark_5dp);
+                btnMiddle.setBackgroundResource(R.drawable.shape_green_dark_5dp);
+                btnMiddle.setTextColor(getResources().getColor(R.color.white));
                 btnLeft.setTextColor(getResources().getColor(R.color.gray2));
                 btnLeft.setText(cancleOreder);
                 btnMiddle.setText(nowPay);
                 btnLeft.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.e("KEY id", id);
                         UserInfoModel.cancelOrder(cancelCallBack, id);
                     }
                 });
                 btnMiddle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        UserInfoModel.pay(payCallBack, t.getOrders_num(), 0.01+"", t.getGoods_title());
+                        UserInfoModel.pay(payCallBack, t.getOrders_num(), 0.01 + "", t.getGoods_title());
                     }
                 });
                 break;
             case 1:
                 typeText = "已支付";
+                btnLeft.setVisibility(View.GONE);
+                btnMiddle.setVisibility(View.GONE);
+                btnRight.setVisibility(View.GONE);
+                btnLeft.setBackgroundResource(R.drawable.shape_green_dark_5dp);
+                btnMiddle.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
+                btnRight.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
+                btnMiddle.setTextColor(getResources().getColor(R.color.gray2));
+                btnRight.setTextColor(getResources().getColor(R.color.gray2));
+                btnLeft.setTextColor(getResources().getColor(R.color.white));
+                btnLeft.setText(getShop);
+                btnMiddle.setText(refund);
+                btnRight.setText(logistics);
+                btnLeft.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UserInfoModel.getShop(getShopCallBack, id);
+                    }
+                });
+                btnMiddle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (type == 3) {
+                            start(SalesReturn.newInstance(id));
+                        } else {
+                            TOT("还未签收，不能退货");
+                        }
+                    }
+                });
+                btnRight.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        start(LogisticsFragment.newInstance(id));
+                    }
+                });
                 break;
             case 2:
-
                 typeText = "已发货";
                 btnLeft.setVisibility(View.VISIBLE);
-                btnMiddle.setVisibility(View.VISIBLE);
+                btnMiddle.setVisibility(View.GONE);
                 btnRight.setVisibility(View.VISIBLE);
                 btnLeft.setBackgroundResource(R.drawable.shape_green_dark_5dp);
                 btnMiddle.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
@@ -253,12 +286,11 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 btnMiddle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (canSalesReturn) {
-                            TOT("请先确认收货");
-                        } else {
+                        if (type == 3) {
                             start(SalesReturn.newInstance(id));
+                        } else {
+                            TOT("还未签收，不能退货");
                         }
-
                     }
                 });
                 btnRight.setOnClickListener(new View.OnClickListener() {
@@ -270,7 +302,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 break;
             case 3:
                 typeText = "已签收";
-                btnLeft.setVisibility(View.VISIBLE);
+                btnLeft.setVisibility(View.GONE);
                 btnMiddle.setVisibility(View.VISIBLE);
                 btnRight.setVisibility(View.VISIBLE);
                 btnLeft.setBackgroundResource(R.drawable.shape_green_dark_5dp);
@@ -291,7 +323,11 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 btnMiddle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        start(SalesReturn.newInstance(id));
+                        if (type == 3) {
+                            start(SalesReturn.newInstance(id));
+                        } else {
+                            TOT("还未签收，不能退货");
+                        }
                     }
                 });
                 btnRight.setOnClickListener(new View.OnClickListener() {

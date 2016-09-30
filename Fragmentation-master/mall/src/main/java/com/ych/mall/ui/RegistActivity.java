@@ -67,10 +67,7 @@ public class RegistActivity extends BaseActivity {
                 getT(mInvitation), callback);
     }
 
-    @Click
-    void onBack() {
-        finish();
-    }
+
 
     @ViewById
     TextView tiTitle;

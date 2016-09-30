@@ -30,5 +30,5 @@ dependencies {
     compile project(':fragmentation_swipeback')
     compile project(':fragmentation')
     compile 'com.zhy:okhttputils:2.6.2'
-    compile project(':ych_library')
+
 }

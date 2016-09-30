@@ -29,5 +29,5 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
     compile project(':fragmentation_swipeback')
     compile project(':fragmentation')
-    compile project(':ych_library')
+
 }

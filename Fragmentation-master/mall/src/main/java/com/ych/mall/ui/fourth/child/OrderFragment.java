@@ -191,7 +191,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
     private String complete = "标记完成";
 
     @Override
-    public void covert(YViewHolder holder, final OrderBean.OrderData t) {
+    public void covert(YViewHolder holder, final OrderBean.OrderData t)  {
         final String id = t.getOrders_num();
         holder.setText(R.id.id, "订单号:" + t.getOrders_num());
         final int type = Integer.parseInt(t.getOrders_status());

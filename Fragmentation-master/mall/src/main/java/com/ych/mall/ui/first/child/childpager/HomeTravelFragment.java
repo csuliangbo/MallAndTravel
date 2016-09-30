@@ -187,7 +187,6 @@ setTAG("hometravel");
 
     @Override
     public List<HomeTravelBean.Clas> getList(String str) {
-
         HomeTravelBean bean = Http.model(HomeTravelBean.class, str);
         if (bean.getCode().equals("200")) {
             if (mBanner == null) {

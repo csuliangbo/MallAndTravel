@@ -9,13 +9,13 @@ import com.zhy.http.okhttp.callback.StringCallback;
  */
 public class Http {
     private static final String URL_TEST="http://115.159.146.202/api/";
-    private static final String URL_RELEASE="www.zzumall.com/api";
+    private static final String URL_RELEASE="http://www.zzumall.com/api/";
     private static final String PIC_URL="http://www.zzumall.com/Public/Uploads/";
     public static final String AD_PIC_URL=PIC_URL+"ad/";
     public static final String GOODS_PIC_URL=PIC_URL+"goods/";
     public static final String CLASS_PIC_URL=PIC_URL+"class/";
     public static final String IMAGE_PIC_URL=PIC_URL+"image/";
-    public static final String SERVER_URL=URL_TEST;
+    public static final String SERVER_URL=URL_TEST ;
 
     public static <T> T model(Class<T> clazz, String json) {
         try {

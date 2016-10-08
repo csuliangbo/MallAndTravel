@@ -190,6 +190,7 @@ public class RecyclerViewModel<T> implements SwipeRefreshLayout.OnRefreshListene
 
     public void newInit() {
         CURRENT_STATE = STATE_NEW;
+        page=0;
         mListener.getData(callback, page);
     }
 

@@ -50,7 +50,7 @@ public class BottomBarTab extends FrameLayout {
         int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 27, getResources().getDisplayMetrics());
         LayoutParams params = new LayoutParams(size, size);
         params.gravity = Gravity.CENTER;
-        params.bottomMargin = 10;
+
         mIcon.setImageResource(icon);
         mIcon.setLayoutParams(params);
         mIcon.setColorFilter(ContextCompat.getColor(context, R.color.tab_unselect));

@@ -140,7 +140,7 @@ public class MallAndTravelModel {
 
     public static void createOrder(StringCallback callback, String price_sum, String price_shiji,
                                    String address, String realName, String mobile, String number,
-                                   String jifen, String cartId) {
+                                   String jifen, String cartId, String jifenA, String jifenB) {
         HashMap<String, String> map = new HashMap<>();
         map.put("user_id", UserCenter.getInstance().getCurrentUserId());
         map.put("price_sum", price_sum);
@@ -151,8 +151,11 @@ public class MallAndTravelModel {
         map.put("num_sum", number);
         map.put("fanli_jifen", jifen);
         map.put("cart_id", cartId);
+        map.put("use_jf_limit", jifenA);
+        map.put("use_jf_currency", jifenB);
         HttpModel.newInstance(CREATE_ORDER).post(map, callback);
     }
+
 
     //创建旅游订单
     static String CREATE_TOUR_ORDER = urlTravel + "create_order";

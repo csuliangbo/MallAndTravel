@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.ych.mall.MainActivity;
+import com.ych.mall.MainActivity_;
 import com.ych.mall.R;
 import com.ych.mall.bean.LoginBean;
 import com.ych.mall.event.LoginEvent;
+import com.ych.mall.event.MainEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.LoginAndRegistModel;
 import com.ych.mall.ui.base.BaseActivity;
@@ -90,5 +93,12 @@ public class LoginActivity extends BaseActivity {
     void onForget(){
 
         startActivity(new Intent(this,ForgetPwdActivity_.class));
+    }
+
+    @Click
+    void onGo(){
+        EventBus.getDefault().post(new MainEvent(-1));
+        startActivity(new Intent(this, MainActivity_.class));
+        finish();
     }
 }

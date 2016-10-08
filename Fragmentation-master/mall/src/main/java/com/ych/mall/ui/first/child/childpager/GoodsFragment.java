@@ -1,27 +1,21 @@
 package com.ych.mall.ui.first.child.childpager;
 
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.fyales.tagcloud.library.TagBaseAdapter;
 import com.fyales.tagcloud.library.TagCloudLayout;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.editorpage.ShareActivity;
 import com.umeng.socialize.media.UMImage;
 import com.ych.mall.R;
-
 import com.ych.mall.bean.GoodsDetailBean;
 import com.ych.mall.bean.ParentBean;
 import com.ych.mall.bean.TravelDetailBean;
@@ -29,15 +23,12 @@ import com.ych.mall.event.LoginEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.MallAndTravelModel;
 import com.ych.mall.model.UserInfoModel;
-import com.ych.mall.ui.BuyVipActivity;
 import com.ych.mall.ui.BuyVipActivity_;
 import com.ych.mall.ui.LoginActivity_;
 import com.ych.mall.ui.PayActivity_;
 import com.ych.mall.ui.base.BaseFragment;
 import com.ych.mall.ui.fourth.WebViewActivity_;
-import com.ych.mall.ui.fourth.child.VipGradeFragment;
 import com.ych.mall.utils.KV;
-import com.ych.mall.utils.Tools;
 import com.ych.mall.utils.UserCenter;
 import com.ych.mall.widget.SlideShowView;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -103,7 +94,7 @@ public class GoodsFragment extends BaseFragment {
     @ViewById(R.id.ll_children)
     LinearLayout llChildren;
     @ViewById
-    ImageView onCollect;
+    TextView onCollect;
     private int numAdult;
     private int numChildren;
     @Click
@@ -413,7 +404,7 @@ public class GoodsFragment extends BaseFragment {
                 mPrice = mDate.get(position).getChufa_price();
                 mChildPrice = mDate.get(position).getChufa_price_et();
                 Log.e("KTY  price", mChildPrice + "");
-                if (mChildPrice == null || mChildPrice == "0") {
+                if (mChildPrice == null || mChildPrice .equals("0")) {
                     llChildren.setVisibility(View.GONE);
                 }else{
                     llChildren.setVisibility(View.VISIBLE);

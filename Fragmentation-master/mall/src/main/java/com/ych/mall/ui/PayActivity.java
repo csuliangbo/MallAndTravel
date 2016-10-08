@@ -475,8 +475,9 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
                     mobile, number, jifenTravelTotal, goods_id, jifenB, date, childrenNum, childrenPrice, adultNum, adultPrice);
         } else {
             MallAndTravelModel.createOrder(createCallback, payPrice + "", totalPrice + "", address, realName,
-                    mobile, number, fanli_jifen + "", cart_id);
+                    mobile, number, fanli_jifen + "", cart_id, jifenA, jifenB);
         }
+
 
 
     }
@@ -494,7 +495,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             CreateOrderBean bean = Http.model(CreateOrderBean.class, response);
             if (bean.getCode().equals("200")) {
                 isPay = true;
-                UserInfoModel.pay(payCallBack, bean.getData().get(0), 0.01 + "", goodTitle);
+                UserInfoModel.pay(payCallBack, bean.getData().get(0), totalPrice + "", goodTitle);
             }
         }
     };

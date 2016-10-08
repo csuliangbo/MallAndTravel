@@ -68,20 +68,27 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="10"></View>
-                    <ImageView
+                    <TextView
                         android:id="@+id/onCollect"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="10dp"
-                        android:visibility="gone"
-                        android:src="@drawable/ic_collect" />
-                    <ImageView
+                        android:textColor="@color/colorPrimary"
+                        android:text="收藏"
+                        android:padding="5dp"
+                        android:textSize="@dimen/text_xxlarge"
+                          />
+                    <TextView
                         android:id="@+id/ivShare"
+                        android:text="分享"
+                        android:padding="5dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_xxlarge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/share" />
+                          />
                 </LinearLayout>
 
                 <LinearLayout

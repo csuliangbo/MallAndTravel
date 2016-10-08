@@ -1,5 +1,7 @@
 package com.ych.mall.model;
 
+import android.util.Log;
+
 import com.ych.mall.utils.UserCenter;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -264,6 +266,7 @@ public class UserInfoModel {
 
     //订单
     static void order(StringCallback callback, int page, String url) {
+        Log.i("ych","order  ");
         HashMap<String, String> map = new HashMap<>();
         map.put("id", UserCenter.getInstance().getCurrentUserId());
         HttpModel.newInstance(url + "&page=" + (page + 1)).post(map, callback);
@@ -280,6 +283,7 @@ public class UserInfoModel {
 
     //待支付订单
     public static void orderPay(StringCallback callback, int page) {
+
         order(callback, page, ORDER_PAY);
     }
 

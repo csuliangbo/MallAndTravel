@@ -55,10 +55,10 @@ import okhttp3.Call;
  */
 @EFragment(R.layout.fragment_order)
 public class OrderFragment extends BaseFragment implements RecyclerViewModel.RModelListener<OrderBean.OrderData> {
-    public final static int TYPE_PAY = 1;
-    public final static int TYPE_WAIT = 2;
-    public final static int TYPE_COMMENT = 3;
-    public final static int TYPE_ALL = 4;
+    public final static int TYPE_PAY = 11;
+    public final static int TYPE_WAIT = 12;
+    public final static int TYPE_COMMENT = 13;
+    public final static int TYPE_ALL = 14;
     int currentType = TYPE_ALL;
     public static final int SDK_PAY_FLAG = 1;
     public static final int SDK_AUTH_FLAG = 2;
@@ -102,7 +102,22 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
         mTab.addTab(mTab.newTab().setText("待收货"));
         //mTab.addTab(mTab.newTab().setText("待评价"));
 
-
+        model = new RecyclerViewModel<>(getActivity(), this, mRecyclerView, mSwipeRefreshLayout, R.layout.item_order);
+        model.init();
+        switch (currentType) {
+            case TYPE_ALL:
+                mTab.getTabAt(0).select();
+                break;
+            case TYPE_PAY:
+                mTab.getTabAt(1).select();
+                break;
+            case TYPE_WAIT:
+                mTab.getTabAt(2).select();
+                break;
+            case TYPE_COMMENT:
+                mTab.getTabAt(3).select();
+                break;
+        }
         mTab.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -115,7 +130,10 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 if (tab.getText().toString().equals("待评价"))
                     currentType = TYPE_COMMENT;
                 mLoading.setVisibility(View.VISIBLE);
-                model.onRefresh();
+                if (!model.isEmpty())
+                    model.onRefresh();
+                else
+                    model.init();
 
             }
 
@@ -129,27 +147,13 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
 
             }
         });
-        model = new RecyclerViewModel<>(getActivity(), this, mRecyclerView, mSwipeRefreshLayout, R.layout.item_order);
-        model.init();
-        switch (currentType) {
-            case TYPE_ALL:
-                mTab.getTabAt(0).select();
 
-                break;
-            case TYPE_PAY:
-                mTab.getTabAt(1).select();
-                break;
-            case TYPE_WAIT:
-                mTab.getTabAt(2).select();
-                break;
-            case TYPE_COMMENT:
-                mTab.getTabAt(3).select();
-                break;
-        }
+
     }
 
     @Override
     public void getData(StringCallback callback, int page) {
+        log(currentType);
         switch (currentType) {
             case TYPE_ALL:
                 UserInfoModel.orderAll(callback, page);
@@ -174,6 +178,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
 
     @Override
     public List<OrderBean.OrderData> getList(String str) {
+        log(str);
         if (mLoading != null)
             mLoading.setVisibility(View.GONE);
         OrderBean bean = Http.model(OrderBean.class, str);
@@ -191,7 +196,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
     private String complete = "标记完成";
 
     @Override
-    public void covert(YViewHolder holder, final OrderBean.OrderData t)  {
+    public void covert(YViewHolder holder, final OrderBean.OrderData t) {
         final String id = t.getOrders_num();
         holder.setText(R.id.id, "订单号:" + t.getOrders_num());
         final int type = Integer.parseInt(t.getOrders_status());
@@ -222,7 +227,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 btnMiddle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        UserInfoModel.pay(payCallBack, t.getOrders_num(), 0.01 + "", t.getGoods_title());
+                        UserInfoModel.pay(payCallBack, t.getOrders_num(), t.getPrice_sum() + "", t.getGoods_title());
                     }
                 });
                 break;

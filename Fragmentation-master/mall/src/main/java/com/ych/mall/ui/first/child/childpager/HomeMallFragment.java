@@ -188,7 +188,7 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
 
     @Override
     public List<HomeMallBean.Class> getList(String str) {
-
+log(str);
         HomeMallBean bean = Http.model(HomeMallBean.class, str);
         if (bean.getCode().equals("200")) {
             if (mBanner == null || mCenter == null || mHot == null) {

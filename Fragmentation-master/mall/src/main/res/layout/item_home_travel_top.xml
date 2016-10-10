@@ -16,7 +16,7 @@
         <TextView
             android:id="@+id/toMall"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="45dp"
             android:layout_weight="1"
             android:background="@drawable/selector_home_text"
             android:gravity="center"
@@ -28,7 +28,7 @@
         <TextView
             android:id="@+id/toTravel"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="45dp"
             android:layout_weight="1"
             android:background="@drawable/selector_home_text"
             android:enabled="false"
@@ -39,7 +39,7 @@
     <!--分类栏-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:background="@color/white"
         android:orientation="horizontal">
 
@@ -52,8 +52,8 @@
             android:id="@+id/mItem1">
 
             <ImageView
-                android:layout_width="55dp"
-                android:layout_height="55dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:src="@drawable/ic_abroad_long" />
 
             <TextView
@@ -73,8 +73,8 @@
             android:id="@+id/mItem2">
 
             <ImageView
-                android:layout_width="55dp"
-                android:layout_height="55dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:src="@drawable/ic_abroad_short" />
 
             <TextView
@@ -94,8 +94,8 @@
             android:id="@+id/mItem3">
 
             <ImageView
-                android:layout_width="55dp"
-                android:layout_height="55dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:src="@drawable/ic_home_long" />
 
             <TextView
@@ -115,8 +115,8 @@
             android:id="@+id/mItem4">
 
             <ImageView
-                android:layout_width="55dp"
-                android:layout_height="55dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:src="@drawable/ic_home_short" />
 
             <TextView
@@ -137,8 +137,8 @@
             android:id="@+id/mItem5">
 
             <ImageView
-                android:layout_width="55dp"
-                android:layout_height="55dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:src="@drawable/ic_ship" />
 
             <TextView

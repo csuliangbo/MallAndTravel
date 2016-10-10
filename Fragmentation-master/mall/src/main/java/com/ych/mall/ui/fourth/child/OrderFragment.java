@@ -98,6 +98,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
     @AfterViews
     void initView() {
         //R.layout.item_order
+        setTAG("order");
         currentType = getArguments().getInt(KV.TYPE, TYPE_ALL);
         tiTitle.setText("我的订单");
         mTab.addTab(mTab.newTab().setText("全部"));
@@ -181,7 +182,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
 
     @Override
     public List<OrderBean.OrderData> getList(String str) {
-        Log.e("KTY dfdg", str);
+        log(str);
         if (mLoading != null)
             mLoading.setVisibility(View.GONE);
         OrderBean bean = Http.model(OrderBean.class, str);

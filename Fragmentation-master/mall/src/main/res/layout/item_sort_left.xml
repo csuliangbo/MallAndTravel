@@ -16,7 +16,7 @@
         android:padding="10dp"
         android:text="test"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_large">
+        android:textSize="@dimen/text_mid">
 
     </TextView>
 

@@ -11,9 +11,11 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ych.mall.R;
+import com.ych.mall.bean.HomeMallBean;
 
 
 /**
@@ -45,6 +47,10 @@ public class BottomBarTab extends FrameLayout {
         Drawable drawable = typedArray.getDrawable(0);
         setBackgroundDrawable(drawable);
         typedArray.recycle();
+        LinearLayout layout = new LinearLayout(context);
+        LayoutParams lParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setGravity(Gravity.CENTER);
 
         mIcon = new ImageView(context);
         int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 27, getResources().getDisplayMetrics());
@@ -54,7 +60,8 @@ public class BottomBarTab extends FrameLayout {
         mIcon.setImageResource(icon);
         mIcon.setLayoutParams(params);
         mIcon.setColorFilter(ContextCompat.getColor(context, R.color.tab_unselect));
-        addView(mIcon);
+        layout.addView(mIcon);
+
         mText = new TextView(context);
         mText.setText(text);
         LayoutParams tvParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -62,7 +69,10 @@ public class BottomBarTab extends FrameLayout {
         tvParams.gravity = Gravity.CENTER;
         mText.setLayoutParams(tvParams);
         mText.setTextSize(12);
-        addView(mText);
+        mText.setTextColor(ContextCompat.getColor(context, R.color.tab_unselect));
+        layout.addView(mText);
+
+        addView(layout);
     }
 
     @Override

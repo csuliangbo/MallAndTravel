@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -124,7 +125,10 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     TextView tvContactName;
     @ViewById(R.id.tv_contact_phone)
     TextView tvContactPhone;
+    @ViewById(R.id.et_remark)
+    EditText etRemark;
 
+    private String remark;
     private String cart_id;
     private String goods_id;
     private boolean isPayNow = false;
@@ -176,11 +180,16 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     @Click
     void onPay() {
         // payUpPay();
-        if (!isPay) {
-            createOrder();
+        if (cbPayWeixin.isChecked() || cbPayUppay.isChecked() || cbPayAlipay.isChecked()) {
+            if (!isPay) {
+                createOrder();
+            } else {
+                TOT("你已经创建了订单，请到订单页面进行支付");
+            }
         } else {
-            TOT("你已经创建了订单，请到订单页面进行支付");
+            TOT("请选择支付方式");
         }
+
     }
 
     /**
@@ -453,10 +462,11 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             number = t.getGoods_num();
         }
         holder.setText(R.id.tv_number, number);
-        totalPrice = totalPrice + Tools.mul(Double.parseDouble(t.getPrice_new()), Integer.parseInt(number));
         if (num != 0) {
             holder.setText(R.id.tv_number, num + "");
             totalPrice = totalPrice + Tools.mul(Double.parseDouble(t.getPrice_new()), num);
+        } else {
+            totalPrice = totalPrice + Tools.mul(Double.parseDouble(t.getPrice_new()), Integer.parseInt(number));
         }
         tvTotalPrice.setText(totalPrice + "元");
         tvPayPrice.setText("应付：" + totalPrice);
@@ -496,8 +506,11 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         }
         tvPayPrice.setText("￥" + totalPrice);
         if (isTravel) {
+            Log.e("ket", "payprice " + payPrice + " totalprice " + totalPrice + " jifenB " + jifenB + "  " + remark);
             MallAndTravelModel.createTourOrder(createCallback, payPrice + "", totalPrice + "", realName,
-                    mobile, number, jifenTravelTotal, goods_id, jifenB, date, childrenNum, childrenPrice, adultNum, adultPrice);
+                    mobile, number, jifenTravelTotal, goods_id, jifenB, date, childrenNum, childrenPrice,
+                    adultNum, adultPrice, remark
+            );
         } else {
             MallAndTravelModel.createOrder(createCallback, payPrice + "", totalPrice + "", address, realName,
                     mobile, number, fanli_jifen + "", cart_id, jifenA, jifenB);
@@ -523,10 +536,10 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
                     UserInfoModel.pay(payCallBack, bean.getData().get(0), totalPrice + "", goodTitle);
                 } else if (cbPayWeixin.isChecked()) {
                     payWeixin();
-                } else if (false) {
+                } else if (cbPayUppay.isChecked()) {
+                    // payUpPay("");
                     UserInfoModel.upPay(upPayCallBack, bean.getData().get(0), totalPrice + "");
                 }
-                //UserInfoModel.upPay(upPayCallBack, bean.getData().get(0), totalPrice + "");
             }
         }
     };
@@ -550,9 +563,11 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
      * 银联支付
      */
     private static final String TN_URL_01 = "http://101.231.204.84:8091/sim/getacptn";
-    private String mMode = "01";//设置测试模式:01为测试 00为正式环境
+    private String mMode = "00";//设置测试模式:01为测试 00为正式环境
 
     private void payUpPay(String tn) {
+//        HashMap<String, String> map = new HashMap<>();
+//        HttpModel.newInstance(TN_URL_01).post(map, upPayCallBack);
         UPPayAssistEx.startPay(PayActivity.this, null, null, tn, mMode);
 
     }
@@ -565,6 +580,8 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
         @Override
         public void onResponse(String response, int id) {
+//            Log.e("KTy tn", response);
+//            UPPayAssistEx.startPay(PayActivity.this, null, null, response, mMode);
             UpPayRequestBean bean = Http.model(UpPayRequestBean.class, response);
             Log.e("KTy 123", response);
             if (bean.getCode().equals("200")) {
@@ -642,6 +659,8 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             tvAddress.setText(address);
             tvContactPhone.setText(t.getAddress().getMobile());
             tvContactName.setText(t.getAddress().getRealname());
+            EditText etRemark = holder.getView(R.id.et_remark);
+            remark = etRemark.getText().toString();
         }
     }
 

@@ -45,7 +45,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity_"
+            android:name=".WelcomeActivity"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,6 +55,9 @@
         </activity>
         <activity
             android:name=".ui.PayActivity_"
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity
+            android:name=".MainActivity_"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".ui.AddressActivity_"></activity>
         <activity android:name=".ui.NewAddressActivity_"></activity>

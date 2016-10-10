@@ -66,6 +66,7 @@ public class SalesReturn extends BaseFragment {
 
         @Override
         public void onResponse(String response, int id) {
+            Log.e("KTY tuihuo", response);
             ParentBean bean = Http.model(ParentBean.class, response);
             if (bean.getCode().equals("200")) {
                 TOT(bean.getMessage());

@@ -23,12 +23,14 @@ import com.alipay.sdk.app.PayTask;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.unionpay.UPPayAssistEx;
 import com.ych.mall.R;
 import com.ych.mall.bean.AuthResult;
 import com.ych.mall.bean.OrderBean;
 import com.ych.mall.bean.ParentBean;
 import com.ych.mall.bean.PayRequestBean;
 import com.ych.mall.bean.PayResult;
+import com.ych.mall.bean.UpPayRequestBean;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.HttpModel;
 import com.ych.mall.model.RecyclerViewModel;
@@ -36,6 +38,7 @@ import com.ych.mall.model.UserInfoModel;
 import com.ych.mall.model.YViewHolder;
 import com.ych.mall.ui.base.BaseFragment;
 import com.ych.mall.utils.KV;
+import com.ych.mall.utils.Tools;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.androidannotations.annotations.AfterViews;
@@ -201,6 +204,11 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
 
     @Override
     public void covert(YViewHolder holder, final OrderBean.OrderData t) {
+        if (t.getGoods() != null) {
+            RecyclerView recyclerView = holder.getView(R.id.order_item);
+            itemModel = new RecyclerViewModel<>(getActivity(), new ItemRecycler(t.getGoods()), recyclerView, itemSwipeRefreshLayout, R.layout.item_order_recyclerview);
+            itemModel.init();
+        }
         final String id = t.getOrders_num();
         holder.setText(R.id.id, "订单号:" + t.getOrders_num());
         final int type = Integer.parseInt(t.getOrders_status());
@@ -231,12 +239,13 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 btnMiddle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        UserInfoModel.pay(payCallBack, t.getOrders_num(), t.getPrice_shiji() + "", "shangp");
+                        payChoosePopupwindow(t.getOrders_num(), t.getPrice_shiji(), "shangpin");
+
                     }
                 });
                 break;
             case 1:
-                typeText = "已支付";
+                typeText = "待发货";
                 btnLeft.setVisibility(View.GONE);
                 btnMiddle.setVisibility(View.GONE);
                 btnRight.setVisibility(View.GONE);
@@ -381,10 +390,18 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
             holder.setText(R.id.time, "下单时间:" + date);
         }
         holder.setText(R.id.status, typeText);
-        holder.setText(R.id.priceAll, t.getPrice_shiji());
-        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.order_item);
-        itemModel = new RecyclerViewModel<>(getActivity(), new ItemRecycler(t.getGoods()), recyclerView, itemSwipeRefreshLayout, R.layout.item_order_recyclerview);
-        itemModel.init();
+        if (t.getPrice_shiji()==null||t.getPrice_shiji().equals("0")) {
+            double price = 0;
+            if (t.getGoods()!=null) {
+                for (int i = 0; i < t.getGoods().size(); i++) {
+                    price = Tools.add(price, Double.parseDouble(t.getGoods().get(i).getPrice_new()));
+                }
+            }
+            holder.setText(R.id.priceAll, price + "");
+        } else {
+            holder.setText(R.id.priceAll, t.getPrice_shiji());
+        }
+
     }
 
     //取消订单
@@ -396,7 +413,6 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
 
         @Override
         public void onResponse(String response, int id) {
-            Log.e("KTY@@@@", response);
             ParentBean bean = Http.model(ParentBean.class, response);
             if (bean.getCode().equals("200")) {
                 model.onRefresh();
@@ -421,8 +437,8 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
             TOT(bean.getMessage());
         }
     };
-    //支付
-    private StringCallback payCallBack = new StringCallback() {
+    //支付宝支付
+    private StringCallback alipayCallBack = new StringCallback() {
         @Override
         public void onError(Call call, Exception e, int id) {
             TOT("网络连接失败");
@@ -431,15 +447,13 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
         @Override
         public void onResponse(String response, int id) {
             PayRequestBean bean = Http.model(PayRequestBean.class, response);
-            Log.e("KTY pay", response);
             if (bean.getCode().equals("200")) {
-                payChoosePopupwindow(bean.getData());
+                payInerface(bean.getData());
             }
         }
     };
 
-    private void payChoosePopupwindow(final String orderInfo) {
-
+    private void payChoosePopupwindow(final String orderNum, final String price, final String title) {
         View popupWindow_view = getActivity().getLayoutInflater().inflate(R.layout.item_popupwindow_pay, null, false);
         final PopupWindow popupWindow = new PopupWindow(popupWindow_view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
         popupWindow.showAtLocation(getView(), Gravity.BOTTOM, 0, 0);
@@ -448,6 +462,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
         popupWindow.setBackgroundDrawable(dw);
         LinearLayout llWeixin = (LinearLayout) popupWindow_view.findViewById(R.id.ll_weixin);
         LinearLayout llAlipay = (LinearLayout) popupWindow_view.findViewById(R.id.ll_alipay);
+        LinearLayout llUppay = (LinearLayout) popupWindow_view.findViewById(R.id.ll_uppay);
         ImageView ivQuit = (ImageView) popupWindow_view.findViewById(R.id.iv_quit);
         llWeixin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -460,7 +475,14 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
-                payInerface(orderInfo);
+                UserInfoModel.pay(alipayCallBack, orderNum, price, title);
+            }
+        });
+        llUppay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                UserInfoModel.upPay(upPayCallBack, orderNum, price);
             }
         });
         ivQuit.setOnClickListener(new View.OnClickListener() {
@@ -471,6 +493,32 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
         });
 
     }
+
+    /**
+     * 银联支付
+     */
+    private static final String TN_URL_01 = "http://101.231.204.84:8091/sim/getacptn";
+    private String mMode = "00";//设置测试模式:01为测试 00为正式环境
+
+    private void payUpPay(String tn) {
+        UPPayAssistEx.startPay(getActivity(), null, null, tn, mMode);
+
+    }
+
+    StringCallback upPayCallBack = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            TOT("请求失败");
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            UpPayRequestBean bean = Http.model(UpPayRequestBean.class, response);
+            if (bean.getCode().equals("200")) {
+                payUpPay(bean.getData().getTn());
+            }
+        }
+    };
 
     /**
      * 支付宝支付
@@ -605,7 +653,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
 
         @Override
         public void getData(StringCallback callback, int page) {
-
+            callback.onResponse("", -1);
         }
 
         @Override

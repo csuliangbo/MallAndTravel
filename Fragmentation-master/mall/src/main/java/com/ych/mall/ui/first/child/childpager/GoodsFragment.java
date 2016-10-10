@@ -98,6 +98,8 @@ public class GoodsFragment extends BaseFragment {
     LinearLayout llChildren;
     @ViewById
     TextView onCollect;
+    @ViewById
+    LinearLayout llNum;
     private int numAdult;
     private int numChildren;
     private int num = 1;
@@ -291,6 +293,7 @@ public class GoodsFragment extends BaseFragment {
             goodsInit();
             MallAndTravelModel.goodsDetail(goodsCallBack, mId);
         } else {
+            llNum.setVisibility(View.GONE);
             MallAndTravelModel.travelDetail(travelCallBack, mId);
         }
         if (UserCenter.getInstance().isTourist()) {
@@ -334,7 +337,7 @@ public class GoodsFragment extends BaseFragment {
             }
         }
 
-        MallAndTravelModel.addShopCar(shopCallBack, mId, groupTitle, mPoint, mPrice);
+        MallAndTravelModel.addShopCar(shopCallBack, mId, groupTitle, mPoint, mPrice,num+"");
     }
 
 

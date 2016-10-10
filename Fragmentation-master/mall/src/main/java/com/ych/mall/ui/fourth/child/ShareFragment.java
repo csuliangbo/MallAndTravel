@@ -1,5 +1,7 @@
 package com.ych.mall.ui.fourth.child;
 
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,11 +19,16 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
 import com.ych.mall.R;
 import com.ych.mall.ui.base.BaseFragment;
 import com.ych.mall.ui.fourth.WebViewActivity;
 import com.ych.mall.ui.fourth.WebViewActivity_;
 import com.ych.mall.utils.KV;
+import com.ych.mall.utils.Tools;
 import com.ych.mall.utils.UserCenter;
 import com.ych.mall.zxingcode.activity.CaptureActivity;
 
@@ -47,6 +54,7 @@ public class ShareFragment extends BaseFragment {
     @ViewById(R.id.tiTitle)
     TextView tiTitle;
     String dns = "http://www.zzumall.com/index.php/Mobile/Myzzy/web/id/";
+    String imgUrl = "http://www.zzumall.com/public/vipcard/10000285.png";
     String userId;
     public static int REQUEST_CODE = 123;
 
@@ -62,6 +70,20 @@ public class ShareFragment extends BaseFragment {
         back();
     }
 
+    @Click
+    void onShare() {
+        umShare(dns);
+    }
+
+    @Click
+    void onCopy() {
+        // 得到剪贴板管理器
+        Tools.copy(dns, getActivity());
+        if (Tools.paste(getActivity()).equals(dns)) {
+            TOT("复制成功");
+        }
+    }
+
     @AfterViews
     void init() {
         tiTitle.setText("我的分享");
@@ -73,8 +95,43 @@ public class ShareFragment extends BaseFragment {
         ivCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                imgUrl = imgUrl.replace("10000285", userId);
+                umShare(imgUrl);
             }
         });
+    }
+
+    UMShareListener umShareListener = new UMShareListener() {
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            TOT("分享成功啦");
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            TOT("分享失败啦");
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            TOT("分享取消了");
+        }
+    };
+
+    private void umShare(String url) {
+        UMImage image = new UMImage(getActivity(), R.drawable.icon_logo);//资源文件
+        final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]
+                {
+                        SHARE_MEDIA.WEIXIN,
+                        SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.WEIXIN_CIRCLE
+                };
+        new ShareAction(getActivity()).setDisplayList(displaylist)
+                .withText("我的主页")
+                .withTitle("掌中游")
+                .withMedia(image)
+                .withTargetUrl(url)
+                .setListenerList(umShareListener)
+                .open();
     }
 
     /**

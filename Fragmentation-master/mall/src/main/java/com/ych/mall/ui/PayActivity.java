@@ -28,12 +28,14 @@ import com.alipay.sdk.app.PayTask;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.unionpay.UPPayAssistEx;
 import com.ych.mall.R;
 import com.ych.mall.bean.CreateOrderBean;
 import com.ych.mall.bean.GoodsDetailBean;
 import com.ych.mall.bean.PayBean;
 import com.ych.mall.bean.PayRequestBean;
 import com.ych.mall.bean.TravelRecverBean;
+import com.ych.mall.bean.UpPayRequestBean;
 import com.ych.mall.event.AddressEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.HttpModel;
@@ -49,6 +51,7 @@ import com.ych.mall.ui.first.child.childpager.GoodsFragment;
 import com.ych.mall.utils.KV;
 import com.ych.mall.utils.Tools;
 import com.ych.mall.widget.ClearEditText;
+import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.androidannotations.annotations.AfterViews;
@@ -60,8 +63,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -100,6 +108,8 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     ClearEditText cetB;
     @ViewById(R.id.tv_pay_price)
     TextView tvPayPrice;
+    @ViewById(R.id.cb_pay_uppay)
+    CheckBox cbPayUppay;
     @ViewById(R.id.cb_pay_alipay)
     CheckBox cbPayAlipay;
     @ViewById(R.id.cb_pay_weixin)
@@ -127,7 +137,8 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     private String address;
     //收货人
     private String realName;
-
+    //商品
+    private int num;
     //旅游
     private String number;
     private String mobile;
@@ -142,6 +153,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     private String adultNum = "";
     private String jifenTravelTotal = "";
     private boolean isPay = false;
+    private boolean isShopCar = true;
 
     @Click
     public void addressLayout() {
@@ -163,6 +175,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     @Click
     void onPay() {
+        // payUpPay();
         if (!isPay) {
             createOrder();
         } else {
@@ -247,9 +260,9 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     @AfterViews
     void init() {
         EventBus.getDefault().register(this);
-        goods_id = getIntent().getExtras().getString(KV.GOODS_ID);
         Bundle bundle = getIntent().getExtras();
         goods_id = bundle.getString(KV.GOODS_ID);
+        num = bundle.getInt("num");
         if (bundle.getInt("TYPE") == GoodsFragment.TYPE_TRAVEL) {
             isTravel = true;
             date = bundle.getString("Date");
@@ -264,6 +277,8 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             llA.setVisibility(View.GONE);
             addressLayout.setVisibility(View.GONE);
             llContact.setVisibility(View.VISIBLE);
+        } else if (bundle.getInt("TYPE") == GoodsFragment.TYPE_GOODS) {
+            isShopCar = false;
         }
         if (!TextUtils.isEmpty(goods_id)) {
             isPayNow = true;
@@ -303,7 +318,6 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
                 if (jifenA > jifenATotal) {
                     TOT("A账号的积分余额不足");
                 } else {
-
                     tvPayPrice.setText("应付：￥" + Tools.sub(totalPrice, jifenA));
                 }
             }
@@ -352,7 +366,6 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
                     if (TextUtils.isEmpty(cetA.getText().toString())) {
                         tvPayPrice.setText("应付：￥" + totalPrice);
                     } else {
-
                         tvPayPrice.setText("应付：￥" + Tools.sub(totalPrice, Double.parseDouble(cetA.getText().toString())));
                     }
                 }
@@ -369,8 +382,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     cbPayWeixin.setChecked(false);
-                } else {
-                    cbPayWeixin.setChecked(true);
+                    cbPayUppay.setChecked(false);
                 }
             }
         });
@@ -379,8 +391,16 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     cbPayAlipay.setChecked(false);
-                } else {
-                    cbPayAlipay.setChecked(true);
+                    cbPayUppay.setChecked(false);
+                }
+            }
+        });
+        cbPayUppay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    cbPayAlipay.setChecked(false);
+                    cbPayWeixin.setChecked(false);
                 }
             }
         });
@@ -389,7 +409,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     @Override
     public void getData(StringCallback callback, int page) {
         if (isPayNow) {
-            MallAndTravelModel.payNow(callback, goods_id);
+            MallAndTravelModel.payNow(callback, goods_id, num + "");
 
         } else {
             MallAndTravelModel.settelAccounts(callback, cart_id);
@@ -417,9 +437,6 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         holder.setText(R.id.num, t.getFanli_jifen());
         holder.setVisible(R.id.ll_taocan, View.VISIBLE);
         holder.setText(R.id.tv_taocan, t.getTaocan_name());
-
-        totalPrice = totalPrice + Double.parseDouble(t.getPrice_new());
-        tvTotalPrice.setText(totalPrice + "");
         if (TextUtils.isEmpty(t.getFanli_jifen())) {
             holder.setVisible(R.id.ll_fanli, View.GONE);
         }
@@ -428,7 +445,6 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         tvB.setText("B账户：" + t.getAdd_jf_currency());
         jifenATotal = Double.parseDouble(t.getAdd_jf_limit());
         jifenBTotal = Double.parseDouble(t.getAdd_jf_currency());
-        tvPayPrice.setText("应付：" + totalPrice);
         fanli_jifen = Double.parseDouble(t.getFanli_jifen());
         address = t.getAddress();
         if (t.getGoods_num() == null) {
@@ -437,7 +453,16 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             number = t.getGoods_num();
         }
         holder.setText(R.id.tv_number, number);
-        cart_id = t.getCart_id();
+        totalPrice = totalPrice + Tools.mul(Double.parseDouble(t.getPrice_new()), Integer.parseInt(number));
+        if (num != 0) {
+            holder.setText(R.id.tv_number, num + "");
+            totalPrice = totalPrice + Tools.mul(Double.parseDouble(t.getPrice_new()), num);
+        }
+        tvTotalPrice.setText(totalPrice + "元");
+        tvPayPrice.setText("应付：" + totalPrice);
+        if (!isShopCar) {
+            cart_id = t.getCart_id();
+        }
         realName = t.getRealname();
         mobile = t.getMobile();
         goodTitle = t.getTitle();
@@ -479,7 +504,6 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         }
 
 
-
     }
 
 
@@ -495,11 +519,18 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             CreateOrderBean bean = Http.model(CreateOrderBean.class, response);
             if (bean.getCode().equals("200")) {
                 isPay = true;
-                UserInfoModel.pay(payCallBack, bean.getData().get(0), totalPrice + "", goodTitle);
+                if (cbPayAlipay.isChecked()) {
+                    UserInfoModel.pay(payCallBack, bean.getData().get(0), totalPrice + "", goodTitle);
+                } else if (cbPayWeixin.isChecked()) {
+                    payWeixin();
+                } else if (false) {
+                    UserInfoModel.upPay(upPayCallBack, bean.getData().get(0), totalPrice + "");
+                }
+                //UserInfoModel.upPay(upPayCallBack, bean.getData().get(0), totalPrice + "");
             }
         }
     };
-    //支付
+    //支付宝支付
     private StringCallback payCallBack = new StringCallback() {
         @Override
         public void onError(Call call, Exception e, int id) {
@@ -510,16 +541,38 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         public void onResponse(String response, int id) {
             PayRequestBean bean = Http.model(PayRequestBean.class, response);
             if (bean.getCode().equals("200")) {
-                if (cbPayAlipay.isChecked()) {
-                    payInerface(bean.getData());
-                } else {
-                    payWeixin();
-                }
-                //payChoosePopupwindow(bean.getData());
+                payInerface(bean.getData());
             }
         }
     };
 
+    /**
+     * 银联支付
+     */
+    private static final String TN_URL_01 = "http://101.231.204.84:8091/sim/getacptn";
+    private String mMode = "01";//设置测试模式:01为测试 00为正式环境
+
+    private void payUpPay(String tn) {
+        UPPayAssistEx.startPay(PayActivity.this, null, null, tn, mMode);
+
+    }
+
+    StringCallback upPayCallBack = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            TOT("请求失败");
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            UpPayRequestBean bean = Http.model(UpPayRequestBean.class, response);
+            Log.e("KTy 123", response);
+            if (bean.getCode().equals("200")) {
+                Log.e("KTY tn", bean.getData().getTn());
+                payUpPay(bean.getData().getTn());
+            }
+        }
+    };
 
     class TravelRecver implements RecyclerViewModel.RModelListener<TravelRecverBean.TravelRecverData> {
 
@@ -641,6 +694,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -699,4 +753,26 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         }
     };
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data == null) {
+            return;
+        }
+        String msg = "";
+        /*
+         * 支付控件返回字符串:success、fail、cancel 分别代表支付成功，支付失败，支付取消
+         */
+        String str = data.getExtras().getString("pay_result");
+        Log.v("zftphone", "2 " + data.getExtras().getString("merchantOrderId"));
+        if (str.equalsIgnoreCase("success")) {
+            TOT("支付成功！");
+
+        } else if (str.equalsIgnoreCase("fail")) {
+            TOT("支付失败！");
+
+        } else if (str.equalsIgnoreCase("cancel")) {
+            TOT("用户取消了支付！");
+        }
+    }
 }

@@ -65,7 +65,8 @@ public class MeFragment extends BaseFragment {
     @ViewById
     FrameLayout onComment;
     String[] iName = new String[]{
-            "个人信息", "账户管理", "会员等级", "订单管理", "我的收藏", "分享掌中游", "我的足迹"
+            "个人信息", "账户管理", "会员等级", "订单管理", "我的收藏", "分享掌中游", "我的足迹", "意见反馈"
+            , "关于我们"
     };
     //图片集
     int[] iImg = new int[]{
@@ -76,6 +77,8 @@ public class MeFragment extends BaseFragment {
             R.drawable.ic_me_item5,
             R.drawable.ic_me_item6,
             R.drawable.ic_me_item7,
+            R.drawable.icon_advice,
+            R.drawable.icon_about_us
     };
 
 
@@ -169,7 +172,12 @@ public class MeFragment extends BaseFragment {
         if (position == iImg[6]) {
             start(MyFootFragment.newInstance());
         }
-
+        if (position == iImg[7]) {
+            start(AdviseFragment.newInstance());
+        }
+        if (position == iImg[8]) {
+            start(AboutUsFragment.newInstance());
+        }
     }
 
     private boolean judge() {

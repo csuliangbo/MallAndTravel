@@ -1,5 +1,6 @@
 package com.ych.mall.model;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.ych.mall.utils.UserCenter;
@@ -161,7 +162,7 @@ public class MallAndTravelModel {
     static String CREATE_TOUR_ORDER = urlTravel + "create_order";
 
     public static void createTourOrder(StringCallback callback, String price_sum, String price_shiji,
-                                        String realName, String mobile, String number,
+                                       String realName, String mobile, String number,
                                        String jifen, String goods_id, String jifenB, String date,
                                        String childNum, String childPrice, String adultNum, String adultPrice) {
         HashMap<String, String> map = new HashMap<>();
@@ -194,10 +195,13 @@ public class MallAndTravelModel {
 
     static String PAY_NOW = urlGoods + "immediate_payment";
 
-    public static void payNow(StringCallback callback, String goodsId) {
+    public static void payNow(StringCallback callback, String goodsId, String num) {
         HashMap<String, String> map = new HashMap<>();
         map.put("user_id", UserCenter.getInstance().getCurrentUserId());
         map.put("goods_id", goodsId);
+        if (!TextUtils.isEmpty(num)) {
+            map.put("goods_num", num + "");
+        }
         HttpModel.newInstance(PAY_NOW).post(map, callback);
     }
 

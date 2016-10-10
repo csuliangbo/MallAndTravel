@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.fyales.tagcloud.library.TagBaseAdapter;
 import com.fyales.tagcloud.library.TagCloudLayout;
 import com.umeng.socialize.ShareAction;
@@ -91,12 +92,16 @@ public class GoodsFragment extends BaseFragment {
     TextView tvNumAdult;
     @ViewById(R.id.tv_num_children)
     TextView tvNumChildren;
+    @ViewById(R.id.tv_num)
+    TextView tvNum;
     @ViewById(R.id.ll_children)
     LinearLayout llChildren;
     @ViewById
     TextView onCollect;
     private int numAdult;
     private int numChildren;
+    private int num = 1;
+
     @Click
     void onProtocol() {
         web("http://www.zzumall.com/index.php/Mobile/Tourism/lvyou_xieyi");
@@ -146,11 +151,26 @@ public class GoodsFragment extends BaseFragment {
         //setChildPrice();
     }
 
+
     @Click
     void tv_add_num_children() {
         numChildren++;
         tvNumChildren.setText(numChildren + "");
         // setChildPrice();
+    }
+
+    @Click
+    void tv_add_num() {
+        num++;
+        tvNum.setText(num + "");
+    }
+
+    @Click
+    void tv_sub_num() {
+        num--;
+        if (num <= 0)
+            num = 0;
+        tvNum.setText(num + "");
     }
 
     //商品购买
@@ -162,7 +182,11 @@ public class GoodsFragment extends BaseFragment {
                 return;
             }
         }
-        startActivity(new Intent(getActivity(), PayActivity_.class).putExtra(KV.GOODS_ID, mId));
+        Bundle bundle = new Bundle();
+        bundle.putString(KV.GOODS_ID, mId);
+        bundle.putInt("num", num);
+        bundle.putInt("TYPE", TYPE_GOODS);
+        startActivity(new Intent(getActivity(), PayActivity_.class).putExtras(bundle));
     }
 
     //旅游预订
@@ -206,8 +230,7 @@ public class GoodsFragment extends BaseFragment {
         if (mPrice != null) {
             mLoading.setVisibility(View.VISIBLE);
             UserInfoModel.addCollect(addCallBack, mId, mImgUrl, mPrice, mTitleText, "0", currentType);
-        }
-        else
+        } else
             TOT("请选择出发时间");
     }
 
@@ -404,9 +427,9 @@ public class GoodsFragment extends BaseFragment {
                 mPrice = mDate.get(position).getChufa_price();
                 mChildPrice = mDate.get(position).getChufa_price_et();
                 Log.e("KTY  price", mChildPrice + "");
-                if (mChildPrice == null || mChildPrice .equals("0")) {
+                if (mChildPrice == null || mChildPrice.equals("0")) {
                     llChildren.setVisibility(View.GONE);
-                }else{
+                } else {
                     llChildren.setVisibility(View.VISIBLE);
                 }
                 sT(mPriceTV, mPrice);
@@ -448,7 +471,7 @@ public class GoodsFragment extends BaseFragment {
                 if (bean.getCode().equals("200")) {
                     goods(bean.getData().get(0));
                     onCollect.setVisibility(View.VISIBLE);
-            } else
+                } else
                     TOT(bean.getMessage());
             } catch (Exception e) {
 
@@ -472,8 +495,7 @@ public class GoodsFragment extends BaseFragment {
             if (bean.getCode().equals("200")) {
                 travel(bean.getData().get(0));
                 onCollect.setVisibility(View.VISIBLE);
-            }
-            else
+            } else
                 TOT(bean.getMessage());
         }
     };
@@ -503,13 +525,13 @@ public class GoodsFragment extends BaseFragment {
         @Override
         public void onError(Call call, Exception e, int id) {
             TOT("网络连接失败");
-            if (mLoading!=null)
-            mLoading.setVisibility(View.GONE);
+            if (mLoading != null)
+                mLoading.setVisibility(View.GONE);
         }
 
         @Override
         public void onResponse(String response, int id) {
-            if (mLoading!=null)
+            if (mLoading != null)
                 mLoading.setVisibility(View.GONE);
             ParentBean bean = Http.model(ParentBean.class, response);
             if (bean.getCode().equals("200")) {

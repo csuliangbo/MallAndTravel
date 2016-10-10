@@ -83,6 +83,9 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
     SwipeRefreshLayout mSwipeRefreshLayout;
     RecyclerViewModel<OrderBean.OrderData> model;
 
+    RecyclerViewModel<OrderBean.Goods> itemModel;
+    SwipeRefreshLayout itemSwipeRefreshLayout;
+
     private String titleHead = "点击后该订单(";
     private String titleFoot = ")所有商品不可退货，积分返利立即到账，是否同意?";
     boolean canSalesReturn = false;
@@ -178,7 +181,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
 
     @Override
     public List<OrderBean.OrderData> getList(String str) {
-        log(str);
+        Log.e("KTY dfdg", str);
         if (mLoading != null)
             mLoading.setVisibility(View.GONE);
         OrderBean bean = Http.model(OrderBean.class, str);
@@ -227,7 +230,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 btnMiddle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        UserInfoModel.pay(payCallBack, t.getOrders_num(), t.getPrice_sum() + "", t.getGoods_title());
+                        UserInfoModel.pay(payCallBack, t.getOrders_num(), t.getPrice_shiji() + "", "shangp");
                     }
                 });
                 break;
@@ -377,11 +380,10 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
             holder.setText(R.id.time, "下单时间:" + date);
         }
         holder.setText(R.id.status, typeText);
-        holder.loadImg(getActivity(), R.id.pic, Http.GOODS_PIC_URL + t.getPic_url());
-        holder.setText(R.id.price, "￥" + t.getPrice_new());
-        holder.setText(R.id.num, "x" + t.getGoods_num());
-        holder.setText(R.id.priceAll, t.getPrice_sum());
-        holder.setText(R.id.name, t.getGoods_title());
+        holder.setText(R.id.priceAll, t.getPrice_shiji());
+        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.order_item);
+        itemModel = new RecyclerViewModel<>(getActivity(), new ItemRecycler(t.getGoods()), recyclerView, itemSwipeRefreshLayout, R.layout.item_order_recyclerview);
+        itemModel.init();
     }
 
     //取消订单
@@ -591,4 +593,36 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
             }
         }
     };
+
+    //item的class
+    private class ItemRecycler implements RecyclerViewModel.RModelListener<OrderBean.Goods> {
+        private List<OrderBean.Goods> goodsList;
+
+        public ItemRecycler(List<OrderBean.Goods> goodsList) {
+            this.goodsList = goodsList;
+        }
+
+        @Override
+        public void getData(StringCallback callback, int page) {
+
+        }
+
+        @Override
+        public void onErr(int state) {
+
+        }
+
+        @Override
+        public List<OrderBean.Goods> getList(String str) {
+            return goodsList;
+        }
+
+        @Override
+        public void covert(YViewHolder holder, OrderBean.Goods goods) {
+            holder.loadImg(getActivity(), R.id.pic, Http.GOODS_PIC_URL + goods.getPic_url());
+            holder.setText(R.id.price, "￥" + goods.getPrice_new());
+            holder.setText(R.id.num, "x" + goods.getGoods_num());
+            holder.setText(R.id.name, goods.getGoods_title());
+        }
+    }
 }

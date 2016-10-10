@@ -1,5 +1,6 @@
 package com.ych.mall.model;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.ych.mall.utils.UserCenter;
@@ -223,7 +224,7 @@ public class UserInfoModel {
 
     //添加收藏
     public static void addCollect(StringCallback callback, String goods_id, String pic_url,
-                                  String price_new, String detail_title, String price_old,int type
+                                  String price_new, String detail_title, String price_old, int type
     ) {
         HashMap<String, String> map = new HashMap<>();
         map.put("goods_id", goods_id);
@@ -232,7 +233,7 @@ public class UserInfoModel {
         map.put("price_new", price_new);
         map.put("detail_title", detail_title);
         map.put("price_old", price_old);
-        map.put("is_type",type+"");
+        map.put("is_type", type + "");
         HttpModel.newInstance(ADD_COLLECT).post(map, callback);
 
     }
@@ -244,6 +245,18 @@ public class UserInfoModel {
         HashMap<String, String> map = new HashMap<>();
         map.put("id", UserCenter.getInstance().getCurrentUserId());
         HttpModel.newInstance(COLLECT_URL).post(map, callback);
+    }
+
+    //意见反馈
+    static String ADVISE = url + "liuyan";
+
+    public static void userAdvise(StringCallback callback, String content, String mobile) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("content", content);
+        map.put("app_type", "android");
+        if (!TextUtils.isEmpty(mobile))
+            map.put("mobile", mobile);
+        HttpModel.newInstance(ADVISE).post(map, callback);
     }
 
     static String DEL_COLLECT = url + "del_collect";
@@ -266,7 +279,6 @@ public class UserInfoModel {
 
     //订单
     static void order(StringCallback callback, int page, String url) {
-        Log.i("ych","order  ");
         HashMap<String, String> map = new HashMap<>();
         map.put("id", UserCenter.getInstance().getCurrentUserId());
         HttpModel.newInstance(url + "&page=" + (page + 1)).post(map, callback);
@@ -310,7 +322,7 @@ public class UserInfoModel {
         HttpModel.newInstance(CANCEL_ORDER).post(map, callback);
     }
 
-    //支付
+    //支付宝支付
     static String PAY = url + "update_pay";
 
     public static void pay(StringCallback callback, String orderNum, String price, String goodsTitle) {
@@ -319,6 +331,16 @@ public class UserInfoModel {
         map.put("price_shiji", price);
         map.put("goods_title", goodsTitle);
         HttpModel.newInstance(PAY).post(map, callback);
+    }
+
+    //银联支付
+    static String UPPAY = url + "yl_pay";
+
+    public static void upPay(StringCallback callback, String orderNum, String price) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("orders_num", orderNum);
+        map.put("price_shiji", price);
+        HttpModel.newInstance(UPPAY).post(map, callback);
     }
 
     //确认收货

@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\demo\\build\\intermediates\\res\\merged\\debug\\menu\\home.xml",
+        "source": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\demo\\src\\main\\res\\menu\\home.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\demo\\build\\intermediates\\res\\merged\\debug\\menu\\hierarchy.xml",
+        "source": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\demo\\src\\main\\res\\menu\\hierarchy.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\demo\\build\\intermediates\\res\\merged\\debug\\menu\\activity_main_drawer.xml",
+        "source": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\demo\\src\\main\\res\\menu\\activity_main_drawer.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\demo\\build\\intermediates\\res\\merged\\debug\\menu\\swipe_orientation.xml",
+        "source": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\demo\\src\\main\\res\\menu\\swipe_orientation.xml"
+    },
+    {
+        "merged": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\demo\\build\\intermediates\\res\\merged\\debug\\menu\\home_pop.xml",
+        "source": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\demo\\src\\main\\res\\menu\\home_pop.xml"
+    }
+]

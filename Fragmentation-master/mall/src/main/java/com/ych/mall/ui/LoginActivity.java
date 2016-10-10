@@ -59,7 +59,6 @@ public class LoginActivity extends BaseActivity {
            web("http://www.zzumall.com/index.php/Mobile/Other/index.html");
            return;
        }
-
         onSubmit.startLoading();
         LoginAndRegistModel.login(getT(mPhone), getT(mPwd), callback);
     }

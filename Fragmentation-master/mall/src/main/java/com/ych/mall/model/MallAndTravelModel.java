@@ -164,11 +164,12 @@ public class MallAndTravelModel {
     public static void createTourOrder(StringCallback callback, String price_sum, String price_shiji,
                                        String realName, String mobile, String number,
                                        String jifen, String goods_id, String jifenB, String date,
-                                       String childNum, String childPrice, String adultNum, String adultPrice) {
+                                       String childNum, String childPrice, String adultNum, String adultPrice,
+                                       String order_remarks) {
         HashMap<String, String> map = new HashMap<>();
         map.put("user_id", UserCenter.getInstance().getCurrentUserId());
         map.put("price_sum", price_sum);
-        map.put("price_shij", price_shiji);
+        map.put("price_shiji", price_shiji);
         map.put("realname", realName);
         map.put("mobile", mobile);
         map.put("num_sum", number);
@@ -180,6 +181,7 @@ public class MallAndTravelModel {
         map.put("cr_num", adultNum);
         map.put("price_et", childPrice);
         map.put("et_num", childNum);
+        map.put("order_remarks", order_remarks);
         HttpModel.newInstance(CREATE_TOUR_ORDER).post(map, callback);
     }
 
@@ -238,7 +240,7 @@ public class MallAndTravelModel {
     static String ADD_SHOPCAR = urlGoods + "add_goods_cart";
 
     //添加购物车
-    public static void addShopCar(StringCallback callback, String id, String title, String point, String price) {
+    public static void addShopCar(StringCallback callback, String id, String title, String point, String price, String num) {
         HashMap<String, String> map = new HashMap<>();
         map.put("user_id", UserCenter.getInstance().getCurrentUserId());
         map.put("goods_id", id);
@@ -248,6 +250,7 @@ public class MallAndTravelModel {
             map.put("taocan", "");
         map.put("fanli_jifen", point);
         map.put("price_new", price);
+        map.put("num", num);
         HttpModel.newInstance(ADD_SHOPCAR).post(map, callback);
     }
 

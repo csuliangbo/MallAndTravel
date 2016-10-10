@@ -16,10 +16,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
 import com.alipay.sdk.app.PayTask;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.unionpay.UPPayAssistEx;
 import com.ych.mall.R;
 import com.ych.mall.bean.AuthResult;
 import com.ych.mall.bean.CreateVipBean;
@@ -27,6 +29,7 @@ import com.ych.mall.bean.ParentBean;
 import com.ych.mall.bean.PayBean;
 import com.ych.mall.bean.PayRequestBean;
 import com.ych.mall.bean.PayResult;
+import com.ych.mall.bean.UpPayRequestBean;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.HttpModel;
 import com.ych.mall.model.LoginAndRegistModel;
@@ -90,7 +93,7 @@ public class BuyVipActivity extends BaseActivity {
     StringCallback canBuyCallback = new StringCallback() {
         @Override
         public void onError(Call call, Exception e, int id) {
-           tvLoading.setText("网络连接失败");
+            tvLoading.setText("网络连接失败");
         }
 
         @Override
@@ -164,29 +167,27 @@ public class BuyVipActivity extends BaseActivity {
             } else if (code.equals("200")) {
                 Log.e("KTY", response);
                 TOT("创建订单成功");
-                UserInfoModel.pay(payCallBack, bean.getData().getOrders_num(), bean.getData().getHf_money() + "", "购买会员");
+                payChoosePopupwindow(bean.getData().getOrders_num(), bean.getData().getHf_money() + "", "购买会员");
             }
         }
     };
-    //支付
-    private StringCallback payCallBack = new StringCallback() {
+    //支付宝支付
+    private StringCallback alipayCallBack = new StringCallback() {
         @Override
         public void onError(Call call, Exception e, int id) {
-            tvLoading.setText("网络连接失败");
+            TOT("网络连接失败");
         }
 
         @Override
         public void onResponse(String response, int id) {
-            tvLoading.setVisibility(View.GONE);
             PayRequestBean bean = Http.model(PayRequestBean.class, response);
             if (bean.getCode().equals("200")) {
-                payChoosePopupwindow(bean.getData());
+                payInerface(bean.getData());
             }
         }
     };
 
-    private void payChoosePopupwindow(final String orderInfo) {
-
+    private void payChoosePopupwindow(final String orderNum, final String price, final String title) {
         View popupWindow_view = getLayoutInflater().inflate(R.layout.item_popupwindow_pay, null, false);
         final PopupWindow popupWindow = new PopupWindow(popupWindow_view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
         popupWindow.showAtLocation(tiTitle, Gravity.BOTTOM, 0, 0);
@@ -195,6 +196,7 @@ public class BuyVipActivity extends BaseActivity {
         popupWindow.setBackgroundDrawable(dw);
         LinearLayout llWeixin = (LinearLayout) popupWindow_view.findViewById(R.id.ll_weixin);
         LinearLayout llAlipay = (LinearLayout) popupWindow_view.findViewById(R.id.ll_alipay);
+        LinearLayout llUppay = (LinearLayout) popupWindow_view.findViewById(R.id.ll_uppay);
         ImageView ivQuit = (ImageView) popupWindow_view.findViewById(R.id.iv_quit);
         llWeixin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,7 +209,14 @@ public class BuyVipActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
-                payInerface(orderInfo);
+                UserInfoModel.pay(alipayCallBack, orderNum, price, title);
+            }
+        });
+        llUppay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                UserInfoModel.upPay(upPayCallBack, orderNum, price);
             }
         });
         ivQuit.setOnClickListener(new View.OnClickListener() {
@@ -338,6 +347,31 @@ public class BuyVipActivity extends BaseActivity {
             } catch (Exception e) {
                 Log.e("PAY_GET", "异常：" + e.getMessage());
                 TOT("异常：" + e.getMessage());
+            }
+        }
+    };
+    /**
+     * 银联支付
+     */
+    private static final String TN_URL_01 = "http://101.231.204.84:8091/sim/getacptn";
+    private String mMode = "00";//设置测试模式:01为测试 00为正式环境
+
+    private void payUpPay(String tn) {
+        UPPayAssistEx.startPay(this, null, null, tn, mMode);
+
+    }
+
+    StringCallback upPayCallBack = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            TOT("请求失败");
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            UpPayRequestBean bean = Http.model(UpPayRequestBean.class, response);
+            if (bean.getCode().equals("200")) {
+                payUpPay(bean.getData().getTn());
             }
         }
     };

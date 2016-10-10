@@ -50,11 +50,12 @@ public class LogisticsFragment extends BaseFragment {
     @AfterViews
     void init() {
         tiTitle.setText("查看物流");
-        orderNum = getArguments().getString(KV.ORDER_NUM);
+        orderNum = getArguments().getString(KV.KUIDI);
         if (orderNum == null) {
             TOT("没有订单号");
             return;
         }
+        Log.e("KTy or", orderNum);
         UserInfoModel.kuaidi(kuaidiCallback, orderNum);
     }
 
@@ -67,12 +68,14 @@ public class LogisticsFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response, int id) {
+            Log.e("KTY", response);
             LogisticsBean bean = Http.model(LogisticsBean.class, response);
             if (bean.getCode().equals("200")) {
-                TOT("快递");
+                TOT(bean.getMessage());
                 List<LogisticsBean.LogisticsData> data = bean.getData();
                 webView.loadUrl(url + data.get(0).getKuaidi_num());
             }
+            TOT(bean.getMessage());
         }
     };
 }

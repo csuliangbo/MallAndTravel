@@ -394,6 +394,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
             double price = 0;
             if (t.getGoods()!=null) {
                 for (int i = 0; i < t.getGoods().size(); i++) {
+                    if(t.getGoods().get(i).getPrice_new()!=null)
                     price = Tools.add(price, Double.parseDouble(t.getGoods().get(i).getPrice_new()));
                 }
             }

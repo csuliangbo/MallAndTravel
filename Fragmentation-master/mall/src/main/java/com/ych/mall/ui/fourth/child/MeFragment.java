@@ -147,6 +147,12 @@ public class MeFragment extends BaseFragment {
         UserInfoModel.userCenter(infoCallBack);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        UserInfoModel.userCenter(infoCallBack);
+    }
+
     private void onGridClick(int position) {
         if (judge())
             return;
@@ -231,6 +237,7 @@ public class MeFragment extends BaseFragment {
                 mName.setText(data.getMobile());
                 mID.setText("ID:" + data.getId());
                 mGrade.setText("等级:" + data.getGrade_name());
+                UserCenter.getInstance().setUserGrade(data.getGrade_name());
                 mIntegral.setText(data.getIntegral());
             }
         }

@@ -41,28 +41,36 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        share = getSharedPreferences("showWelcomm", Context.MODE_PRIVATE);
-        editor = share.edit();
-        // 判断是否首次登录程序
-        if (share.contains("shownum")) {
-            int num = share.getInt("shownum", 0);
-            editor.putInt("shownum", num++);
-            editor.commit();
-            skipActivity(0);
-        } else {
-            editor.putInt("shownum", 1);
-            editor.commit();
-            setContentView(R.layout.activity_welcome);
-            TextView tvOnEnter = (TextView) findViewById(R.id.onEnter);
+//        share = getSharedPreferences("showWelcomm", Context.MODE_PRIVATE);
+//        editor = share.edit();
+//        // 判断是否首次登录程序
+//        if (share.contains("shownum")) {
+//            int num = share.getInt("shownum", 0);
+//            editor.putInt("shownum", num++);
+//            editor.commit();
+//            skipActivity(0);
+//        } else {
+//            editor.putInt("shownum", 1);
+//            editor.commit();
+//            setContentView(R.layout.activity_welcome);
+//            TextView tvOnEnter = (TextView) findViewById(R.id.onEnter);
+//            tvOnEnter.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    skipActivity(0);
+//                }
+//            });
+//            initView();
+//        }
+        setContentView(R.layout.activity_welcome);
+             TextView tvOnEnter = (TextView) findViewById(R.id.onEnter);
             tvOnEnter.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    skipActivity(0);
-                }
-            });
-            initView();
-        }
-
+               @Override
+                 public void onClick(View v) {
+                   skipActivity(0);
+               }
+           });
+             initView();
     }
 
     private void initView() {
@@ -92,7 +100,7 @@ public class WelcomeActivity extends BaseActivity {
             public void onPageSelected(int arg0) {
                 moveCursorTo(arg0);
                 if (arg0 == ids.length - 1) {// 到最后一张了
-                    skipActivity(2);
+                    skipActivity(1);
                 }
                 curPos = arg0;
             }

@@ -6,8 +6,9 @@
 
     <include layout="@layout/include_title"></include>
 
-    <WebView
+    <ImageView
         android:id="@+id/webview"
+        android:scaleType="fitXY"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></WebView>
+        android:layout_height="match_parent"></ImageView>
 </LinearLayout>

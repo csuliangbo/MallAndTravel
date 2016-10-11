@@ -38,6 +38,7 @@ import com.ych.mall.bean.PayRequestBean;
 import com.ych.mall.bean.TravelRecverBean;
 import com.ych.mall.bean.UpPayRequestBean;
 import com.ych.mall.event.AddressEvent;
+import com.ych.mall.event.LoginEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.HttpModel;
 import com.ych.mall.model.MallAndTravelModel;
@@ -51,6 +52,7 @@ import com.ych.mall.bean.PayResult;
 import com.ych.mall.ui.first.child.childpager.GoodsFragment;
 import com.ych.mall.utils.KV;
 import com.ych.mall.utils.Tools;
+import com.ych.mall.utils.UserCenter;
 import com.ych.mall.widget.ClearEditText;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -286,6 +288,9 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             llA.setVisibility(View.GONE);
             addressLayout.setVisibility(View.GONE);
             llContact.setVisibility(View.VISIBLE);
+            if (UserCenter.getInstance().getCurrentUserGrade().equals("合伙人")){
+                llB.setVisibility(View.GONE);
+            }
         } else if (bundle.getInt("TYPE") == GoodsFragment.TYPE_GOODS) {
             isShopCar = false;
         }
@@ -784,6 +789,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
          */
         String str = data.getExtras().getString("pay_result");
         Log.v("zftphone", "2 " + data.getExtras().getString("merchantOrderId"));
+        EventBus.getDefault().post(new LoginEvent());
         if (str.equalsIgnoreCase("success")) {
             TOT("支付成功！");
 

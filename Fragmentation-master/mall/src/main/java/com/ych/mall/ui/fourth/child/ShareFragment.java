@@ -96,7 +96,7 @@ public class ShareFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 imgUrl = imgUrl.replace("10000285", userId);
-                umShare(imgUrl);
+              start(ShareWebFragment.newInstance(imgUrl));
             }
         });
     }

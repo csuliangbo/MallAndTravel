@@ -41,7 +41,7 @@ public class GoodsListFragment extends BaseFragment implements RecyclerViewModel
     TextView mLoading;
     @ViewById(R.id.onSearch)
     ClearEditText onSearch;
-int type;
+    int type;
     @Click
     void tvSearch() {
         start(SearchFragment.newInstance(onSearch.getText().toString(), GoodsFragment.TYPE_GOODS));

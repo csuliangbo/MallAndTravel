@@ -167,7 +167,8 @@ public class BuyVipActivity extends BaseActivity {
             } else if (code.equals("200")) {
                 Log.e("KTY", response);
                 TOT("创建订单成功");
-                payChoosePopupwindow(bean.getData().getOrders_num(), bean.getData().getHf_money() + "", "购买会员");
+                //bean.getData().getHf_money()
+                payChoosePopupwindow(bean.getData().getOrders_num(), "0.01", "购买会员");
             }
         }
     };

@@ -10,14 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="170dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/trveltest"
         android:id="@+id/pic" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="休闲之都成都3日游"
         android:textColor="@color/black"
         android:textSize="18sp"
         android:id="@+id/name" />
@@ -31,7 +29,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="￥123"
+            android:text="￥"
             android:textColor="@color/text_orange"
             android:textSize="18sp"
 
@@ -45,7 +43,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="返利：130积分"
+            android:text="返利：积分"
             android:textColor="@color/text_orange"
             android:textSize="18sp"
             android:id="@+id/num" />

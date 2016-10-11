@@ -23,7 +23,6 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_mid"
             android:textColor="@color/black"
-            android:text="惠普笔记本"
             android:id="@+id/name" />
 <TextView
     android:layout_width="wrap_content"
@@ -32,7 +31,7 @@
     android:textColor="@color/text_orange"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
-    android:text="￥12341"
+    android:text="￥"
     android:id="@+id/price" />
         <TextView
             android:layout_width="wrap_content"

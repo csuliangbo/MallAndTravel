@@ -11,7 +11,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="银行"
         android:layout_marginLeft="10dp"
         android:id="@+id/mBankName"
         android:textColor="@color/black" />
@@ -22,7 +21,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:text="储蓄卡"
         android:id="@+id/mType"
         android:textColor="@color/black" />
 
@@ -30,7 +28,6 @@
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="102481094017414"
         android:id="@+id/mNum"
         android:textColor="@color/black" />
     <View

@@ -20,7 +20,7 @@
         android:id="@+id/tiTitle"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="商品结算"
+        android:text="标题"
         android:textColor="@color/black"
         android:textSize="20sp" />
 

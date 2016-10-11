@@ -9,55 +9,53 @@
         android:background="@drawable/selector_layout_pressed"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:paddingRight="110dp"
-        android:paddingTop="10dp"
-        android:paddingLeft="10dp"
         android:paddingBottom="10dp"
-         >
+        android:paddingLeft="10dp"
+        android:paddingRight="110dp"
+        android:paddingTop="10dp">
 
         <TextView
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="叶昌洪\t\t\t\t18008112518"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_large"
-            android:id="@+id/name" />
+            android:textSize="@dimen/text_large" />
 
         <TextView
+            android:id="@+id/add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:layout_marginTop="5dp"
 
-            android:text="成都市武侯hththththththththth区刀叉街123号1栋1单元1231"
             android:textColor="@color/black"
-
-            android:textSize="@dimen/text_large"
-            android:id="@+id/add" />
-
+            android:textSize="@dimen/text_large" />
 
 
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/line_height"
-        android:background="@color/Linear"
-android:layout_gravity="bottom"
-        />
+        android:layout_gravity="bottom"
+        android:background="@color/Linear" />
+
     <TextView
+        android:id="@+id/defalut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_xlarge"
-        android:text="[默认]"
-        android:textColor="@color/text_red"
         android:layout_gravity="center_vertical|right"
         android:layout_marginRight="60dp"
-        android:id="@+id/defalut" />
+        android:text="[默认]"
+        android:textColor="@color/text_red"
+        android:textSize="@dimen/text_xlarge" />
+
     <ImageView
+        android:id="@+id/mEdit"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@drawable/ic_edit"
         android:layout_gravity="center_vertical|right"
         android:layout_marginRight="20dp"
-        android:id="@+id/mEdit" />
+        android:src="@drawable/ic_edit" />
 
 </FrameLayout>

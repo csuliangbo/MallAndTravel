@@ -419,7 +419,6 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     public void getData(StringCallback callback, int page) {
         if (isPayNow) {
             MallAndTravelModel.payNow(callback, goods_id, num + "");
-
         } else {
             MallAndTravelModel.settelAccounts(callback, cart_id);
         }
@@ -432,6 +431,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     @Override
     public List<PayBean.PayData> getList(String str) {
+        Log.e("KTY rsg",str);
         PayBean bean = Http.model(PayBean.class, str);
         if (bean.getCode().equals("200")) {
             return bean.getData();

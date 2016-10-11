@@ -191,6 +191,15 @@ public class UserInfoModel {
         HttpModel.newInstance(DEL_BANK).post(map, callback);
     }
 
+    //查看消息
+    static String MESSAGE = url + "news";
+
+    public static void message(StringCallback callback) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("id", UserCenter.getInstance().getCurrentUserId());
+        HttpModel.newInstance(MESSAGE).post(map, callback);
+    }
+
     static String MY_FOOT = url + "person_footprint";
 
     //用户足迹
@@ -208,6 +217,7 @@ public class UserInfoModel {
         map.put("id", id);
         HttpModel.newInstance(DEL_FOOT).post(map, callback);
     }
+
 
     static String CLEAR_FOOT = url + "empty_footprint";
 

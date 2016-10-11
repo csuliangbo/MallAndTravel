@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -68,5 +70,12 @@ public class Tools {
 // 得到剪贴板管理器
         ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         return cmb.getText().toString().trim();
+    }
+
+    //时间戳转字符串
+    public static String getStrTime(String timeStamp) {
+        Date d = new Date(timeStamp);
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy:MM:dd");
+        return sf.format(d);
     }
 }

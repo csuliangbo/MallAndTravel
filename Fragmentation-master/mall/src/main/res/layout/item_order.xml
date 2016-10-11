@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="订单号：12321312"
+            android:text="订单号："
             android:textColor="@color/black"
             android:textSize="@dimen/text_mid" />
 
@@ -31,7 +31,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:text="已发货"
             android:textColor="@color/black"
             android:textSize="@dimen/text_mid" />
     </LinearLayout>
@@ -72,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:text="￥123元"
+            android:text="￥元"
             android:textColor="@color/text_orange"
             android:textSize="@dimen/text_large" />
 
@@ -85,7 +84,7 @@
         android:background="@color/white"
         android:gravity="center_vertical"
         android:paddingLeft="10dp"
-        android:text="下单时间：2016-09-06 09:33:54"
+        android:text="下单时间："
         android:textColor="@color/black"
         android:textSize="@dimen/text_mini" />
 

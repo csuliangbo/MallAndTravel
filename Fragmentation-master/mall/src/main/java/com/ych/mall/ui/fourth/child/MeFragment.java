@@ -81,6 +81,14 @@ public class MeFragment extends BaseFragment {
             R.drawable.icon_about_us
     };
 
+    @Click
+    void onMessage() {
+        start(MessageFragment.newInstance());
+    }
+    @Click
+    void onMessageButton(){
+        start(MessageFragment.newInstance());
+    }
 
     @Click
     void onIntegration() {

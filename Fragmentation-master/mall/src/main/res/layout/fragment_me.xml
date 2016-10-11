@@ -10,7 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="@null">
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -78,6 +78,7 @@
                     android:textSize="@dimen/text_mini" />
 
                 <FrameLayout
+                    android:id="@+id/onMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="10dp">
@@ -88,6 +89,7 @@
                         android:src="@drawable/ic_message" />
 
                     <View
+                        android:id="@+id/dot"
                         android:layout_width="6dp"
                         android:layout_height="6dp"
                         android:layout_gravity="right"
@@ -169,7 +171,28 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_mini" />
                 </FrameLayout>
+                <FrameLayout
+                    android:id="@+id/onMessageButton"
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/selector_layout_pressed">
 
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="5dp"
+                        android:src="@drawable/message" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:text="消息"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_mini" />
+                </FrameLayout>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

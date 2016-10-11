@@ -124,8 +124,11 @@ public class GoodsFragment extends BaseFragment {
     String mChildPrice;
     String mPoint;
     String goodsID;
-    String goodsUrl = "http://www.zzumall.com/index.php/Mobile/Goods/goods_detail_m.html?id=";
-    String travelUrl = "http://www.zzumall.com/index.php/Mobile/Tourism/tourism_detail_m.html?id=";
+    String goodsUrl = "http://www.zzumall.com/index.php/Mobile/Goods/goods_goods/id/";
+    String travelUrl = "http://www.zzumall.com/index.php/Mobile/Tourism/tourism_tourism/id/";
+    String userId;
+    //String goodsUrl = "http://www.zzumall.com/index.php/Mobile/Goods/goods_detail_m.html?id=";
+    //  String travelUrl = "http://www.zzumall.com/index.php/Mobile/Tourism/tourism_detail_m.html?id=";
     String protocolUrl = "http://www.zzumall.com/index.php/Mobile/Tourism/lvyou_xieyi";
 
     @Click
@@ -256,10 +259,14 @@ public class GoodsFragment extends BaseFragment {
     private void umShare() {
         UMImage image = new UMImage(getActivity(), R.drawable.icon_logo);//资源文件
         String url;
-        if (currentType == TYPE_GOODS)
-            url = goodsUrl + mId;
-        else
-            url = travelUrl + mId;
+        if (currentType == TYPE_GOODS) {
+            url = goodsUrl + mId + "/pid/" + UserCenter.getInstance().getCurrentUserId() + ".html";
+        } else {
+            url = travelUrl + mId + "/pid/" + UserCenter.getInstance().getCurrentUserId() + ".html";
+        }
+
+        TOT(url);
+
         final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]
                 {
                         SHARE_MEDIA.WEIXIN,
@@ -337,7 +344,7 @@ public class GoodsFragment extends BaseFragment {
             }
         }
 
-        MallAndTravelModel.addShopCar(shopCallBack, mId, groupTitle, mPoint, mPrice,num+"");
+        MallAndTravelModel.addShopCar(shopCallBack, mId, groupTitle, mPoint, mPrice, num + "");
     }
 
 

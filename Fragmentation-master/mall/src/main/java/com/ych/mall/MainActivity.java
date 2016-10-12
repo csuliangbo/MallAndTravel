@@ -4,6 +4,7 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import me.yokeyword.fragmentation.SupportActivity;
 import me.yokeyword.fragmentation.SupportFragment;
@@ -155,8 +156,20 @@ public class MainActivity extends SupportActivity implements BaseLazyMainFragmen
             finish();
             return;
         }
+        if (e.getPosition()==-2)
+        {
+            if (!e.isBottomStatus())
+            {
+                mBottomBar.setVisibility(View.GONE);
+            }else
+                mBottomBar.setVisibility(View.VISIBLE);
+            return;
+        }
         mBottomBar.setCurrentItem(e.getPosition());
         EventBus.getDefault().post(new ClickEvent(e.getPosition()));
+        mBottomBar.setVisibility(View.VISIBLE);
+if (e.getPosition()==0)
+    mFragments[0].popToChild(ViewPagerFragment.class, false);
 
     }
 

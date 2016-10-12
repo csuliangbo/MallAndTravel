@@ -1,6 +1,7 @@
 package com.ych.mall.ui.first.child.childpager;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.ych.mall.bean.GoodsDetailBean;
 import com.ych.mall.bean.ParentBean;
 import com.ych.mall.bean.TravelDetailBean;
 import com.ych.mall.event.LoginEvent;
+import com.ych.mall.event.MainEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.MallAndTravelModel;
 import com.ych.mall.model.UserInfoModel;
@@ -100,9 +102,31 @@ public class GoodsFragment extends BaseFragment {
     TextView onCollect;
     @ViewById
     LinearLayout llNum;
+    @ViewById
+    LinearLayout travelButton;
+    @ViewById
+    TextView onTMain, onMain, onShop;
     private int numAdult;
     private int numChildren;
     private int num = 1;
+
+    @Click
+    void onTMain() {
+        back();
+EventBus.getDefault().post(new MainEvent(0));
+    }
+
+    @Click
+    void onMain() {
+        back();
+        EventBus.getDefault().post(new MainEvent(0));
+    }
+
+    @Click
+    void onShop() {
+        back();
+        EventBus.getDefault().post(new MainEvent(2));
+    }
 
     @Click
     void onProtocol() {
@@ -293,6 +317,9 @@ public class GoodsFragment extends BaseFragment {
 
     @AfterViews
     public void initView() {
+        MainEvent e = new MainEvent(-2);
+        e.setBottomStatus(false);
+        EventBus.getDefault().post(e);
         setTAG("goods");
         currentType = getArguments().getInt(KV.TYPE, TYPE_TRAVEL);
         mId = getArguments().getString(KV.ID);
@@ -331,8 +358,9 @@ public class GoodsFragment extends BaseFragment {
         city.setVisibility(View.GONE);
         packagell.setVisibility(View.VISIBLE);
         bottomLL.setVisibility(View.VISIBLE);
-        order.setVisibility(View.GONE);
+
         llPeopleNumber.setVisibility(View.GONE);
+        travelButton.setVisibility(View.GONE);
     }
 
     @Click
@@ -347,6 +375,21 @@ public class GoodsFragment extends BaseFragment {
         MallAndTravelModel.addShopCar(shopCallBack, mId, groupTitle, mPoint, mPrice, num + "");
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        MainEvent e = new MainEvent(-2);
+        e.setBottomStatus(true);
+        EventBus.getDefault().post(e);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MainEvent e = new MainEvent(-2);
+        e.setBottomStatus(true);
+        EventBus.getDefault().post(e);
+    }
 
     private void goods(GoodsDetailBean.GoodsDetailData t) {
         if (t == null)
@@ -356,6 +399,7 @@ public class GoodsFragment extends BaseFragment {
         sT(mTitle, t.getTitle());
         sT(mPriceNew, "￥" + t.getPrice_new());
         sT(mPriceOld, t.getPrice_old());
+        mPriceOld.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
         points.setText("送积分（" + t.getFanli_jifen() + "积分）");
         stock.setText("库存：" + t.getKucun() + "件");
         mPrice = t.getPrice_new();
@@ -374,7 +418,7 @@ public class GoodsFragment extends BaseFragment {
         datas = t.getTaocan();
         if (datas == null || datas.size() < 1)
             return;
-        mGroup.setVisibility(View.GONE);
+        mGroup.setText("选择套餐");
         List<String> tagDatas = new ArrayList<>();
         for (GoodsDetailBean.Taocan ta : datas) {
             tagDatas.add(ta.getGuige_title());
@@ -422,7 +466,7 @@ public class GoodsFragment extends BaseFragment {
         if (mDate == null)
             return;
         packagell.setVisibility(View.VISIBLE);
-        mGroup.setVisibility(View.GONE);
+        mGroup.setText("选择出发日期");
         List<String> tagDatas = new ArrayList<>();
         for (TravelDetailBean.Taocan tc : mDate) {
             tagDatas.add(tc.getChufa_date());

@@ -1,6 +1,7 @@
 package com.ych.mall.ui.first.child.childpager;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -108,6 +109,15 @@ public class GoodsFragment extends BaseFragment {
     void onProtocol() {
         web("http://www.zzumall.com/index.php/Mobile/Tourism/lvyou_xieyi");
     }
+
+    @Click
+    void onPhoneNumber() {
+        String phone = "021-52218886";
+        Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+phone));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
 
     List<GoodsDetailBean.Taocan> datas;
     List<TravelDetailBean.Taocan> mDate;

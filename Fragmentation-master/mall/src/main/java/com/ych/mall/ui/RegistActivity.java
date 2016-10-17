@@ -94,9 +94,9 @@ public class RegistActivity extends BaseActivity {
     void mGetCode() {
         if (isEmp(mPhone, "手机号不能为空"))
             return;
-        if (mGetCode.getText().equals("获取验证码"))
+        if (mGetCode.getText().equals("获取验证码")){
             handler.sendEmptyMessageDelayed(0x123, 1000);
-        LoginAndRegistModel.code(getT(mPhone));
+        LoginAndRegistModel.code(getT(mPhone));}
     }
 
     int time = 60;

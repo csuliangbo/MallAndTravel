@@ -17,7 +17,7 @@ import org.androidannotations.annotations.ViewById;
 /**
  * Created by Administrator on 2016/9/22.
  */
-@EActivity(R.layout.fragment_webview)
+@EActivity(R.layout.activity_web)
 public class WebViewActivity extends BaseActivity {
     @ViewById(R.id.webview)
     WebView webView;

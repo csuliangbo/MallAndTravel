@@ -162,6 +162,12 @@ public class MeFragment extends BaseFragment {
     }
 
     private void onGridClick(int position) {
+        if (position == iImg[7]) {
+            start(AdviseFragment.newInstance());
+        }
+        if (position == iImg[8]) {
+            start(AboutUsFragment.newInstance());
+        }
         if (judge())
             return;
         if (position == iImg[0]) {
@@ -186,12 +192,7 @@ public class MeFragment extends BaseFragment {
         if (position == iImg[6]) {
             start(MyFootFragment.newInstance());
         }
-        if (position == iImg[7]) {
-            start(AdviseFragment.newInstance());
-        }
-        if (position == iImg[8]) {
-            start(AboutUsFragment.newInstance());
-        }
+
     }
 
     private boolean judge() {

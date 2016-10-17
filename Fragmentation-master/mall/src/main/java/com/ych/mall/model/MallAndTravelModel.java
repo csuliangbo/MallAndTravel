@@ -9,6 +9,8 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.Call;
+
 /**
  * Created by ych on 2016/9/5.
  */
@@ -79,10 +81,10 @@ public class MallAndTravelModel {
     //商品列表
     public static void goodsList(StringCallback callback, int page, String id, int type) {
         HashMap<String, String> map = new HashMap<>();
-        if (type == 0)
+        //if (type == 0)
             HttpModel.newInstance(GOODS_LIST + "&id=" + id + "&page=" + (page + 1)).post(map, callback);
-        else
-            HttpModel.newInstance(GOODS_ONE + "&id=" + id + "&page=" + (page + 1)).post(map, callback);
+       // else
+            //HttpModel.newInstance(GOODS_ONE + "&id=" + id + "&page=" + (page + 1)).post(map, callback);
     }
 
     static String TRAVEL_LIST = urlTravel + "goods_list";
@@ -292,6 +294,24 @@ public class MallAndTravelModel {
         HashMap<String, String> map = new HashMap<>();
 
         HttpModel.newInstance(HOME_TRAVEL_URL + "&page=" + (page + 1) + "&pagesize=10").post(map, callback);
+    }
+
+    static String UPDATE = home + "get_version";
+
+    //升级
+    public static void update(String code, StringCallback callback) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("version_num", code);
+        map.put("app_type", "android");
+        HttpModel.newInstance(UPDATE).post(map, callback);
+    }
+
+    static String AD_TEXT = home + "gonggao";
+
+    //公告
+    public static void getAd(StringCallback callback) {
+        HashMap<String, String> map = new HashMap<>();
+        HttpModel.newInstance(AD_TEXT).post(map, callback);
     }
 
 }

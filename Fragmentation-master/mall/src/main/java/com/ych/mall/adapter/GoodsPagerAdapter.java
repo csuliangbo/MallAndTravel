@@ -29,8 +29,10 @@ public class GoodsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         if (position == 0)
             return GoodsFragment.newInstance(type, mId);
-        else
+        else if (position==1)
             return DetailFragment.newInstance(type,mId);
+        else
+            return CommentFragment.newInstance(type,mId);
 //        else if (position == 1)
 //            return DetailFragment.newInstance();
 //       else

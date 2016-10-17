@@ -1,16 +1,30 @@
 package com.ych.mall;
 import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
+
 import me.yokeyword.fragmentation.SupportActivity;
 import me.yokeyword.fragmentation.SupportFragment;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
+import okhttp3.Call;
+
+import com.ych.mall.bean.UpdateBean;
 import com.ych.mall.event.ClickEvent;
 import com.ych.mall.event.MainEvent;
+import com.ych.mall.model.Http;
+import com.ych.mall.model.MallAndTravelModel;
+import com.ych.mall.ui.LoginActivity_;
 import com.ych.mall.ui.base.BaseLazyMainFragment;
 import com.ych.mall.ui.first.FirstFragment;
 import com.ych.mall.ui.first.child.ViewPagerFragment;
@@ -22,6 +36,8 @@ import com.ych.mall.ui.third.ThridFragment;
 import com.ych.mall.ui.third.child.ShopCarFragment_;
 import com.ych.mall.widget.BottomBar;
 import com.ych.mall.widget.BottomBarTab;
+import com.zhy.http.okhttp.callback.StringCallback;
+
 import org.androidannotations.annotations.EActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -130,6 +146,8 @@ public class MainActivity extends SupportActivity implements BaseLazyMainFragmen
                 }
             }
         });
+
+        MallAndTravelModel.update("v"+getVersionCode(this),update);
     }
 
 
@@ -173,4 +191,65 @@ if (e.getPosition()==0)
 
     }
 
+    //版本号
+    public int getVersionCode(Context context) {
+        return getPackageInfo(context).versionCode;
+    }
+
+    private PackageInfo getPackageInfo(Context context) {
+        PackageInfo pi = null;
+
+        try {
+            PackageManager pm = context.getPackageManager();
+            pi = pm.getPackageInfo(context.getPackageName(),
+                    PackageManager.GET_CONFIGURATIONS);
+            return pi;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return pi;
+    }
+    StringCallback update=new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            UpdateBean bean= Http.model(UpdateBean.class,response);
+        try{
+            if (bean.getCode().equals("200"))
+            {
+                final String url=bean.getData().getUrl();
+                AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("发现有新版本");
+                builder.setMessage(bean.getData().getIntro());
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                });
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        link(url);
+                        finish();
+                    }
+                });
+                builder.setCancelable(false);
+                builder.show();
+            }
+        }catch (Exception e){}
+        }
+    };
+
+    private void link(String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
+    }
 }

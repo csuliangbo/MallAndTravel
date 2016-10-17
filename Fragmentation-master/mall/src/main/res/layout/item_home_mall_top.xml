@@ -43,7 +43,19 @@
             android:text="会员旅游"
             android:textColor="@drawable/selector_home_text_color" />
     </LinearLayout>
-    <!--分类栏-->
+ <com.ych.mall.widget.MyTextView
+     android:layout_width="match_parent"
+     android:layout_height="40dp"
+     android:textSize="15sp"
+     android:textColor="#FF0000"
+     android:id="@+id/adText"
+     android:background="#C9CDC8"
+     android:ellipsize="marquee"
+     android:singleLine="true"
+     android:gravity="center_vertical"
+     android:focusableInTouchMode="true"
+     android:marqueeRepeatLimit="marquee_forever"
+     />
     <!--中部广告-->
     <FrameLayout
         android:layout_width="match_parent"

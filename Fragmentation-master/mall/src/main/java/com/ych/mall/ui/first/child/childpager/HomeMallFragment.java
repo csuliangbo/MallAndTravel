@@ -1,7 +1,9 @@
 package com.ych.mall.ui.first.child.childpager;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.media.Image;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ import com.umeng.socialize.utils.Log;
 import com.ych.mall.R;
 import com.ych.mall.adapter.HomeMallAdapter;
 import com.ych.mall.adapter.HomeTravelAdapter;
+import com.ych.mall.bean.AdBean;
 import com.ych.mall.bean.HomeMallBean;
 import com.ych.mall.event.MainEvent;
 import com.ych.mall.event.MallAndTravelEvent;
@@ -45,6 +48,7 @@ import com.ych.mall.utils.KV;
 import com.ych.mall.utils.UserCenter;
 import com.ych.mall.widget.ClearEditText;
 import com.ych.mall.widget.MyScrollView;
+import com.ych.mall.widget.MyTextView;
 import com.ych.mall.widget.SlideShowView;
 import com.ych.mall.zxingcode.activity.CaptureActivity;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -76,6 +80,8 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
     MyScrollView mScroll;
     @ViewById
     LinearLayout mLL;
+
+    MyTextView adText;
     public final static int REQUEST_CODE = 123;
 
     HomeMallBean.Class mData;
@@ -103,6 +109,7 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
                 EventBus.getDefault().post(new MallAndTravelEvent(MallAndTravelEvent.TYPE_CHANGE, 1));
             }
         });
+        adText= (MyTextView) header.findViewById(R.id.adText);
         model = new RecyclerViewModel<>(getActivity(),
                 this,
                 list,
@@ -121,7 +128,7 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
 
             }
         });
-
+MallAndTravelModel.getAd(callback);
     }
 
 
@@ -159,11 +166,11 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
+        switch (requestCode) {
             case REQUEST_CODE:
-                    //跳转到扫一扫
-                    Intent intent = new Intent(getActivity(), CaptureActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE);
+                //跳转到扫一扫
+                Intent intent = new Intent(getActivity(), CaptureActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
                 break;
         }
     }
@@ -188,7 +195,7 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
 
     @Override
     public List<HomeMallBean.Class> getList(String str) {
-log(str);
+        log(str);
         HomeMallBean bean = Http.model(HomeMallBean.class, str);
         if (bean.getCode().equals("200")) {
             if (mBanner == null || mCenter == null || mHot == null) {
@@ -301,4 +308,20 @@ log(str);
     private void onWeb(String url) {
         startActivity(new Intent(getActivity(), WebViewActivity_.class).putExtra(KV.URL, url));
     }
+
+StringCallback callback=new StringCallback() {
+    @Override
+    public void onError(Call call, Exception e, int id) {
+
+    }
+
+    @Override
+    public void onResponse(String response, int id) {
+        AdBean bean=Http.model(AdBean.class,response);
+        if (bean.getCode().equals("200")) {
+            adText.setText(bean.getData());
+
+        }
+    }
+};
 }

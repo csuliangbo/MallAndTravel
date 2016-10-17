@@ -358,7 +358,8 @@ EventBus.getDefault().post(new MainEvent(0));
             });
             if (currentType == TYPE_GOODS) {
                 order.setVisibility(View.VISIBLE);
-                bottomLL.setVisibility(View.GONE);
+                bottomLL.setVisibility(View.GONE);   travelButton.setVisibility(View.VISIBLE);
+
             }
         }
 

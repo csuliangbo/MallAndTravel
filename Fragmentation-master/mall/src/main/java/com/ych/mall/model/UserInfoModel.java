@@ -353,6 +353,17 @@ public class UserInfoModel {
         HttpModel.newInstance(UPPAY).post(map, callback);
     }
 
+    //微信支付
+    static String WEIXIN = url + "wx_pay";
+
+    public static void weixinPay(StringCallback callback, String orderNum, String price) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("out_trade_no", orderNum);
+        map.put("total_fee", price);
+        map.put("body", "掌中游-商品/旅游支付");
+        HttpModel.newInstance(WEIXIN).post(map, callback);
+    }
+
     //确认收货
     static String GET_SHOP = url + "confirm";
 

@@ -37,6 +37,7 @@ import com.ych.mall.bean.PayBean;
 import com.ych.mall.bean.PayRequestBean;
 import com.ych.mall.bean.TravelRecverBean;
 import com.ych.mall.bean.UpPayRequestBean;
+import com.ych.mall.bean.WeixinPayBean;
 import com.ych.mall.event.AddressEvent;
 import com.ych.mall.event.LoginEvent;
 import com.ych.mall.model.Http;
@@ -288,7 +289,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             llA.setVisibility(View.GONE);
             addressLayout.setVisibility(View.GONE);
             llContact.setVisibility(View.VISIBLE);
-            if (UserCenter.getInstance().getCurrentUserGrade().equals("合伙人")){
+            if (UserCenter.getInstance().getCurrentUserGrade().equals("合伙人")) {
                 llB.setVisibility(View.GONE);
             }
         } else if (bundle.getInt("TYPE") == GoodsFragment.TYPE_GOODS) {
@@ -436,7 +437,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     @Override
     public List<PayBean.PayData> getList(String str) {
-        Log.e("KTY rsg",str);
+        Log.e("KTY rsg", str);
         PayBean bean = Http.model(PayBean.class, str);
         if (bean.getCode().equals("200")) {
             return bean.getData();
@@ -540,11 +541,27 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
                 if (cbPayAlipay.isChecked()) {
                     UserInfoModel.pay(payCallBack, bean.getData().get(0), totalPrice + "", goodTitle);
                 } else if (cbPayWeixin.isChecked()) {
-                    payWeixin();
+                    UserInfoModel.weixinPay(weixinCallBack, bean.getData().get(0), totalPrice + "");
                 } else if (cbPayUppay.isChecked()) {
                     // payUpPay("");
                     UserInfoModel.upPay(upPayCallBack, bean.getData().get(0), totalPrice + "");
                 }
+            }
+        }
+    };
+    //微信支付
+    private StringCallback weixinCallBack = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            TOT("网络连接失败");
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            Log.e("KTY weixin", response);
+            WeixinPayBean bean = Http.model(WeixinPayBean.class, response);
+            if (bean.getCode().equals("200")) {
+                payWeixin(bean.getData());
             }
         }
     };
@@ -571,8 +588,6 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     private String mMode = "00";//设置测试模式:01为测试 00为正式环境
 
     private void payUpPay(String tn) {
-//        HashMap<String, String> map = new HashMap<>();
-//        HttpModel.newInstance(TN_URL_01).post(map, upPayCallBack);
         UPPayAssistEx.startPay(PayActivity.this, null, null, tn, mMode);
 
     }
@@ -585,12 +600,9 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
         @Override
         public void onResponse(String response, int id) {
-//            Log.e("KTy tn", response);
-//            UPPayAssistEx.startPay(PayActivity.this, null, null, response, mMode);
+
             UpPayRequestBean bean = Http.model(UpPayRequestBean.class, response);
-            Log.e("KTy 123", response);
             if (bean.getCode().equals("200")) {
-                Log.e("KTY tn", bean.getData().getTn());
                 payUpPay(bean.getData().getTn());
             }
         }
@@ -683,7 +695,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
-                payWeixin();
+                //payWeixin();
             }
         });
         llAlipay.setOnClickListener(new View.OnClickListener() {
@@ -709,12 +721,24 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
      */
     private IWXAPI api;
 
-    private void payWeixin() {
-        api = WXAPIFactory.createWXAPI(this, "wxb4ba3c02aa476ea1");
-        String url = "http://wxpay.weixin.qq.com/pub_v2/app/app_pay.php?plat=android";
-        TOT("获取订单中...");
-        HashMap<String, String> map = new HashMap<>();
-        HttpModel.newInstance(url).post(map, callback);
+    private void payWeixin(WeixinPayBean.WeixinPayData data) {
+        api = WXAPIFactory.createWXAPI(this, data.getAppid(), false);
+        //"wxc60cf9d8efdbbd50"
+        api.registerApp(data.getAppid());
+        PayReq req = new PayReq();
+        req.appId = data.getAppid();
+        req.partnerId = data.getPartnerid();
+        req.prepayId = data.getPrepayid();
+        req.packageValue = "Sign=WXPay";
+        req.nonceStr = data.getNonce_str();
+        req.sign = data.getSign();
+        req.timeStamp = data.getTimestamp();
+
+        TOT("正在调起支付");
+        Log.e("KTY req", api.sendReq(req) + "");
+        api.sendReq(req);
+        Log.e("KTY wixindata", data.getAppid() + " partnerid: " + data.getPartnerid() + " prepayId: " + data.getPrepayid()
+                + " noncestr: " + data.getNoncestr() + " timestamp " + data.getTimestamp() + " sign: " + data.getSign());
 
     }
 
@@ -739,43 +763,6 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     }
 
-    StringCallback callback = new StringCallback() {
-        @Override
-        public void onError(Call call, Exception e, int id) {
-
-        }
-
-        @Override
-        public void onResponse(String response, int id) {
-            try {
-
-                Log.e("get server pay params:", response);
-                JSONObject json = new JSONObject(response);
-                if (null != json && !json.has("retcode")) {
-                    PayReq req = new PayReq();
-                    //req.appId = "wxf8b4f85f3a794e77";  // 测试用appId
-                    req.appId = json.getString("appid");
-                    req.partnerId = json.getString("partnerid");
-                    req.prepayId = json.getString("prepayid");
-                    req.nonceStr = json.getString("noncestr");
-                    req.timeStamp = json.getString("timestamp");
-                    req.packageValue = json.getString("package");
-                    req.sign = json.getString("sign");
-                    //req.extData = "app data"; // optional
-                    TOT("正常调起支付");
-                    // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
-                    api.sendReq(req);
-                } else {
-                    Log.d("PAY_GET", "返回错误" + json.getString("retmsg"));
-                    TOT("返回错误" + json.getString("retmsg"));
-                }
-
-            } catch (Exception e) {
-                Log.e("PAY_GET", "异常：" + e.getMessage());
-                TOT("异常：" + e.getMessage());
-            }
-        }
-    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

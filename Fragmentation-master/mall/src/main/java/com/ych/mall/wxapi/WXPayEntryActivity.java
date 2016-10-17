@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
@@ -25,7 +26,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weixin_pay_result);
-        api = WXAPIFactory.createWXAPI(this, "wxf8b4f85f3a794e77");
+        api = WXAPIFactory.createWXAPI(this, "wxc60cf9d8efdbbd50",false);
         api.handleIntent(getIntent(), this);
     }
 
@@ -42,7 +43,8 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
     @Override
     public void onResp(BaseResp resp) {
-
+        Toast.makeText(WXPayEntryActivity.this, resp.errStr + "  " + resp.errCode, Toast.LENGTH_SHORT).show();
+        Log.e("KTY", resp.errStr + "  " + resp.errCode);
         if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.app_tip);

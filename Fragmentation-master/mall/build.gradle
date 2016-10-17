@@ -46,6 +46,7 @@ dependencies {
     compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.0'
     compile files('libs/alipaySdk-20160825.jar')
     compile files('libs/UPPayPluginExPro.jar')
+    compile files('libs/jpush-android-2.2.0.jar')
 }
 
 apt {

@@ -354,7 +354,7 @@ public class UserInfoModel {
     }
 
     //微信支付
-    static String WEIXIN = url + "wx_pay";
+    static String WEIXIN = url + "wxpay";
 
     public static void weixinPay(StringCallback callback, String orderNum, String price) {
         HashMap<String, String> map = new HashMap<>();

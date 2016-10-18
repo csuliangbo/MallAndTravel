@@ -14,20 +14,54 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
     private static final String TAG = "MicroMsg.SDKSample.WXPayEntryActivity";
+    public static String PAY_STATE = "01";
 
     private IWXAPI api;
+    private TextView tvTitle;
+    private TextView tvConfirm;
+    private LinearLayout llSucced;
+    private LinearLayout llFail;
+    private ImageView onBack;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weixin_pay_result);
-        api = WXAPIFactory.createWXAPI(this, "wxc60cf9d8efdbbd50",false);
+        initWidght();
+        api = WXAPIFactory.createWXAPI(this, "wxc60cf9d8efdbbd50");
         api.handleIntent(getIntent(), this);
+    }
+
+    private void initWidght() {
+        tvTitle = (TextView) findViewById(R.id.tiTitle);
+        onBack = (ImageView) findViewById(R.id.onBack);
+        llFail = (LinearLayout) findViewById(R.id.ll_fail);
+        llSucced = (LinearLayout) findViewById(R.id.ll_succed);
+        tvConfirm = (TextView) findViewById(R.id.confirm);
+        onBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        tvConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -43,13 +77,18 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
     @Override
     public void onResp(BaseResp resp) {
-        Toast.makeText(WXPayEntryActivity.this, resp.errStr + "  " + resp.errCode, Toast.LENGTH_SHORT).show();
-        Log.e("KTY", resp.errStr + "  " + resp.errCode);
         if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.app_tip);
-            builder.setMessage(getString(R.string.pay_result_callback_msg, String.valueOf(resp.errCode)));
-            builder.show();
+            if (String.valueOf(resp.errCode).equals("0")) {
+                PAY_STATE = "00";
+            } else if (String.valueOf(resp.errCode).equals("-1")) {
+                llFail.setVisibility(View.VISIBLE);
+                llSucced.setVisibility(View.GONE);
+                PAY_STATE = "02";
+            } else if (String.valueOf(resp.errCode).equals("-2")) {
+                llFail.setVisibility(View.VISIBLE);
+                llSucced.setVisibility(View.GONE);
+                PAY_STATE = "03";
+            }
         }
     }
 }

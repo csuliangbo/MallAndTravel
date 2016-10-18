@@ -30,12 +30,14 @@ import com.ych.mall.bean.PayBean;
 import com.ych.mall.bean.PayRequestBean;
 import com.ych.mall.bean.PayResult;
 import com.ych.mall.bean.UpPayRequestBean;
+import com.ych.mall.bean.WeixinPayBean;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.HttpModel;
 import com.ych.mall.model.LoginAndRegistModel;
 import com.ych.mall.model.UserInfoModel;
 import com.ych.mall.ui.base.BaseActivity;
 import com.ych.mall.utils.UserCenter;
+import com.ych.mall.wxapi.WXPayEntryActivity;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.androidannotations.annotations.AfterViews;
@@ -153,7 +155,6 @@ public class BuyVipActivity extends BaseActivity {
 
         @Override
         public void onResponse(String response, int id) {
-            Log.e("KEy 123", response);
             CreateVipBean bean = Http.model(CreateVipBean.class, response);
             String code = bean.getCode();
             if (code.equals("401")) {
@@ -203,7 +204,7 @@ public class BuyVipActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
-                payWeixin();
+                UserInfoModel.weixinPay(weixinCallBack, orderNum, price);
             }
         });
         llAlipay.setOnClickListener(new View.OnClickListener() {
@@ -305,49 +306,35 @@ public class BuyVipActivity extends BaseActivity {
      */
     private IWXAPI api;
 
-    private void payWeixin() {
-        api = WXAPIFactory.createWXAPI(this, "wxb4ba3c02aa476ea1");
-        String url = "http://wxpay.weixin.qq.com/pub_v2/app/app_pay.php?plat=android";
-        TOT("获取订单中...");
-        HashMap<String, String> map = new HashMap<>();
-        HttpModel.newInstance(url).post(map, callback);
+    private void payWeixin(WeixinPayBean.WeixinPayData data) {
+        api = WXAPIFactory.createWXAPI(this, data.getAppid(), false);
+        //"wxc60cf9d8efdbbd50"
+        api.registerApp(data.getAppid());
+        PayReq req = new PayReq();
+        req.appId = data.getAppid();
+        req.partnerId = data.getPartnerid();
+        req.prepayId = data.getPrepayid();
+        req.packageValue = "Sign=WXPay";
+        req.nonceStr = data.getNoncestr();
+        req.sign = data.getSign();
+        req.timeStamp = data.getTimestamp();
+        TOT("正在调起支付");
+        api.sendReq(req);
 
     }
 
-    StringCallback callback = new StringCallback() {
+    //微信支付
+    private StringCallback weixinCallBack = new StringCallback() {
         @Override
         public void onError(Call call, Exception e, int id) {
-
+            TOT("网络连接失败");
         }
 
         @Override
         public void onResponse(String response, int id) {
-            try {
-
-                Log.e("get server pay params:", response);
-                JSONObject json = new JSONObject(response);
-                if (null != json && !json.has("retcode")) {
-                    PayReq req = new PayReq();
-                    //req.appId = "wxf8b4f85f3a794e77";  // 测试用appId
-                    req.appId = json.getString("appid");
-                    req.partnerId = json.getString("partnerid");
-                    req.prepayId = json.getString("prepayid");
-                    req.nonceStr = json.getString("noncestr");
-                    req.timeStamp = json.getString("timestamp");
-                    req.packageValue = json.getString("package");
-                    req.sign = json.getString("sign");
-                    //req.extData = "app data"; // optional
-                    TOT("正常调起支付");
-                    // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
-                    api.sendReq(req);
-                } else {
-                    Log.d("PAY_GET", "返回错误" + json.getString("retmsg"));
-                    TOT("返回错误" + json.getString("retmsg"));
-                }
-
-            } catch (Exception e) {
-                Log.e("PAY_GET", "异常：" + e.getMessage());
-                TOT("异常：" + e.getMessage());
+            WeixinPayBean bean = Http.model(WeixinPayBean.class, response);
+            if (bean.getCode().equals("200")) {
+                payWeixin(bean.getData());
             }
         }
     };
@@ -376,4 +363,16 @@ public class BuyVipActivity extends BaseActivity {
             }
         }
     };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (WXPayEntryActivity.PAY_STATE == "00") {
+            finish();
+        } else if (WXPayEntryActivity.PAY_STATE == "02") {
+            TOT("支付失败");
+        } else if (WXPayEntryActivity.PAY_STATE == "03") {
+            TOT("取消支付");
+        }
+    }
 }

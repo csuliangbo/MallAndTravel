@@ -86,7 +86,13 @@
         </activity>
         <activity
             android:name=".MainActivity_"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="wxc60cf9d8efdbbd50" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.AddressActivity_"></activity>
         <activity android:name=".ui.NewAddressActivity_"></activity>
         <activity android:name=".ui.fourth.MyinfoActivity_"></activity>
@@ -98,7 +104,13 @@
         <activity android:name=".ui.ForgetPwdActivity_"></activity>
         <activity android:name=".ui.SplashActivity_"></activity>
         <activity android:name=".ui.fourth.WebViewActivity_"></activity>
-        <activity android:name=".ui.BuyVipActivity_"></activity>
+        <activity android:name=".ui.BuyVipActivity_">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="wxc60cf9d8efdbbd50" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.ContactActivity_"></activity>
         <!-- 二维码 -->
         <activity android:name=".zxingcode.activity.CaptureActivity"></activity>
@@ -147,7 +159,10 @@
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind"></activity>
-        <activity android:name=".wxapi.WXPayEntryActivity"></activity>
+        <activity
+            android:name=".wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"></activity>
         <!--银联支付 -->
         <uses-library
             android:name="org.simalliance.openmobileapi"

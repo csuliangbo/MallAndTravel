@@ -55,6 +55,7 @@ import com.ych.mall.utils.KV;
 import com.ych.mall.utils.Tools;
 import com.ych.mall.utils.UserCenter;
 import com.ych.mall.widget.ClearEditText;
+import com.ych.mall.wxapi.WXPayEntryActivity;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -130,6 +131,8 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     TextView tvContactPhone;
     @ViewById(R.id.et_remark)
     EditText etRemark;
+    @ViewById(R.id.tiTitle)
+    TextView tiTitle;
 
     private String remark;
     private String cart_id;
@@ -271,6 +274,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     @AfterViews
     void init() {
+        tiTitle.setText("购买");
         EventBus.getDefault().register(this);
         Bundle bundle = getIntent().getExtras();
         goods_id = bundle.getString(KV.GOODS_ID);
@@ -437,7 +441,6 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     @Override
     public List<PayBean.PayData> getList(String str) {
-        Log.e("KTY rsg", str);
         PayBean bean = Http.model(PayBean.class, str);
         if (bean.getCode().equals("200")) {
             return bean.getData();
@@ -535,6 +538,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
         @Override
         public void onResponse(String response, int id) {
+            TOT("获取订单信息...");
             CreateOrderBean bean = Http.model(CreateOrderBean.class, response);
             if (bean.getCode().equals("200")) {
                 isPay = true;
@@ -558,7 +562,6 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
         @Override
         public void onResponse(String response, int id) {
-            Log.e("KTY weixin", response);
             WeixinPayBean bean = Http.model(WeixinPayBean.class, response);
             if (bean.getCode().equals("200")) {
                 payWeixin(bean.getData());
@@ -733,11 +736,22 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         req.nonceStr = data.getNoncestr();
         req.sign = data.getSign();
         req.timeStamp = data.getTimestamp();
-
+        TOT("正在调起支付");
         api.sendReq(req);
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (WXPayEntryActivity.PAY_STATE == "00") {
+            finish();
+        } else if (WXPayEntryActivity.PAY_STATE == "02") {
+            TOT("支付失败");
+        } else if (WXPayEntryActivity.PAY_STATE == "03") {
+            TOT("取消支付");
+        }
+    }
 
     @Override
     protected void onDestroy() {

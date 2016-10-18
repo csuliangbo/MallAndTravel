@@ -15,7 +15,7 @@ public class Http {
     public static final String GOODS_PIC_URL=PIC_URL+"goods/";
     public static final String CLASS_PIC_URL=PIC_URL+"class/";
     public static final String IMAGE_PIC_URL=PIC_URL+"image/";
-    public static final String SERVER_URL=URL_TEST;
+    public static final String SERVER_URL=URL_RELEASE;
 
     public static <T> T model(Class<T> clazz, String json) {
         try {

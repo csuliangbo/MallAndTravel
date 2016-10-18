@@ -317,11 +317,12 @@ StringCallback callback=new StringCallback() {
 
     @Override
     public void onResponse(String response, int id) {
-        AdBean bean=Http.model(AdBean.class,response);
-        if (bean.getCode().equals("200")) {
-            adText.setText(bean.getData());
-
-        }
+        Log.e("KTY ad",response);
+//        AdBean bean=Http.model(AdBean.class,response);
+//        if (bean.getCode().equals("200")) {
+//            adText.setText(bean.getData());
+//
+//        }
     }
 };
 }

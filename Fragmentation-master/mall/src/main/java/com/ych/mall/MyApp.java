@@ -24,8 +24,8 @@ public class MyApp extends Application {
         // QQ和Qzone appid appkey
         SharedPreferencesUtil util = new SharedPreferencesUtil();
         util.init(this);
-        //极光推送
-        JPushInterface.setDebugMode(true);//如果时正式版就改成false
-        JPushInterface.init(this);
+//        //极光推送
+//        JPushInterface.setDebugMode(true);//如果时正式版就改成false
+//        JPushInterface.init(this);
     }
 }

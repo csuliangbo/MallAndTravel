@@ -730,15 +730,11 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         req.partnerId = data.getPartnerid();
         req.prepayId = data.getPrepayid();
         req.packageValue = "Sign=WXPay";
-        req.nonceStr = data.getNonce_str();
+        req.nonceStr = data.getNoncestr();
         req.sign = data.getSign();
         req.timeStamp = data.getTimestamp();
 
-        TOT("正在调起支付");
-        Log.e("KTY req", api.sendReq(req) + "");
         api.sendReq(req);
-        Log.e("KTY wixindata", data.getAppid() + " partnerid: " + data.getPartnerid() + " prepayId: " + data.getPrepayid()
-                + " noncestr: " + data.getNoncestr() + " timestamp " + data.getTimestamp() + " sign: " + data.getSign());
 
     }
 

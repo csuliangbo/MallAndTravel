@@ -55,7 +55,6 @@ public class LogisticsFragment extends BaseFragment {
             TOT("没有订单号");
             return;
         }
-        Log.e("KTy or", orderNum);
         UserInfoModel.kuaidi(kuaidiCallback, orderNum);
     }
 
@@ -68,7 +67,6 @@ public class LogisticsFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response, int id) {
-            Log.e("KTY", response);
             LogisticsBean bean = Http.model(LogisticsBean.class, response);
             if (bean.getCode().equals("200")) {
                 TOT(bean.getMessage());

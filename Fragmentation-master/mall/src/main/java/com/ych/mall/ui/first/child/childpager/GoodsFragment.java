@@ -302,7 +302,7 @@ EventBus.getDefault().post(new MainEvent(0));
             url = travelUrl + mId + "/pid/" + UserCenter.getInstance().getCurrentUserId() + ".html";
         }
 
-        TOT(url);
+
 
         final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]
                 {
@@ -531,7 +531,6 @@ EventBus.getDefault().post(new MainEvent(0));
 
         @Override
         public void onResponse(String response, int id) {
-            Log.e("KTY@@@", response);
             if (mLoading != null)
                 mLoading.setVisibility(View.GONE);
             try {

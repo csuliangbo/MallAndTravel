@@ -30,6 +30,7 @@ import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.unionpay.UPPayAssistEx;
+import com.ych.mall.MyApp;
 import com.ych.mall.R;
 import com.ych.mall.bean.CreateOrderBean;
 import com.ych.mall.bean.GoodsDetailBean;
@@ -738,18 +739,21 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         req.timeStamp = data.getTimestamp();
         TOT("正在调起支付");
         api.sendReq(req);
+        MyApp.isPayActivity = true;
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (WXPayEntryActivity.PAY_STATE == "00") {
-            finish();
-        } else if (WXPayEntryActivity.PAY_STATE == "02") {
-            TOT("支付失败");
-        } else if (WXPayEntryActivity.PAY_STATE == "03") {
-            TOT("取消支付");
+        if (MyApp.isPayActivity) {
+            if (WXPayEntryActivity.PAY_STATE == "00") {
+                finish();
+            } else if (WXPayEntryActivity.PAY_STATE == "02") {
+                TOT("支付失败");
+            } else if (WXPayEntryActivity.PAY_STATE == "03") {
+                TOT("取消支付");
+            }
         }
     }
 
@@ -769,8 +773,6 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         //旅游联系方式
         tvContactName.setText(e.getName());
         tvContactPhone.setText(e.getPhone());
-
-
     }
 
 

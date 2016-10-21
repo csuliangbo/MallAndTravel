@@ -28,6 +28,15 @@ public class OrderBean extends ParentBean {
         private String orders_status;
 
         private String order_type;
+        private String pay_status;
+
+        public String getPay_status() {
+            return pay_status;
+        }
+
+        public void setPay_status(String pay_status) {
+            this.pay_status = pay_status;
+        }
 
         private List<Goods> goods;
 

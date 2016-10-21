@@ -14,6 +14,7 @@ import cn.jpush.android.api.JPushInterface;
 public class MyApp extends Application {
     public static boolean isRelease = false;
     private static final String TAG = "JPush";
+    public static boolean isPayActivity = true;
 
     @Override
     public void onCreate() {

@@ -109,7 +109,7 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
                 EventBus.getDefault().post(new MallAndTravelEvent(MallAndTravelEvent.TYPE_CHANGE, 1));
             }
         });
-        adText= (MyTextView) header.findViewById(R.id.adText);
+        adText = (MyTextView) header.findViewById(R.id.adText);
         model = new RecyclerViewModel<>(getActivity(),
                 this,
                 list,
@@ -128,7 +128,7 @@ public class HomeMallFragment extends BaseFragment implements RecyclerViewModel.
 
             }
         });
-MallAndTravelModel.getAd(callback);
+        MallAndTravelModel.getAd(callback);
     }
 
 
@@ -225,7 +225,7 @@ MallAndTravelModel.getAd(callback);
     String[] bannerUrl;
     SlideShowView sv;
 
-    private void setBanner(List<HomeMallBean.Banner> banner) {
+    private void setBanner(final List<HomeMallBean.Banner> banner) {
         mBanner = banner;
         sv = (SlideShowView) header.findViewById(R.id.banner);
         final TextView toTravel = (TextView) header.findViewById(R.id.toTravel);
@@ -243,10 +243,13 @@ MallAndTravelModel.getAd(callback);
         sv.setListener(new SlideShowView.OnVClick() {
             @Override
             public void Click(int position) {
-
                 String url = bannerUrl[position];
-                String id = url.split("=")[1];
-                ((SupportFragment) getParentFragment()).start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_GOODS, id));
+                try {
+                    String id = url.split("=")[1];
+                    ((SupportFragment) getParentFragment()).start(GoodsViewPagerFragment.newInstance(GoodsFragment.TYPE_GOODS, id));
+                } catch (Exception e) {
+                }
+
 
             }
         });
@@ -309,20 +312,20 @@ MallAndTravelModel.getAd(callback);
         startActivity(new Intent(getActivity(), WebViewActivity_.class).putExtra(KV.URL, url));
     }
 
-StringCallback callback=new StringCallback() {
-    @Override
-    public void onError(Call call, Exception e, int id) {
+    StringCallback callback = new StringCallback() {
+        @Override
+        public void onError(Call call, Exception e, int id) {
 
-    }
+        }
 
-    @Override
-    public void onResponse(String response, int id) {
-        Log.e("KTY ad",response);
-//        AdBean bean=Http.model(AdBean.class,response);
-//        if (bean.getCode().equals("200")) {
-//            adText.setText(bean.getData());
-//
-//        }
-    }
-};
+        @Override
+        public void onResponse(String response, int id) {
+
+            AdBean bean = Http.model(AdBean.class, response);
+            if (bean.getCode().equals("200")) {
+                adText.setText(bean.getData());
+
+            }
+        }
+    };
 }

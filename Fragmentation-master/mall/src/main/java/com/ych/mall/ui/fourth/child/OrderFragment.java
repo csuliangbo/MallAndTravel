@@ -1,19 +1,23 @@
 package com.ych.mall.ui.fourth.child;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -24,6 +28,7 @@ import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.unionpay.UPPayAssistEx;
+import com.ych.mall.MyApp;
 import com.ych.mall.R;
 import com.ych.mall.bean.AuthResult;
 import com.ych.mall.bean.OrderBean;
@@ -32,6 +37,8 @@ import com.ych.mall.bean.PayRequestBean;
 import com.ych.mall.bean.PayResult;
 import com.ych.mall.bean.UpPayRequestBean;
 import com.ych.mall.bean.WeixinPayBean;
+import com.ych.mall.event.AddressEvent;
+import com.ych.mall.event.RefundEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.HttpModel;
 import com.ych.mall.model.RecyclerViewModel;
@@ -40,6 +47,7 @@ import com.ych.mall.model.YViewHolder;
 import com.ych.mall.ui.base.BaseFragment;
 import com.ych.mall.utils.KV;
 import com.ych.mall.utils.Tools;
+import com.ych.mall.utils.UserCenter;
 import com.ych.mall.wxapi.WXPayEntryActivity;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -47,6 +55,8 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -104,6 +114,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
     void initView() {
         //R.layout.item_order
         setTAG("order");
+        EventBus.getDefault().register(this);
         currentType = getArguments().getInt(KV.TYPE, TYPE_ALL);
         tiTitle.setText("我的订单");
         mTab.addTab(mTab.newTab().setText("全部"));
@@ -158,6 +169,19 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
         });
 
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onEvent(RefundEvent e) {
+        if (e.isRefund()) {
+            model.onRefresh();
+        }
     }
 
     @Override
@@ -223,70 +247,67 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
         btnRight.setVisibility(View.GONE);
         switch (type) {
             case 0:
-                typeText = "待付款";
-                btnLeft.setVisibility(View.VISIBLE);
-                btnMiddle.setVisibility(View.VISIBLE);
-                btnLeft.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
-                btnMiddle.setBackgroundResource(R.drawable.shape_green_dark_5dp);
-                btnMiddle.setTextColor(getResources().getColor(R.color.white));
-                btnLeft.setTextColor(getResources().getColor(R.color.gray2));
-                btnLeft.setText(cancleOreder);
-                btnMiddle.setText(nowPay);
-                btnLeft.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        UserInfoModel.cancelOrder(cancelCallBack, id);
-                    }
-                });
-                btnMiddle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        payChoosePopupwindow(t.getOrders_num(), t.getPrice_shiji(), "shangpin");
-
-                    }
-                });
-                break;
-            case 1:
-                typeText = "待发货";
-                btnLeft.setVisibility(View.GONE);
-                btnMiddle.setVisibility(View.GONE);
-                btnRight.setVisibility(View.GONE);
-                btnLeft.setBackgroundResource(R.drawable.shape_green_dark_5dp);
-                btnMiddle.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
-                btnRight.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
-                btnMiddle.setTextColor(getResources().getColor(R.color.gray2));
-                btnRight.setTextColor(getResources().getColor(R.color.gray2));
-                btnLeft.setTextColor(getResources().getColor(R.color.white));
-                btnLeft.setText(getShop);
-                btnMiddle.setText(refund);
-                btnRight.setText(logistics);
-                btnLeft.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        UserInfoModel.getShop(getShopCallBack, id);
-                    }
-                });
-                btnMiddle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (type == 3) {
-                            start(SalesReturn.newInstance(id));
-                        } else {
-                            TOT("还未签收，不能退货");
+                if (t.getPay_status().equals("0")) {
+                    typeText = "待付款";
+                    btnLeft.setVisibility(View.VISIBLE);
+                    btnMiddle.setVisibility(View.VISIBLE);
+                    btnLeft.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
+                    btnMiddle.setBackgroundResource(R.drawable.shape_green_dark_5dp);
+                    btnMiddle.setTextColor(getResources().getColor(R.color.white));
+                    btnLeft.setTextColor(getResources().getColor(R.color.gray2));
+                    btnLeft.setText(cancleOreder);
+                    btnMiddle.setText(nowPay);
+                    btnLeft.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            UserInfoModel.cancelOrder(cancelCallBack, id);
                         }
-                    }
-                });
-                btnRight.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        start(LogisticsFragment.newInstance(id));
-                    }
-                });
+                    });
+                    btnMiddle.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            payChoosePopupwindow(t.getOrders_num(), t.getPrice_shiji(), "shangpin");
+
+                        }
+                    });
+                } else if (t.getPay_status().equals("1")) {
+                    typeText = "待发货";
+                    btnLeft.setVisibility(View.GONE);
+                    btnMiddle.setVisibility(View.VISIBLE);
+                    btnRight.setVisibility(View.GONE);
+                    btnLeft.setBackgroundResource(R.drawable.shape_green_dark_5dp);
+                    btnMiddle.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
+                    btnRight.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
+                    btnMiddle.setTextColor(getResources().getColor(R.color.gray2));
+                    btnRight.setTextColor(getResources().getColor(R.color.gray2));
+                    btnLeft.setTextColor(getResources().getColor(R.color.white));
+                    btnLeft.setText(getShop);
+                    btnMiddle.setText(refund);
+                    btnRight.setText(logistics);
+                    btnLeft.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            inputPassword(id);
+                        }
+                    });
+                    btnMiddle.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            start(SalesReturn.newInstance(id));
+                        }
+                    });
+                    btnRight.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            start(LogisticsFragment.newInstance(id));
+                        }
+                    });
+                }
                 break;
             case 2:
                 typeText = "已发货";
                 btnLeft.setVisibility(View.VISIBLE);
-                btnMiddle.setVisibility(View.GONE);
+                btnMiddle.setVisibility(View.VISIBLE);
                 btnRight.setVisibility(View.VISIBLE);
                 btnLeft.setBackgroundResource(R.drawable.shape_green_dark_5dp);
                 btnMiddle.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
@@ -300,17 +321,13 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 btnLeft.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        UserInfoModel.getShop(getShopCallBack, id);
+                        inputPassword(id);
                     }
                 });
                 btnMiddle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (type == 3) {
-                            start(SalesReturn.newInstance(id));
-                        } else {
-                            TOT("还未签收，不能退货");
-                        }
+                        start(SalesReturn.newInstance(id));
                     }
                 });
                 btnRight.setOnClickListener(new View.OnClickListener() {
@@ -323,7 +340,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
             case 3:
                 typeText = "已签收";
                 btnLeft.setVisibility(View.GONE);
-                btnMiddle.setVisibility(View.VISIBLE);
+                btnMiddle.setVisibility(View.GONE);
                 btnRight.setVisibility(View.VISIBLE);
                 btnLeft.setBackgroundResource(R.drawable.shape_green_dark_5dp);
                 btnMiddle.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
@@ -337,17 +354,13 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 btnLeft.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        UserInfoModel.getShop(getShopCallBack, id);
+                        inputPassword(id);
                     }
                 });
                 btnMiddle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (type == 3) {
-                            start(SalesReturn.newInstance(id));
-                        } else {
-                            TOT("还未签收，不能退货");
-                        }
+                        start(SalesReturn.newInstance(id));
                     }
                 });
                 btnRight.setOnClickListener(new View.OnClickListener() {
@@ -613,6 +626,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
         req.timeStamp = data.getTimestamp();
         TOT("正在调起支付");
         api.sendReq(req);
+        MyApp.isPayActivity = false;
 
     }
 
@@ -663,4 +677,49 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
             holder.setText(R.id.name, goods.getGoods_title());
         }
     }
+
+    private void inputPassword(final String id) {
+        final EditText etInput = new EditText(getActivity());
+        etInput.setTransformationMethod(PasswordTransformationMethod.getInstance()); //设置为密码输入框
+        AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle("请输入密码").setView(etInput)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String input = etInput.getText().toString();
+                        if (!TextUtils.isEmpty(input)) {
+                            confirmGetGood(id, input);
+                        } else {
+                            TOT("密码输入错误");
+                        }
+
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create();
+        dialog.show();
+    }
+
+    private void confirmGetGood(final String id, final String passWord) {
+        AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle("确认收货")
+                .setMessage("确认收货之后，将无法退货，您确定吗")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        UserInfoModel.getShop(getShopCallBack, id, UserCenter.getInstance().getCurrentUserPhone(), passWord);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create();
+        dialog.show();
+    }
+
+
 }

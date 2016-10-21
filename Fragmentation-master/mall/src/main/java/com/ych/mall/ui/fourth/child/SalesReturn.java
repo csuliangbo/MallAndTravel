@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.ych.mall.R;
 import com.ych.mall.bean.ParentBean;
+import com.ych.mall.event.RefundEvent;
 import com.ych.mall.model.Http;
 import com.ych.mall.model.UserInfoModel;
 import com.ych.mall.ui.base.BaseFragment;
@@ -18,6 +19,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.EventBus;
 
 import okhttp3.Call;
 
@@ -54,7 +56,6 @@ public class SalesReturn extends BaseFragment {
     void initData() {
         orderNum = getArguments().getString(KV.ORDER_NUM);
         tvTitle.setText("退货申请");
-        Log.e("KTY orderNum", orderNum);
     }
 
     //退货申请
@@ -66,10 +67,10 @@ public class SalesReturn extends BaseFragment {
 
         @Override
         public void onResponse(String response, int id) {
-            Log.e("KTY tuihuo", response);
             ParentBean bean = Http.model(ParentBean.class, response);
             if (bean.getCode().equals("200")) {
                 TOT(bean.getMessage());
+                EventBus.getDefault().post(new RefundEvent(true));
                 back();
             } else {
                 TOT(bean.getMessage());

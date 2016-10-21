@@ -367,10 +367,10 @@ public class UserInfoModel {
     //确认收货
     static String GET_SHOP = url + "confirm";
 
-    public static void getShop(StringCallback callback, String id, String mobile, String password) {
+    public static void getShop(StringCallback callback, String id, String password) {
         HashMap<String, String> map = new HashMap<>();
         map.put("orders_num", id);
-        map.put("mobile", mobile);
+        map.put("id", UserCenter.getInstance().getCurrentUserId());
         map.put("password", password);
         HttpModel.newInstance(GET_SHOP).post(map, callback);
     }

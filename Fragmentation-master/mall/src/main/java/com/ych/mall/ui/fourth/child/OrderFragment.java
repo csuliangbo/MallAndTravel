@@ -709,7 +709,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        UserInfoModel.getShop(getShopCallBack, id, UserCenter.getInstance().getCurrentUserPhone(), passWord);
+                        UserInfoModel.getShop(getShopCallBack, id, passWord);
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {

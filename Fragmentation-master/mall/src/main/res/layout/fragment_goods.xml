@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -103,6 +104,7 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:src="@drawable/tel" />
+
                     <TextView
                         android:id="@+id/onPhoneNumber"
                         android:layout_width="wrap_content"
@@ -210,8 +212,8 @@
                     android:id="@+id/mGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="选择套餐：无"
                     android:layout_marginBottom="10dp"
+                    android:text="选择套餐：无"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -292,58 +294,53 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:weightSum="7">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="成人：" />
+
+                    <TextView
+                        android:id="@+id/tv_sub_num_adult"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/textview_shape"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="-" />
+
+                    <TextView
+                        android:id="@+id/tv_num_adult"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/textview_shape"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="0" />
+
+                    <TextView
+                        android:id="@+id/tv_add_num_adult"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/textview_shape"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="+" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="5">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="成人：" />
-
-                        <TextView
-                            android:id="@+id/tv_sub_num_adult"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="@drawable/textview_shape"
-                            android:gravity="center"
-                            android:padding="10dp"
-                            android:text="-" />
-
-                        <TextView
-                            android:id="@+id/tv_num_adult"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/textview_shape"
-                            android:gravity="center"
-                            android:padding="10dp"
-                            android:text="0" />
-
-                        <TextView
-                            android:id="@+id/tv_add_num_adult"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/textview_shape"
-                            android:gravity="center"
-                            android:padding="10dp"
-                            android:text="+" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:gravity="center"
                         android:orientation="horizontal">
 
                         <TextView
@@ -357,24 +354,26 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="元/人（单价）"
-                            android:textSize="@dimen/text_xlarge" />
+                            android:text="元/人(单价)"
+                            android:textSize="@dimen/text_mid" />
                     </LinearLayout>
                 </LinearLayout>
+
+
                 //儿童
 
                 <LinearLayout
                     android:id="@+id/ll_children"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:weightSum="5">
+                        android:weightSum="7">
 
                         <TextView
                             android:layout_width="0dp"
@@ -390,7 +389,7 @@
                             android:layout_weight="1"
                             android:background="@drawable/textview_shape"
                             android:gravity="center"
-                            android:padding="10dp"
+                            android:padding="5dp"
                             android:text="-" />
 
                         <TextView
@@ -401,7 +400,7 @@
                             android:layout_weight="1"
                             android:background="@drawable/textview_shape"
                             android:gravity="center"
-                            android:padding="10dp"
+                            android:padding="5dp"
                             android:text="0" />
 
                         <TextView
@@ -412,30 +411,33 @@
                             android:layout_weight="1"
                             android:background="@drawable/textview_shape"
                             android:gravity="center"
-                            android:padding="10dp"
+                            android:padding="5dp"
                             android:text="+" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/mPriceChildTV"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textColor="@color/text_red"
+                                android:textSize="@dimen/text_xlarge" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="元/人(单价)"
+                                android:textSize="@dimen/text_mid" />
+                        </LinearLayout>
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/mPriceChildTV"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textColor="@color/text_red"
-                            android:textSize="@dimen/text_xlarge" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="元/人（单价）"
-                            android:textSize="@dimen/text_xlarge" />
-                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

@@ -144,6 +144,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     private String realName;
     //商品
     private int num;
+    private String taocanName;
     //旅游
     private String number;
     private String mobile;
@@ -274,6 +275,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         Bundle bundle = getIntent().getExtras();
         goods_id = bundle.getString(KV.GOODS_ID);
         num = bundle.getInt("num");
+        taocanName = bundle.getString("Taocan");
         if (bundle.getInt("TYPE") == GoodsFragment.TYPE_TRAVEL) {
             isTravel = true;
             date = bundle.getString("Date");
@@ -423,7 +425,7 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     @Override
     public void getData(StringCallback callback, int page) {
         if (isPayNow) {
-            MallAndTravelModel.payNow(callback, goods_id, num + "");
+            MallAndTravelModel.payNow(callback, goods_id, num + "", taocanName);
         } else {
             MallAndTravelModel.settelAccounts(callback, cart_id);
         }

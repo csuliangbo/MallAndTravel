@@ -28,6 +28,7 @@ import com.ych.mall.ui.BuyVipActivity;
 import com.ych.mall.ui.BuyVipActivity_;
 import com.ych.mall.ui.LoginActivity_;
 import com.ych.mall.ui.base.BaseFragment;
+import com.ych.mall.ui.fourth.MessageActivity_;
 import com.ych.mall.ui.fourth.MyinfoActivity_;
 import com.ych.mall.utils.UserCenter;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -83,11 +84,14 @@ public class MeFragment extends BaseFragment {
 
     @Click
     void onMessage() {
-        start(MessageFragment.newInstance());
+        //start(MessageFragment.newInstance());
+        startActivity(new Intent(getActivity(), MessageActivity_.class));
     }
+
     @Click
-    void onMessageButton(){
-        start(MessageFragment.newInstance());
+    void onMessageButton() {
+        //start(MessageFragment.newInstance());
+        startActivity(new Intent(getActivity(), MessageActivity_.class));
     }
 
     @Click

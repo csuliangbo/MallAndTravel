@@ -1,1 +1,1 @@
-include ':fragmentation', ':fragmentation_swipeback', ':fragmenttest', ':mall', ':citypickerview', ':tag', ':lib-zxing', ':JPushExample(534538)'
+include ':fragmentation', ':fragmentation_swipeback', ':fragmenttest', ':mall', ':citypickerview', ':tag', ':lib-zxing', ':JPushExample'

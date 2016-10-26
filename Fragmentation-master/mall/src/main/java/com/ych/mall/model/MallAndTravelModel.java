@@ -82,9 +82,9 @@ public class MallAndTravelModel {
     public static void goodsList(StringCallback callback, int page, String id, int type) {
         HashMap<String, String> map = new HashMap<>();
         //if (type == 0)
-            HttpModel.newInstance(GOODS_LIST + "&id=" + id + "&page=" + (page + 1)).post(map, callback);
-       // else
-            //HttpModel.newInstance(GOODS_ONE + "&id=" + id + "&page=" + (page + 1)).post(map, callback);
+        HttpModel.newInstance(GOODS_LIST + "&id=" + id + "&page=" + (page + 1)).post(map, callback);
+        // else
+        //HttpModel.newInstance(GOODS_ONE + "&id=" + id + "&page=" + (page + 1)).post(map, callback);
     }
 
     static String TRAVEL_LIST = urlTravel + "goods_list";
@@ -199,13 +199,19 @@ public class MallAndTravelModel {
 
     static String PAY_NOW = urlGoods + "immediate_payment";
 
-    public static void payNow(StringCallback callback, String goodsId, String num) {
+    public static void payNow(StringCallback callback, String goodsId, String num, String taocan) {
         HashMap<String, String> map = new HashMap<>();
         map.put("user_id", UserCenter.getInstance().getCurrentUserId());
         map.put("goods_id", goodsId);
         if (!TextUtils.isEmpty(num)) {
             map.put("goods_num", num + "");
         }
+        if (TextUtils.isEmpty(taocan)) {
+            map.put("taocan", "");
+        } else {
+            map.put("taocan", taocan);
+        }
+
         HttpModel.newInstance(PAY_NOW).post(map, callback);
     }
 

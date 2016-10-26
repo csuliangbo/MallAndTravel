@@ -117,7 +117,7 @@ public class GoodsFragment extends BaseFragment {
     @Click
     void onTMain() {
         back();
-EventBus.getDefault().post(new MainEvent(0));
+        EventBus.getDefault().post(new MainEvent(0));
     }
 
     @Click
@@ -140,7 +140,7 @@ EventBus.getDefault().post(new MainEvent(0));
     @Click
     void onPhoneNumber() {
         String phone = "021-52218886";
-        Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+phone));
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -227,6 +227,7 @@ EventBus.getDefault().post(new MainEvent(0));
         Bundle bundle = new Bundle();
         bundle.putString(KV.GOODS_ID, mId);
         bundle.putInt("num", num);
+        bundle.putString("Taocan", groupTitle);
         bundle.putInt("TYPE", TYPE_GOODS);
         startActivity(new Intent(getActivity(), PayActivity_.class).putExtras(bundle));
     }
@@ -252,7 +253,7 @@ EventBus.getDefault().post(new MainEvent(0));
         Bundle bundle = new Bundle();
         bundle.putString(KV.GOODS_ID, mId);
         bundle.putInt("TYPE", TYPE_TRAVEL);
-        bundle.putString("Date", groupTitle);
+        bundle.putString("Date", groupTitle+"");
         bundle.putString("ChildrenPrice", mChildPrice);
         bundle.putString("AdultPrice", mPrice);
         bundle.putString("ChildrenNum", tvNumChildren.getText().toString());
@@ -301,7 +302,6 @@ EventBus.getDefault().post(new MainEvent(0));
         } else {
             url = travelUrl + mId + "/pid/" + UserCenter.getInstance().getCurrentUserId() + ".html";
         }
-
 
 
         final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]
@@ -358,7 +358,8 @@ EventBus.getDefault().post(new MainEvent(0));
             });
             if (currentType == TYPE_GOODS) {
                 order.setVisibility(View.VISIBLE);
-                bottomLL.setVisibility(View.GONE);   travelButton.setVisibility(View.VISIBLE);
+                bottomLL.setVisibility(View.GONE);
+                travelButton.setVisibility(View.VISIBLE);
 
             }
         }
@@ -385,7 +386,6 @@ EventBus.getDefault().post(new MainEvent(0));
                 return;
             }
         }
-
         MallAndTravelModel.addShopCar(shopCallBack, mId, groupTitle, mPoint, mPrice, num + "");
     }
 

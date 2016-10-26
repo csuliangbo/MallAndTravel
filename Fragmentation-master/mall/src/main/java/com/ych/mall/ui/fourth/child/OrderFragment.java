@@ -211,7 +211,6 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
 
     @Override
     public List<OrderBean.OrderData> getList(String str) {
-        Log.e("KTY order", str);
         log(str);
         if (mLoading != null)
             mLoading.setVisibility(View.GONE);

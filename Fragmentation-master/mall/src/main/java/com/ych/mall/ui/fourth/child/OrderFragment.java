@@ -211,6 +211,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
 
     @Override
     public List<OrderBean.OrderData> getList(String str) {
+        Log.e("KTY order", str);
         log(str);
         if (mLoading != null)
             mLoading.setVisibility(View.GONE);
@@ -266,7 +267,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                     btnMiddle.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            payChoosePopupwindow(t.getOrders_num(), t.getPrice_shiji(), "shangpin");
+                            payChoosePopupwindow(t.getOrders_num(), t.getPrice_sum(), "shangpin");
 
                         }
                     });
@@ -405,7 +406,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
             holder.setText(R.id.time, "下单时间:" + date);
         }
         holder.setText(R.id.status, typeText);
-        if (t.getPrice_shiji() == null || t.getPrice_shiji().equals("0")) {
+        if (t.getPrice_sum() == null || t.getPrice_sum().equals("0")) {
             double price = 0;
             if (t.getGoods() != null) {
                 for (int i = 0; i < t.getGoods().size(); i++) {
@@ -415,7 +416,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
             }
             holder.setText(R.id.priceAll, price + "");
         } else {
-            holder.setText(R.id.priceAll, t.getPrice_shiji());
+            holder.setText(R.id.priceAll, t.getPrice_sum());
         }
 
     }

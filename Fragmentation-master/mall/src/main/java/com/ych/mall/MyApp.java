@@ -1,6 +1,7 @@
 package com.ych.mall;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.umeng.socialize.PlatformConfig;
 import com.ych.mall.utils.SharedPreferencesUtil;
@@ -15,6 +16,7 @@ public class MyApp extends Application {
     public static boolean isRelease = false;
     private static final String TAG = "JPush";
     public static boolean isPayActivity = true;
+    public static String REGISTRATION_ID;
 
     @Override
     public void onCreate() {
@@ -25,8 +27,10 @@ public class MyApp extends Application {
         // QQ和Qzone appid appkey
         SharedPreferencesUtil util = new SharedPreferencesUtil();
         util.init(this);
-//        //极光推送
-//        JPushInterface.setDebugMode(true);//如果时正式版就改成false
-//        JPushInterface.init(this);
+        //极光推送
+        JPushInterface.setDebugMode(false);//如果时正式版就改成false
+        JPushInterface.init(this);
+        REGISTRATION_ID = JPushInterface.getRegistrationID(getApplicationContext());
+        Log.e("KTY****", REGISTRATION_ID + "");
     }
 }

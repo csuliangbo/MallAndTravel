@@ -21,7 +21,7 @@ public class OrderBean extends ParentBean {
 
         private String orders_num;
 
-        private String price_shiji;
+        private String price_sum;
 
         private String create_time;
 
@@ -29,16 +29,9 @@ public class OrderBean extends ParentBean {
 
         private String order_type;
         private String pay_status;
-
-        public String getPay_status() {
-            return pay_status;
-        }
-
-        public void setPay_status(String pay_status) {
-            this.pay_status = pay_status;
-        }
-
         private List<Goods> goods;
+        private String use_jf_limit;
+        private String use_jf_currency;
 
         public String getId() {
             return id;
@@ -56,12 +49,12 @@ public class OrderBean extends ParentBean {
             this.orders_num = orders_num;
         }
 
-        public String getPrice_shiji() {
-            return price_shiji;
+        public String getPrice_sum() {
+            return price_sum;
         }
 
-        public void setPrice_shiji(String price_shiji) {
-            this.price_shiji = price_shiji;
+        public void setPrice_sum(String price_sum) {
+            this.price_sum = price_sum;
         }
 
         public String getCreate_time() {
@@ -88,6 +81,14 @@ public class OrderBean extends ParentBean {
             this.order_type = order_type;
         }
 
+        public String getPay_status() {
+            return pay_status;
+        }
+
+        public void setPay_status(String pay_status) {
+            this.pay_status = pay_status;
+        }
+
         public List<Goods> getGoods() {
             return goods;
         }
@@ -96,7 +97,21 @@ public class OrderBean extends ParentBean {
             this.goods = goods;
         }
 
+        public String getUse_jf_limit() {
+            return use_jf_limit;
+        }
 
+        public void setUse_jf_limit(String use_jf_limit) {
+            this.use_jf_limit = use_jf_limit;
+        }
+
+        public String getUse_jf_currency() {
+            return use_jf_currency;
+        }
+
+        public void setUse_jf_currency(String use_jf_currency) {
+            this.use_jf_currency = use_jf_currency;
+        }
     }
 
     public class Goods {

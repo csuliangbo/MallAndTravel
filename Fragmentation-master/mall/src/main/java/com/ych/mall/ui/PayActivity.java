@@ -2,7 +2,6 @@ package com.ych.mall.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,17 +12,12 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.alipay.sdk.app.PayTask;
 import com.tencent.mm.sdk.modelpay.PayReq;
@@ -139,8 +133,8 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
     private String cart_id;
     private String goods_id;
     private boolean isPayNow = false;
-    private Double totalPrice = 0.0D;
-    private Double payPrice = 0.0D;
+    private Double totalPrice = 0.0D;//减去积分应付价格
+    private Double payPrice = 0.0D;//原始应付价格
     private Double fanli_jifen;
     private String date;
     private boolean isTravel = false;
@@ -516,7 +510,6 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         }
         tvPayPrice.setText("￥" + totalPrice);
         if (isTravel) {
-            Log.e("ket", "payprice " + payPrice + " totalprice " + totalPrice + " jifenB " + jifenB + "  " + remark);
             MallAndTravelModel.createTourOrder(createCallback, payPrice + "", totalPrice + "", realName,
                     mobile, number, jifenTravelTotal, goods_id, jifenB, date, childrenNum, childrenPrice,
                     adultNum, adultPrice, remark
@@ -685,41 +678,6 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
         }
     }
 
-    private void payChoosePopupwindow(final String orderInfo) {
-
-        View popupWindow_view = getLayoutInflater().inflate(R.layout.item_popupwindow_pay, null, false);
-        final PopupWindow popupWindow = new PopupWindow(popupWindow_view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
-        popupWindow.showAtLocation(llA, Gravity.BOTTOM, 0, 0);
-        // 实例化一个ColorDrawable颜色为半透明
-        ColorDrawable dw = new ColorDrawable(0xb0000000);
-        popupWindow.setBackgroundDrawable(dw);
-        LinearLayout llWeixin = (LinearLayout) popupWindow_view.findViewById(R.id.ll_weixin);
-        LinearLayout llAlipay = (LinearLayout) popupWindow_view.findViewById(R.id.ll_alipay);
-        llWeixin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-                //payWeixin();
-            }
-        });
-        llAlipay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-                payInerface(orderInfo);
-            }
-        });
-        popupWindow_view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (popupWindow != null && popupWindow.isShowing()) {
-                    popupWindow.dismiss();
-                }
-                return false;
-            }
-        });
-    }
-
     /**
      * 微信支付
      */
@@ -727,7 +685,6 @@ public class PayActivity extends BaseActivity implements RecyclerViewModel.RMode
 
     private void payWeixin(WeixinPayBean.WeixinPayData data) {
         api = WXAPIFactory.createWXAPI(this, data.getAppid(), false);
-        //"wxc60cf9d8efdbbd50"
         api.registerApp(data.getAppid());
         PayReq req = new PayReq();
         req.appId = data.getAppid();

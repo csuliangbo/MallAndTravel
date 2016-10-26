@@ -1,30 +1,30 @@
 [
     {
-        "merged": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\JPushExample(534538)\\build\\intermediates\\res\\merged\\debug\\layout\\customer_notitfication_layout.xml",
-        "source": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\JPushExample(534538)\\res\\layout\\customer_notitfication_layout.xml"
+        "merged": "C:\\Users\\ych\\Desktop\\Mall\\MallAndTravel\\Fragmentation-master\\JPushExample(534538)\\build\\intermediates\\res\\merged\\debug\\layout\\jpush_popwin_layout.xml",
+        "source": "C:\\Users\\ych\\Desktop\\Mall\\MallAndTravel\\Fragmentation-master\\JPushExample(534538)\\res\\layout\\jpush_popwin_layout.xml"
     },
     {
-        "merged": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\JPushExample(534538)\\build\\intermediates\\res\\merged\\debug\\layout\\customer_notitfication_layout_one.xml",
-        "source": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\JPushExample(534538)\\res\\layout\\customer_notitfication_layout_one.xml"
+        "merged": "C:\\Users\\ych\\Desktop\\Mall\\MallAndTravel\\Fragmentation-master\\JPushExample(534538)\\build\\intermediates\\res\\merged\\debug\\layout\\main.xml",
+        "source": "C:\\Users\\ych\\Desktop\\Mall\\MallAndTravel\\Fragmentation-master\\JPushExample(534538)\\res\\layout\\main.xml"
     },
     {
-        "merged": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\JPushExample(534538)\\build\\intermediates\\res\\merged\\debug\\layout\\main.xml",
-        "source": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\JPushExample(534538)\\res\\layout\\main.xml"
+        "merged": "C:\\Users\\ych\\Desktop\\Mall\\MallAndTravel\\Fragmentation-master\\JPushExample(534538)\\build\\intermediates\\res\\merged\\debug\\layout\\customer_notitfication_layout_one.xml",
+        "source": "C:\\Users\\ych\\Desktop\\Mall\\MallAndTravel\\Fragmentation-master\\JPushExample(534538)\\res\\layout\\customer_notitfication_layout_one.xml"
     },
     {
-        "merged": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\JPushExample(534538)\\build\\intermediates\\res\\merged\\debug\\layout\\jpush_webview_layout.xml",
-        "source": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\JPushExample(534538)\\res\\layout\\jpush_webview_layout.xml"
+        "merged": "C:\\Users\\ych\\Desktop\\Mall\\MallAndTravel\\Fragmentation-master\\JPushExample(534538)\\build\\intermediates\\res\\merged\\debug\\layout\\set_push_time.xml",
+        "source": "C:\\Users\\ych\\Desktop\\Mall\\MallAndTravel\\Fragmentation-master\\JPushExample(534538)\\res\\layout\\set_push_time.xml"
     },
     {
-        "merged": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\JPushExample(534538)\\build\\intermediates\\res\\merged\\debug\\layout\\jpush_popwin_layout.xml",
-        "source": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\JPushExample(534538)\\res\\layout\\jpush_popwin_layout.xml"
+        "merged": "C:\\Users\\ych\\Desktop\\Mall\\MallAndTravel\\Fragmentation-master\\JPushExample(534538)\\build\\intermediates\\res\\merged\\debug\\layout\\jpush_webview_layout.xml",
+        "source": "C:\\Users\\ych\\Desktop\\Mall\\MallAndTravel\\Fragmentation-master\\JPushExample(534538)\\res\\layout\\jpush_webview_layout.xml"
     },
     {
-        "merged": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\JPushExample(534538)\\build\\intermediates\\res\\merged\\debug\\layout\\set_push_time.xml",
-        "source": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\JPushExample(534538)\\res\\layout\\set_push_time.xml"
+        "merged": "C:\\Users\\ych\\Desktop\\Mall\\MallAndTravel\\Fragmentation-master\\JPushExample(534538)\\build\\intermediates\\res\\merged\\debug\\layout\\push_set_dialog.xml",
+        "source": "C:\\Users\\ych\\Desktop\\Mall\\MallAndTravel\\Fragmentation-master\\JPushExample(534538)\\res\\layout\\push_set_dialog.xml"
     },
     {
-        "merged": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\JPushExample(534538)\\build\\intermediates\\res\\merged\\debug\\layout\\push_set_dialog.xml",
-        "source": "C:\\Users\\Administrator\\Desktop\\MallAndTravel-master\\Fragmentation-master\\JPushExample(534538)\\res\\layout\\push_set_dialog.xml"
+        "merged": "C:\\Users\\ych\\Desktop\\Mall\\MallAndTravel\\Fragmentation-master\\JPushExample(534538)\\build\\intermediates\\res\\merged\\debug\\layout\\customer_notitfication_layout.xml",
+        "source": "C:\\Users\\ych\\Desktop\\Mall\\MallAndTravel\\Fragmentation-master\\JPushExample(534538)\\res\\layout\\customer_notitfication_layout.xml"
     }
 ]

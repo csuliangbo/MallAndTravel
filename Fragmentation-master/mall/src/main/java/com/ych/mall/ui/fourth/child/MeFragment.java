@@ -30,6 +30,8 @@ import com.ych.mall.ui.LoginActivity_;
 import com.ych.mall.ui.base.BaseFragment;
 import com.ych.mall.ui.fourth.MessageActivity_;
 import com.ych.mall.ui.fourth.MyinfoActivity_;
+import com.ych.mall.ui.fourth.WebViewActivity_;
+import com.ych.mall.utils.KV;
 import com.ych.mall.utils.UserCenter;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -67,7 +69,7 @@ public class MeFragment extends BaseFragment {
     FrameLayout onComment;
     String[] iName = new String[]{
             "个人信息", "账户管理", "会员等级", "订单管理", "我的收藏", "分享掌中游", "我的足迹", "意见反馈"
-            , "关于我们"
+            , "关于我们", "客服"
     };
     //图片集
     int[] iImg = new int[]{
@@ -79,7 +81,8 @@ public class MeFragment extends BaseFragment {
             R.drawable.ic_me_item6,
             R.drawable.ic_me_item7,
             R.drawable.icon_advice,
-            R.drawable.icon_about_us
+            R.drawable.icon_about_us,
+            R.drawable.goods_kf
     };
 
     @Click
@@ -171,6 +174,9 @@ public class MeFragment extends BaseFragment {
         }
         if (position == iImg[8]) {
             start(AboutUsFragment.newInstance());
+        }
+        if (position == iImg[9]) {
+            web("http://kefu.easemob.com/webim/im.html?tenantId=29457");
         }
         if (judge())
             return;
@@ -279,6 +285,10 @@ public class MeFragment extends BaseFragment {
             });
         }
     };
+
+    void web(String url) {
+        startActivity(new Intent(getActivity(), WebViewActivity_.class).putExtra(KV.URL, url));
+    }
 
     //重新获取信息
     @Subscribe

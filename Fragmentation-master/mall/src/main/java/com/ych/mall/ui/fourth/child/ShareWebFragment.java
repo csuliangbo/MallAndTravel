@@ -29,19 +29,22 @@ public class ShareWebFragment extends BaseFragment {
     @ViewById(R.id.webview)
     ImageView webView;
     private String url;
-@ViewById
-    TextView tiText,tiTitle;
+    @ViewById
+    TextView tiText, tiTitle;
+
     @Click
-    void onBack(){
+    void onBack() {
         back();
     }
+
     @Click
-    void tiText(){
+    void tiText() {
         umShare(url);
     }
+
     public static ShareWebFragment newInstance(String url) {
         Bundle bundle = new Bundle();
-        bundle.putString(KV.URL,url);
+        bundle.putString(KV.URL, url);
         ShareWebFragment fragment = new ShareWebFragment_();
         fragment.setArguments(bundle);
         return fragment;
@@ -55,6 +58,7 @@ public class ShareWebFragment extends BaseFragment {
         tiTitle.setText("我的二维码");
         tiText.setVisibility(View.VISIBLE);
     }
+
     UMShareListener umShareListener = new UMShareListener() {
         @Override
         public void onResult(SHARE_MEDIA platform) {

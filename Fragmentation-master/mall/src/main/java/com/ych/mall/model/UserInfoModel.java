@@ -194,10 +194,10 @@ public class UserInfoModel {
     //查看消息
     static String MESSAGE = url + "news";
 
-    public static void message(StringCallback callback) {
+    public static void message(StringCallback callback, int page) {
         HashMap<String, String> map = new HashMap<>();
         map.put("id", UserCenter.getInstance().getCurrentUserId());
-        HttpModel.newInstance(MESSAGE).post(map, callback);
+        HttpModel.newInstance(MESSAGE + "&page=" + (page + 1) + "&pagesize=10").post(map, callback);
     }
 
     static String MY_FOOT = url + "person_footprint";

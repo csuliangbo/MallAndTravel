@@ -31,6 +31,6 @@ public class MyApp extends Application {
         JPushInterface.setDebugMode(false);//如果时正式版就改成false
         JPushInterface.init(this);
         REGISTRATION_ID = JPushInterface.getRegistrationID(getApplicationContext());
-        Log.e("KTY****", REGISTRATION_ID + "");
+        Log.e("KTY id", REGISTRATION_ID);
     }
 }

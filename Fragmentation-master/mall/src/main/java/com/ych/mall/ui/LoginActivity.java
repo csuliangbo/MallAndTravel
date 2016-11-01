@@ -2,11 +2,13 @@ package com.ych.mall.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.ych.mall.MainActivity;
 import com.ych.mall.MainActivity_;
+import com.ych.mall.MyApp;
 import com.ych.mall.R;
 import com.ych.mall.bean.LoginBean;
 import com.ych.mall.event.LoginEvent;
@@ -55,12 +57,13 @@ public class LoginActivity extends BaseActivity {
             return;
         if (isEmp(mPwd, "密码不能为空"))
             return;
-       if(getT(mPhone).charAt(1)=='9'){
-           web("http://www.zzumall.com/index.php/Mobile/Other/index.html");
-           return;
-       }
+        if (getT(mPhone).charAt(1) == '9') {
+            web("http://www.zzumall.com/index.php/Mobile/Other/index.html");
+            return;
+        }
         onSubmit.startLoading();
-        LoginAndRegistModel.login(getT(mPhone), getT(mPwd), callback);
+        Log.e("KTy", MyApp.REGISTRATION_ID + "");
+        LoginAndRegistModel.login(getT(mPhone), getT(mPwd), callback, MyApp.REGISTRATION_ID);
     }
 
     StringCallback callback = new StringCallback() {
@@ -73,29 +76,30 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onResponse(String response, int id) {
             onSubmit.stop();
-            LoginBean bean= Http.model(LoginBean.class,response);
-            if(bean.getCode().equals("200")){
+            LoginBean bean = Http.model(LoginBean.class, response);
+            if (bean.getCode().equals("200")) {
                 TOT("登录成功");
                 UserCenter.getInstance().setCurrentUserId(bean.getData().get(0).getId());
                 UserCenter.getInstance().setUserGrade(bean.getData().get(0).getGrade_name());
                 EventBus.getDefault().post(new LoginEvent());
                 finish();
-            }else
+            } else
                 TOT(bean.getMessage());
         }
     };
+
     void web(String url) {
         startActivity(new Intent(this, WebViewActivity_.class).putExtra(KV.URL, url));
     }
 
     @Click
-    void onForget(){
+    void onForget() {
 
-        startActivity(new Intent(this,ForgetPwdActivity_.class));
+        startActivity(new Intent(this, ForgetPwdActivity_.class));
     }
 
     @Click
-    void onGo(){
+    void onGo() {
         EventBus.getDefault().post(new MainEvent(-1));
         startActivity(new Intent(this, MainActivity_.class));
         finish();

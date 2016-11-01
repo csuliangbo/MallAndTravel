@@ -65,7 +65,7 @@ public class MessageFragment extends BaseFragment implements RecyclerViewModel.R
 
     @Override
     public void getData(StringCallback callback, int page) {
-        UserInfoModel.message(callback);
+        UserInfoModel.message(callback, page);
     }
 
     @Override

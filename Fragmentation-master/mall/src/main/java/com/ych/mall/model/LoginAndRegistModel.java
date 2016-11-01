@@ -41,10 +41,11 @@ public class LoginAndRegistModel {
     static String LOGIN_URL = URL + "user_login";
 
     //登录
-    public static void login(String mobile, String pwd, StringCallback callback) {
+    public static void login(String mobile, String pwd, StringCallback callback, String registrationId) {
         HashMap<String, String> map = new HashMap<>();
         map.put("mobile", mobile);
         map.put("password", pwd);
+        map.put("registrationId",registrationId);
         HttpModel hp = HttpModel.newInstance(LOGIN_URL);
         hp.post(map, callback);
     }

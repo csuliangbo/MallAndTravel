@@ -133,6 +133,11 @@ public class GoodsFragment extends BaseFragment {
     }
 
     @Click
+    void onService() {
+        web("http://kefu.easemob.com/webim/im.html?tenantId=29457");
+    }
+
+    @Click
     void onProtocol() {
         web("http://www.zzumall.com/index.php/Mobile/Tourism/lvyou_xieyi");
     }
@@ -253,7 +258,7 @@ public class GoodsFragment extends BaseFragment {
         Bundle bundle = new Bundle();
         bundle.putString(KV.GOODS_ID, mId);
         bundle.putInt("TYPE", TYPE_TRAVEL);
-        bundle.putString("Date", groupTitle+"");
+        bundle.putString("Date", groupTitle + "");
         bundle.putString("ChildrenPrice", mChildPrice);
         bundle.putString("AdultPrice", mPrice);
         bundle.putString("ChildrenNum", tvNumChildren.getText().toString());

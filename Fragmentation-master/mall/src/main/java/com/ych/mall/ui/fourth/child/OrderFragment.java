@@ -2,6 +2,7 @@ package com.ych.mall.ui.fourth.child;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,6 +46,8 @@ import com.ych.mall.model.RecyclerViewModel;
 import com.ych.mall.model.UserInfoModel;
 import com.ych.mall.model.YViewHolder;
 import com.ych.mall.ui.base.BaseFragment;
+import com.ych.mall.ui.fourth.PingJiaActivity;
+import com.ych.mall.ui.fourth.PingJiaActivity_;
 import com.ych.mall.utils.KV;
 import com.ych.mall.utils.Tools;
 import com.ych.mall.utils.UserCenter;
@@ -227,6 +230,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
     private String refund = "退货";
     private String logistics = "查看物流";
     private String complete = "标记完成";
+    private String pingjia = "查看评价";
 
     @Override
     public void covert(YViewHolder holder, final OrderBean.OrderData t) {
@@ -239,7 +243,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
         holder.setText(R.id.id, "订单号:" + t.getOrders_num());
         final int type = Integer.parseInt(t.getOrders_status());
         String typeText = null;
-        Button btnLeft = holder.getView(R.id.btnLeft);
+        final Button btnLeft = holder.getView(R.id.btnLeft);
         Button btnMiddle = holder.getView(R.id.btnMiddle);
         Button btnRight = holder.getView(R.id.btnRight);
         btnLeft.setVisibility(View.GONE);
@@ -340,7 +344,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
             case 3:
                 typeText = "已签收";
                 btnLeft.setVisibility(View.GONE);
-                btnMiddle.setVisibility(View.GONE);
+                btnMiddle.setVisibility(View.VISIBLE);
                 btnRight.setVisibility(View.VISIBLE);
                 btnLeft.setBackgroundResource(R.drawable.shape_green_dark_5dp);
                 btnMiddle.setBackgroundResource(R.drawable.shape_gray_dark_5dp);
@@ -349,7 +353,7 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 btnRight.setTextColor(getResources().getColor(R.color.gray2));
                 btnLeft.setTextColor(getResources().getColor(R.color.white));
                 btnLeft.setText(getShop);
-                btnMiddle.setText(refund);
+                btnMiddle.setText(pingjia);
                 btnRight.setText(logistics);
                 btnLeft.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -360,7 +364,13 @@ public class OrderFragment extends BaseFragment implements RecyclerViewModel.RMo
                 btnMiddle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        start(SalesReturn.newInstance(id));
+                        Intent intent = new Intent(getActivity(), PingJiaActivity_.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("GoodsId", t.getGoods().get(0).getGoods_id());
+                        bundle.putString("OrderId", t.getId());
+                        bundle.putString("OrderNum", t.getOrders_num());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
                     }
                 });
                 btnRight.setOnClickListener(new View.OnClickListener() {
